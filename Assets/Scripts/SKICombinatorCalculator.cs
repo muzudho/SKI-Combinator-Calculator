@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class SKICombinatorCalculator
 {
+    private static string combinatorCharacters = "SKI";
+    private static string variableCharacters = "abcdefghijklmnopqrstuvwxyz";
+
     /// <summary>
     /// 計算実行
     /// </summary>
@@ -19,11 +22,20 @@ public class SKICombinatorCalculator
         StringBuilder calculationProcess = new StringBuilder();
         calculationProcess.AppendLine(expression);
 
+        int tired = 0; // 疲れ
         bool isOk = true;
 
         while (isOk)
         {
-            // 先頭の１文字を取得
+            if (tired == 100)
+            {
+                calculationProcess.AppendLine($@"
+Very tired...");
+                break;
+            }
+            tired++;
+
+            // 次に処理するコンビネーター。先頭とは限らない
             var (isOk2, nextCombinator, rest) = NextCombinator(calculationProcess, expression);
             if (!isOk2)
             {
@@ -138,12 +150,13 @@ public class SKICombinatorCalculator
     /// 丸かっこを剥く
     /// </summary>
     /// <returns></returns>
-    private static (bool, string) StripParentheses(string expression)
+    private static (bool, string) StripParentheses(int start, string expression)
     {
         // 対応する `)` を消去する
-        var nested = 1;
+        var nested = start + 1;
 
-        for (int i = 1; i < expression.Length; i++)
+        int i = 1;
+        for (; i < expression.Length; i++)
         {
             var ch = expression[i];
 
@@ -157,8 +170,16 @@ public class SKICombinatorCalculator
                     if (nested == 0)
                     {
                         // 先頭の `(` と、対応する `)` を消去した数式
-                        expression = $"{expression.Substring(1, i - 1)}{expression.Substring(i + 1)}";
-                        return (true, expression);
+                        string left = string.Empty;
+                        if (0 < start)
+                        {
+                            left = expression.Substring(0, start - 1);
+                        }
+                        var middle = expression.Substring(start + 1, i - 1);
+                        var right = expression.Substring(i + 1);
+                        Debug.Log($"◆{left}◆{middle}◆{right}◆");
+                        var newExpression = $"{left}{middle}{right}";
+                        return (true, newExpression);
                     }
                     break;
 
@@ -166,17 +187,18 @@ public class SKICombinatorCalculator
         }
 
         // 構文エラー
-        Debug.Log("[StripParentheses] 構文エラー");
+        Debug.Log($"[StripParentheses] 構文エラー expression:{expression} nested:{nested} i:{i}");
         return (false, "");
     }
 
     private static (bool, char, string) NextCombinator(StringBuilder calculationProcess, string expression1)
     {
         var rest = expression1;
+        var i = 0;
 
         while (0 < rest.Length)
         {
-            char first = rest[0];
+            char first = rest[i];
 
             switch (first)
             {
@@ -186,31 +208,43 @@ public class SKICombinatorCalculator
                     return (true, first, rest[1..]);
 
                 case '(':
-                    // 丸かっこを剥く
-                    bool isOk;
-                    (isOk, rest) = StripParentheses(rest);
-                    if (!isOk)
                     {
-                        // 構文エラー
-                        Debug.Log("[NextCombinator] 構文エラー");
-                        return (false, ' ', "");
+                        // 丸かっこを剥く
+                        bool isOk;
+                        (isOk, rest) = StripParentheses(i, rest);
+                        if (!isOk)
+                        {
+                            // 構文エラー
+                            Debug.Log("[NextCombinator] 構文エラー");
+                            return (false, ' ', "");
+                        }
+
+                        calculationProcess.AppendLine($"    stripped {rest}");
+                        i = 0;
+                        break;
                     }
 
-                    calculationProcess.AppendLine($"    stripped {rest}");
-                    break;
-
-                // 計算不能
                 default:
-                    Debug.Log("[NextCombinator] 計算不能");
-                    return (false, ' ', "");
+                    {
+                        // 変数と閉じかっこは読み飛ばします
+                        if (variableCharacters.Contains(first) || first == ')')
+                        {
+                            i++;
+                        }
+                        else
+                        {
+                            // 計算不能
+                            Debug.Log($"[NextCombinator] 計算不能 i:{i} first:{first} rest:{rest}");
+                            return (false, ' ', "");
+                        }
+                    }
+                    break;
             }
         }
 
         // 空文字列を指定時
         return (false, ' ', "");
     }
-
-    private static string legalCharacters = "SKIabcdefghijklmnopqrstuvwxyz()";
 
     private static (bool, string, string) Parse(string expression)
     {
@@ -246,7 +280,7 @@ public class SKICombinatorCalculator
             return (false, "", "");
         }
 
-        if (legalCharacters.Contains(first))
+        if (combinatorCharacters.Contains(first) || variableCharacters.Contains(first))
         {
             return (true, $"{first}", expression.Substring(1));
         }
