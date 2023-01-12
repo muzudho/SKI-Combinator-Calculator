@@ -23,7 +23,7 @@ public class SKICombinatorCalculator
             expression = expression.TrimStart();
 
             // 先頭の１文字を取得
-            var (isOk2, nextCombinator, rest) = NextCombinator(expression);
+            var (isOk2, nextCombinator, rest) = NextCombinator(calculationProcess, expression);
             if (!isOk2)
             {
                 Debug.Log($"[Run] Not found nextCombinator. expression:{expression}");
@@ -133,53 +133,68 @@ public class SKICombinatorCalculator
         return (true, $"{arg1}{rest}");
     }
 
-    private static (bool, char, string) NextCombinator(string expression1)
+    /// <summary>
+    /// 丸かっこを剥く
+    /// </summary>
+    /// <returns></returns>
+    private static (bool, string) StripParentheses(string expression)
+    {
+        // 対応する `)` を消去する
+        var nested = 1;
+
+        for (int i = 1; i < expression.Length; i++)
+        {
+            var ch = expression[i];
+
+            switch (ch)
+            {
+                case '(':
+                    nested++;
+                    break;
+                case ')':
+                    nested--;
+                    if (nested == 0)
+                    {
+                        // 先頭の `(` と、対応する `)` を消去した数式
+                        expression = $"{expression.Substring(1, i-1)}{expression.Substring(i + 1)}";
+                        return (true, expression);
+                    }
+                    break;
+
+            }
+        }
+
+        // 構文エラー
+        Debug.Log("[StripParentheses] 構文エラー");
+        return (false, "");
+    }
+
+    private static (bool, char, string) NextCombinator(StringBuilder calculationProcess, string expression1)
     {
         var rest = expression1;
 
         while (0 < rest.Length)
         {
             char first = rest[0];
-            rest = rest[1..];
 
             switch (first)
             {
                 case 'S':
                 case 'K':
                 case 'I':
-                    return (true, first, rest);
+                    return (true, first, rest[1..]);
 
                 case '(':
-                    // TODO 対応する `)` を消去する
-                    var nested = 1;
-
-                    for (int i = 1; i < rest.Length; i++)
+                    // 丸かっこを剥く
+                    bool isOk;
+                    (isOk, rest) = StripParentheses(rest);
+                    if (!isOk)
                     {
-                        var ch = rest[i];
-
-                        switch (ch)
-                        {
-                            case '(':
-                                nested++;
-                                break;
-                            case ')':
-                                nested--;
-                                if (nested == 0)
-                                {
-                                    // 先頭の `(` と、対応する `)` を消去した数式
-                                    rest = $"{rest.Substring(1, i)}{rest.Substring(i + 1)}";
-                                    goto after_loop;
-                                }
-                                break;
-
-                        }
+                        // 構文エラー
+                        return (false, ' ', "");
                     }
 
-                    // 構文エラー
-                    Debug.Log("[NextCombinator] 構文エラー");
-                    return (false, ' ', "");
-
-                after_loop:
+                    calculationProcess.AppendLine($"    stripped {rest}");
                     break;
 
                 // 計算不能
