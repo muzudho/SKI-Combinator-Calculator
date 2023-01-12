@@ -153,9 +153,9 @@ Very tired...");
     private static (bool, string) StripParentheses(int start, string expression)
     {
         // 対応する `)` を消去する
-        var nested = start + 1;
+        int i = start + 1;
+        var nested = 1;
 
-        int i = 1;
         for (; i < expression.Length; i++)
         {
             var ch = expression[i];
@@ -173,11 +173,11 @@ Very tired...");
                         string left = string.Empty;
                         if (0 < start)
                         {
-                            left = expression.Substring(0, start - 1);
+                            left = expression[0..start];
                         }
-                        var middle = expression.Substring(start + 1, i - 1);
-                        var right = expression.Substring(i + 1);
-                        Debug.Log($"◆{left}◆{middle}◆{right}◆");
+                        var middle = expression[(start + 1)..i];
+                        var right = expression[(i + 1)..];
+                        Debug.Log($"[StripParentheses] expression:{expression} start:{start} i:{i} ◆{left}◆{middle}◆{right}◆");
                         var newExpression = $"{left}{middle}{right}";
                         return (true, newExpression);
                     }
@@ -187,7 +187,7 @@ Very tired...");
         }
 
         // 構文エラー
-        Debug.Log($"[StripParentheses] 構文エラー expression:{expression} nested:{nested} i:{i}");
+        Debug.Log($"[StripParentheses] 構文エラー expression:{expression} start:{start} nested:{nested} i:{i}");
         return (false, "");
     }
 
@@ -248,6 +248,12 @@ Very tired...");
 
     private static (bool, string, string) Parse(string expression)
     {
+        if (expression.Length < 1)
+        {
+            Debug.Log("[Parse] 空文字列");
+            return (false, "", "");
+        }
+
         var first = expression[0];
 
         if (first == '(')
@@ -268,7 +274,7 @@ Very tired...");
                         nested--;
                         if (nested == 0)
                         {
-                            return (true, expression.Substring(0, i + 1), expression.Substring(i + 1));
+                            return (true, expression[0..(i + 1)], expression[(i + 1)..]);
                         }
                         break;
 
@@ -276,15 +282,16 @@ Very tired...");
             }
 
             // 構文エラー
-            Debug.Log("[Parse] 構文エラー");
+            Debug.Log("[Parse] 構文エラー1");
             return (false, "", "");
         }
 
         if (combinatorCharacters.Contains(first) || variableCharacters.Contains(first))
         {
-            return (true, $"{first}", expression.Substring(1));
+            return (true, $"{first}", expression[1..]);
         }
 
+        Debug.Log("[Parse] 構文エラー2");
         return (false, "", "");
     }
 }
