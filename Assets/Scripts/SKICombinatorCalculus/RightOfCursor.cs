@@ -1,3 +1,4 @@
+using Assets.Scripts.SKICombinatorCalculus;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -26,18 +27,32 @@ public static class RightOfCursor
 
                 case '(':
                     {
-                        // 丸かっこを剥く
-                        bool isOk;
-                        (isOk, rest) = StripParentheses(i, rest);
-                        if (!isOk)
+                        // 丸かっこを剥く（剥けないケースもある）
+                        var (error, rest2) = StripParentheses(i, rest);
+                        switch (error)
                         {
-                            // 構文エラー
-                            Debug.Log("[NextCombinator] 構文エラー");
-                            return (false, "", ' ', "");
+                            case StripParenthesesError.None:
+                                rest = rest2;
+                                calculationProcess.AppendLine($"    stripped {rest}");
+                                i = 0;
+                                break;
+
+                            case StripParenthesesError.NotFoundArgument:
+                                // 正常な挙動。エラーではない
+                                // calculationProcess.AppendLine($"    can't stripped {rest}");
+                                i++;
+                                break;
+
+                            case StripParenthesesError.Sintax:
+                                // 構文エラー
+                                calculationProcess.AppendLine($"    sintax error. rest:{rest}");
+                                Debug.Log("[NextCombinator] 構文エラー");
+                                return (false, "", ' ', "");
+
+                            default:
+                                throw new System.Exception();
                         }
 
-                        calculationProcess.AppendLine($"    stripped {rest}");
-                        i = 0;
                         break;
                     }
 
@@ -46,11 +61,13 @@ public static class RightOfCursor
                         // 変数と閉じかっこは読み飛ばします
                         if (SKICombinatorCalculator.variableCharacters.Contains(cursor) || cursor == ')')
                         {
+                            // calculationProcess.AppendLine($"    ... i:{i}");
                             i++;
                         }
                         else
                         {
                             // 計算不能
+                            // calculationProcess.AppendLine($"    incalculable. i:{i}");
                             Debug.Log($"[NextCombinator] 計算不能 i:{i} first:{cursor} rest:{rest}");
                             return (false, "", ' ', "");
                         }
@@ -59,7 +76,9 @@ public static class RightOfCursor
             }
         }
 
-        // 空文字列を指定時
+        // - 空文字列を指定時
+        // - 計算正常終了時
+        // calculationProcess.AppendLine($"    out of index exception");
         return (false, "", ' ', "");
     }
 
@@ -145,7 +164,7 @@ public static class RightOfCursor
     /// - ただし、開き丸括弧に対応する閉じ丸括弧の右側に、コンビネーター、または変数が見当たらない場合は その丸括弧は剥かない
     /// </summary>
     /// <returns></returns>
-    private static (bool, string) StripParentheses(int start, string expression)
+    private static (StripParenthesesError, string) StripParentheses(int start, string expression)
     {
         // 対応する `)` を消去する
         int i = start + 1;
@@ -173,7 +192,7 @@ public static class RightOfCursor
                             {
                                 // 構文エラー
                                 Debug.Log($"[StripParentheses] 丸括弧を剥けないケースだった rest:{expression[(i + 1)..]}");
-                                return (false, "");
+                                return (StripParenthesesError.NotFoundArgument, "");
                             }
                         }
 
@@ -187,7 +206,7 @@ public static class RightOfCursor
                         var right = expression[(i + 1)..];
                         Debug.Log($"[StripParentheses] expression:{expression} start:{start} i:{i} ◆{left}◆{middle}◆{right}◆");
                         var newExpression = $"{left}{middle}{right}";
-                        return (true, newExpression);
+                        return (StripParenthesesError.None, newExpression);
                     }
                     break;
 
@@ -196,7 +215,7 @@ public static class RightOfCursor
 
         // 構文エラー
         Debug.Log($"[StripParentheses] 構文エラー expression:{expression} start:{start} nested:{nested} i:{i}");
-        return (false, "");
+        return (StripParenthesesError.Sintax, "");
     }
 
     private static (bool, string, string) Parse(int start, string expression)
