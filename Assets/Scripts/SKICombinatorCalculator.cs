@@ -12,6 +12,9 @@ public class SKICombinatorCalculator
     /// <returns></returns>
     public static string Run(string expression)
     {
+        // 空白は詰める
+        expression = expression.Replace(" ", "");
+
         // 計算過程
         StringBuilder calculationProcess = new StringBuilder();
         calculationProcess.AppendLine(expression);
@@ -20,8 +23,6 @@ public class SKICombinatorCalculator
 
         while (isOk)
         {
-            expression = expression.TrimStart();
-
             // 先頭の１文字を取得
             var (isOk2, nextCombinator, rest) = NextCombinator(calculationProcess, expression);
             if (!isOk2)
@@ -29,22 +30,28 @@ public class SKICombinatorCalculator
                 Debug.Log($"[Run] Not found nextCombinator. expression:{expression}");
                 break;
             }
-            Debug.Log($"[Run 1] isOk:{isOk2} nextCombinator:{nextCombinator} rest:{rest} expression:{expression}");
+            Debug.Log($"[Run 1] nextCombinator:{nextCombinator} rest:{rest} expression:{expression}");
 
             switch (nextCombinator)
             {
                 case 'S':
-                    (isOk, expression) = SolveSCombinator(calculationProcess, rest.TrimStart());
+                    (isOk, expression) = SolveSCombinator(calculationProcess, rest);
                     break;
                 case 'K':
-                    (isOk, expression) = SolveSCombinator(calculationProcess, rest.TrimStart());
+                    (isOk, expression) = SolveKCombinator(calculationProcess, rest);
                     break;
                 case 'I':
-                    (isOk, expression) = SolveSCombinator(calculationProcess, rest.TrimStart());
+                    (isOk, expression) = SolveICombinator(calculationProcess, rest);
                     break;
             }
 
-            Debug.Log($"[Run 2] isOk:{isOk} restExpression:{expression}");
+            if (!isOk)
+            {
+                Debug.Log($"[Run] Failed. rest:{rest}");
+                break;
+            }
+
+            Debug.Log($"[Run 2] restExpression:{expression}");
             calculationProcess.AppendLine(expression);
         }
 
@@ -57,20 +64,17 @@ public class SKICombinatorCalculator
         string arg1;
         string arg2;
         string arg3;
-        (isOk, arg1, rest) = Parse(rest.TrimStart());
-        Debug.Log($"[SolveCombinator S1] arg1:{arg1} rest:{rest}");
+        (isOk, arg1, rest) = Parse(rest);
         if (!isOk)
         {
             return (false, "");
         }
-        (isOk, arg2, rest) = Parse(rest.TrimStart());
-        Debug.Log($"[SolveCombinator S2] arg2:{arg2} rest:{rest}");
+        (isOk, arg2, rest) = Parse(rest);
         if (!isOk)
         {
             return (false, "");
         }
-        (isOk, arg3, rest) = Parse(rest.TrimStart());
-        Debug.Log($"[SolveCombinator S3] arg3:{arg3} rest:{rest}");
+        (isOk, arg3, rest) = Parse(rest);
         if (!isOk)
         {
             return (false, "");
@@ -91,14 +95,12 @@ public class SKICombinatorCalculator
         bool isOk;
         string arg1;
         string arg2;
-        (isOk, arg1, rest) = Parse(rest.TrimStart());
-        Debug.Log($"[SolveCombinator K1] arg1:{arg1} rest:{rest}");
+        (isOk, arg1, rest) = Parse(rest);
         if (!isOk)
         {
             return (false, "");
         }
-        (isOk, arg2, rest) = Parse(rest.TrimStart());
-        Debug.Log($"[SolveCombinator K2] arg2:{arg2} rest:{rest}");
+        (isOk, arg2, rest) = Parse(rest);
         if (!isOk)
         {
             return (false, "");
@@ -117,8 +119,7 @@ public class SKICombinatorCalculator
     {
         bool isOk;
         string arg1;
-        (isOk, arg1, rest) = Parse(rest.TrimStart());
-        Debug.Log($"[SolveCombinator I] arg1:{arg1} rest:{rest}");
+        (isOk, arg1, rest) = Parse(rest);
         if (!isOk)
         {
             return (false, "");
@@ -156,7 +157,7 @@ public class SKICombinatorCalculator
                     if (nested == 0)
                     {
                         // 先頭の `(` と、対応する `)` を消去した数式
-                        expression = $"{expression.Substring(1, i-1)}{expression.Substring(i + 1)}";
+                        expression = $"{expression.Substring(1, i - 1)}{expression.Substring(i + 1)}";
                         return (true, expression);
                     }
                     break;
@@ -191,6 +192,7 @@ public class SKICombinatorCalculator
                     if (!isOk)
                     {
                         // 構文エラー
+                        Debug.Log("[NextCombinator] 構文エラー");
                         return (false, ' ', "");
                     }
 
@@ -199,6 +201,7 @@ public class SKICombinatorCalculator
 
                 // 計算不能
                 default:
+                    Debug.Log("[NextCombinator] 計算不能");
                     return (false, ' ', "");
             }
         }
@@ -207,42 +210,45 @@ public class SKICombinatorCalculator
         return (false, ' ', "");
     }
 
+    private static string legalCharacters = "SKIabcdefghijklmnopqrstuvwxyz()";
+
     private static (bool, string, string) Parse(string expression)
     {
         var first = expression[0];
 
-        switch (first)
+        if (first == '(')
         {
-            case '(':
-                // TODO 対応する ')' まで読む
-                var nested = 1;
+            // TODO 対応する ')' まで読む
+            var nested = 1;
 
-                for (int i = 1; i < expression.Length; i++)
+            for (int i = 1; i < expression.Length; i++)
+            {
+                var ch = expression[i];
+
+                switch (ch)
                 {
-                    var ch = expression[i];
+                    case '(':
+                        nested++;
+                        break;
+                    case ')':
+                        nested--;
+                        if (nested == 0)
+                        {
+                            return (true, expression.Substring(0, i + 1), expression.Substring(i + 1));
+                        }
+                        break;
 
-                    switch (ch)
-                    {
-                        case '(':
-                            nested++;
-                            break;
-                        case ')':
-                            nested--;
-                            if (nested == 0)
-                            {
-                                return (true, expression.Substring(0, i + 1), expression.Substring(i + 1));
-                            }
-                            break;
-
-                    }
                 }
-                break;
+            }
 
-            case 'K':
-                return (true, $"{first}", expression.Substring(1));
+            // 構文エラー
+            Debug.Log("[Parse] 構文エラー");
+            return (false, "", "");
+        }
 
-            case 'x':
-                return (true, $"{first}", expression.Substring(1));
+        if (legalCharacters.Contains(first))
+        {
+            return (true, $"{first}", expression.Substring(1));
         }
 
         return (false, "", "");
