@@ -13,14 +13,15 @@ public class SKICombinatorCalculator
     /// </summary>
     /// <param name="expression"></param>
     /// <returns></returns>
-    public static string Run(string expression)
+    public static string Run(string inputText)
     {
+        string leftText;
         // 空白は詰める
-        expression = expression.Replace(" ", "");
+        string rightText = inputText.Replace(" ", "");
 
         // 計算過程
         StringBuilder calculationProcess = new StringBuilder();
-        calculationProcess.AppendLine(expression);
+        calculationProcess.AppendLine(inputText);
 
         int tired = 0; // 疲れ
         bool isOk = true;
@@ -36,57 +37,62 @@ Very tired...");
             tired++;
 
             // 次に処理するコンビネーター。先頭とは限らない
-            var (isOk2, nextCombinator, rest) = NextCombinator(calculationProcess, expression);
-            if (!isOk2)
+            char nextCombinator;
+            (isOk, leftText, nextCombinator, rightText) = NextCombinator(calculationProcess, rightText);
+            if (!isOk)
             {
-                Debug.Log($"[Run] Not found nextCombinator. expression:{expression}");
+                Debug.Log($"[Run] Not found nextCombinator");
                 break;
             }
-            Debug.Log($"[Run 1] nextCombinator:{nextCombinator} rest:{rest} expression:{expression}");
+            Debug.Log($"[Run 1] leftText:{leftText} nextCombinator:{nextCombinator} rightText:{rightText}");
 
+            int startInRightText = 0;
             switch (nextCombinator)
             {
                 case 'S':
-                    (isOk, expression) = SolveSCombinator(calculationProcess, rest);
+                    (isOk, rightText) = SolveSCombinator(calculationProcess, startInRightText, rightText);
                     break;
                 case 'K':
-                    (isOk, expression) = SolveKCombinator(calculationProcess, rest);
+                    (isOk, rightText) = SolveKCombinator(calculationProcess, startInRightText, rightText);
                     break;
                 case 'I':
-                    (isOk, expression) = SolveICombinator(calculationProcess, rest);
+                    (isOk, rightText) = SolveICombinator(calculationProcess, startInRightText, rightText);
                     break;
             }
 
             if (!isOk)
             {
-                Debug.Log($"[Run] Failed. rest:{rest}");
+                Debug.Log($"[Run] Failed");
                 break;
             }
 
-            Debug.Log($"[Run 2] restExpression:{expression}");
-            calculationProcess.AppendLine(expression);
+            // 右テキストにまとめる
+            Debug.Log($"[Run 2] leftText:{leftText} rightText:{rightText}");
+            rightText = $"{leftText}{rightText}";
+            leftText = "";
+            calculationProcess.AppendLine(rightText);
         }
 
         return calculationProcess.ToString();
     }
 
-    private static (bool, string) SolveSCombinator(StringBuilder calculationProcess, string rest)
+    private static (bool, string) SolveSCombinator(StringBuilder calculationProcess, int start, string rest)
     {
         bool isOk;
         string arg1;
         string arg2;
         string arg3;
-        (isOk, arg1, rest) = Parse(rest);
+        (isOk, arg1, rest) = Parse(start, rest);
         if (!isOk)
         {
             return (false, "");
         }
-        (isOk, arg2, rest) = Parse(rest);
+        (isOk, arg2, rest) = Parse(start, rest);
         if (!isOk)
         {
             return (false, "");
         }
-        (isOk, arg3, rest) = Parse(rest);
+        (isOk, arg3, rest) = Parse(start, rest);
         if (!isOk)
         {
             return (false, "");
@@ -102,17 +108,17 @@ Very tired...");
 
         return (true, $"{arg1}{arg3}({arg2}{arg3}){rest}");
     }
-    private static (bool, string) SolveKCombinator(StringBuilder calculationProcess, string rest)
+    private static (bool, string) SolveKCombinator(StringBuilder calculationProcess, int start, string rest)
     {
         bool isOk;
         string arg1;
         string arg2;
-        (isOk, arg1, rest) = Parse(rest);
+        (isOk, arg1, rest) = Parse(start, rest);
         if (!isOk)
         {
             return (false, "");
         }
-        (isOk, arg2, rest) = Parse(rest);
+        (isOk, arg2, rest) = Parse(start, rest);
         if (!isOk)
         {
             return (false, "");
@@ -127,11 +133,11 @@ Very tired...");
 
         return (true, $"{arg1}{rest}");
     }
-    private static (bool, string) SolveICombinator(StringBuilder calculationProcess, string rest)
+    private static (bool, string) SolveICombinator(StringBuilder calculationProcess, int start, string rest)
     {
         bool isOk;
         string arg1;
-        (isOk, arg1, rest) = Parse(rest);
+        (isOk, arg1, rest) = Parse(start, rest);
         if (!isOk)
         {
             return (false, "");
@@ -191,21 +197,21 @@ Very tired...");
         return (false, "");
     }
 
-    private static (bool, char, string) NextCombinator(StringBuilder calculationProcess, string expression1)
+    private static (bool, string, char, string) NextCombinator(StringBuilder calculationProcess, string expression1)
     {
         var rest = expression1;
         var i = 0;
 
-        while (0 < rest.Length)
+        while (i < rest.Length)
         {
-            char first = rest[i];
+            char cursor = rest[i];
 
-            switch (first)
+            switch (cursor)
             {
                 case 'S':
                 case 'K':
                 case 'I':
-                    return (true, first, rest[1..]);
+                    return (true, rest[0..i], cursor, rest[(i+1)..]);
 
                 case '(':
                     {
@@ -216,7 +222,7 @@ Very tired...");
                         {
                             // 構文エラー
                             Debug.Log("[NextCombinator] 構文エラー");
-                            return (false, ' ', "");
+                            return (false, "", ' ', "");
                         }
 
                         calculationProcess.AppendLine($"    stripped {rest}");
@@ -227,15 +233,15 @@ Very tired...");
                 default:
                     {
                         // 変数と閉じかっこは読み飛ばします
-                        if (variableCharacters.Contains(first) || first == ')')
+                        if (variableCharacters.Contains(cursor) || cursor == ')')
                         {
                             i++;
                         }
                         else
                         {
                             // 計算不能
-                            Debug.Log($"[NextCombinator] 計算不能 i:{i} first:{first} rest:{rest}");
-                            return (false, ' ', "");
+                            Debug.Log($"[NextCombinator] 計算不能 i:{i} first:{cursor} rest:{rest}");
+                            return (false, "", ' ', "");
                         }
                     }
                     break;
@@ -243,20 +249,20 @@ Very tired...");
         }
 
         // 空文字列を指定時
-        return (false, ' ', "");
+        return (false, "", ' ', "");
     }
 
-    private static (bool, string, string) Parse(string expression)
+    private static (bool, string, string) Parse(int start, string expression)
     {
-        if (expression.Length < 1)
+        if (expression.Length <= start)
         {
-            Debug.Log("[Parse] 空文字列");
+            Debug.Log($"[Parse] オーバー length:{expression.Length} start:{start}");
             return (false, "", "");
         }
 
-        var first = expression[0];
+        var cursor = expression[start];
 
-        if (first == '(')
+        if (cursor == '(')
         {
             // TODO 対応する ')' まで読む
             var nested = 1;
@@ -286,9 +292,9 @@ Very tired...");
             return (false, "", "");
         }
 
-        if (combinatorCharacters.Contains(first) || variableCharacters.Contains(first))
+        if (combinatorCharacters.Contains(cursor) || variableCharacters.Contains(cursor))
         {
-            return (true, $"{first}", expression[1..]);
+            return (true, $"{cursor}", expression[1..]);
         }
 
         Debug.Log("[Parse] 構文エラー2");
