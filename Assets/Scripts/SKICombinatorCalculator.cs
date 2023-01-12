@@ -23,40 +23,139 @@ public class SKICombinatorCalculator
             expression = expression.TrimStart();
 
             // 先頭の１文字を取得
-            var (isOk2, nextCombinator) = NextCombinator(expression);
+            var (isOk2, nextCombinator, rest) = NextCombinator(expression);
             if (!isOk2)
             {
+                Debug.Log($"[Run] Not found nextCombinator. expression:{expression}");
                 break;
             }
-            Debug.Log($"Next combinator:{nextCombinator}");
+            Debug.Log($"[Run 1] isOk:{isOk2} nextCombinator:{nextCombinator} rest:{rest} expression:{expression}");
 
-            (isOk, expression) = SolveFirst(expression.TrimStart());
+            switch (nextCombinator)
+            {
+                case 'S':
+                    (isOk, expression) = SolveSCombinator(calculationProcess, rest.TrimStart());
+                    break;
+                case 'K':
+                    (isOk, expression) = SolveSCombinator(calculationProcess, rest.TrimStart());
+                    break;
+                case 'I':
+                    (isOk, expression) = SolveSCombinator(calculationProcess, rest.TrimStart());
+                    break;
+            }
+
+            Debug.Log($"[Run 2] isOk:{isOk} restExpression:{expression}");
             calculationProcess.AppendLine(expression);
         }
 
         return calculationProcess.ToString();
     }
 
-    private static (bool, char) NextCombinator(string expression)
+    private static (bool, string) SolveSCombinator(StringBuilder calculationProcess, string rest)
     {
-        while (0 < expression.Length)
+        bool isOk;
+        string arg1;
+        string arg2;
+        string arg3;
+        (isOk, arg1, rest) = Parse(rest.TrimStart());
+        Debug.Log($"[SolveCombinator S1] arg1:{arg1} rest:{rest}");
+        if (!isOk)
         {
-            char first = expression[0];
+            return (false, "");
+        }
+        (isOk, arg2, rest) = Parse(rest.TrimStart());
+        Debug.Log($"[SolveCombinator S2] arg2:{arg2} rest:{rest}");
+        if (!isOk)
+        {
+            return (false, "");
+        }
+        (isOk, arg3, rest) = Parse(rest.TrimStart());
+        Debug.Log($"[SolveCombinator S3] arg3:{arg3} rest:{rest}");
+        if (!isOk)
+        {
+            return (false, "");
+        }
+
+        calculationProcess.AppendLine($@"
+    S
+      1 {arg1}
+      2 {arg2}
+      3 {arg3}
+      _ {rest}
+");
+
+        return (true, $"{arg1}{arg3}({arg2}{arg3}){rest}");
+    }
+    private static (bool, string) SolveKCombinator(StringBuilder calculationProcess, string rest)
+    {
+        bool isOk;
+        string arg1;
+        string arg2;
+        (isOk, arg1, rest) = Parse(rest.TrimStart());
+        Debug.Log($"[SolveCombinator K1] arg1:{arg1} rest:{rest}");
+        if (!isOk)
+        {
+            return (false, "");
+        }
+        (isOk, arg2, rest) = Parse(rest.TrimStart());
+        Debug.Log($"[SolveCombinator K2] arg2:{arg2} rest:{rest}");
+        if (!isOk)
+        {
+            return (false, "");
+        }
+
+        calculationProcess.AppendLine($@"
+    K
+      1 {arg1}
+      2 {arg2}
+      _ {rest}
+");
+
+        return (true, $"{arg1}{rest}");
+    }
+    private static (bool, string) SolveICombinator(StringBuilder calculationProcess, string rest)
+    {
+        bool isOk;
+        string arg1;
+        (isOk, arg1, rest) = Parse(rest.TrimStart());
+        Debug.Log($"[SolveCombinator I] arg1:{arg1} rest:{rest}");
+        if (!isOk)
+        {
+            return (false, "");
+        }
+
+        calculationProcess.AppendLine($@"
+    I
+      1 {arg1}
+      _ {rest}
+");
+
+        return (true, $"{arg1}{rest}");
+    }
+
+    private static (bool, char, string) NextCombinator(string expression1)
+    {
+        var rest = expression1;
+
+        while (0 < rest.Length)
+        {
+            char first = rest[0];
+            rest = rest[1..];
 
             switch (first)
             {
                 case 'S':
                 case 'K':
                 case 'I':
-                    return (true, first);
+                    return (true, first, rest);
 
                 case '(':
                     // TODO 対応する `)` を消去する
                     var nested = 1;
 
-                    for (int i = 1; i < expression.Length; i++)
+                    for (int i = 1; i < rest.Length; i++)
                     {
-                        var ch = expression[i];
+                        var ch = rest[i];
 
                         switch (ch)
                         {
@@ -68,50 +167,29 @@ public class SKICombinatorCalculator
                                 if (nested == 0)
                                 {
                                     // 先頭の `(` と、対応する `)` を消去した数式
-                                    expression = $"{expression.Substring(1, i)}{expression.Substring(i + 1)}";
+                                    rest = $"{rest.Substring(1, i)}{rest.Substring(i + 1)}";
                                     goto after_loop;
                                 }
                                 break;
 
                         }
                     }
+
+                    // 構文エラー
+                    Debug.Log("[NextCombinator] 構文エラー");
+                    return (false, ' ', "");
+
                 after_loop:
                     break;
 
                 // 計算不能
                 default:
-                    return (false, ' ');
+                    return (false, ' ', "");
             }
         }
 
         // 空文字列を指定時
-        return (false, ' ');
-    }
-
-    private static (bool, string) SolveFirst(string expression)
-    {
-        var first = expression[0];
-        var rest = expression[1..];
-
-        switch (first)
-        {
-            case 'S':
-                // TODO 次のひとかたまりを取得
-                bool isOk;
-                string arg1;
-                string arg2;
-                string arg3;
-                (isOk, arg1, rest) = Parse(rest.TrimStart());
-                Debug.Log($"S arg1:{arg1} rest:{rest}");
-                (isOk, arg2, rest) = Parse(rest.TrimStart());
-                Debug.Log($"S arg2:{arg2} rest:{rest}");
-                (isOk, arg3, rest) = Parse(rest.TrimStart());
-                Debug.Log($"S arg3:{arg3} rest:{rest}");
-
-                return (true, $"{arg1}{arg3}({arg2}{arg3}){rest}");
-        }
-
-        return (false, "");
+        return (false, ' ', "");
     }
 
     private static (bool, string, string) Parse(string expression)
