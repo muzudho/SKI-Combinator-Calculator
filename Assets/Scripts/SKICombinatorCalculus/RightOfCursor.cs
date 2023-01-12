@@ -162,6 +162,7 @@ public static class RightOfCursor
     /// 丸かっこを剥く
     /// 
     /// - ただし、開き丸括弧に対応する閉じ丸括弧の右側に、コンビネーター、または変数が見当たらない場合は その丸括弧は剥かない
+    /// - ただし、`(x)` のように、コンビネーターまたは変数を１つしか含まないものは丸括弧を剥がす
     /// </summary>
     /// <returns></returns>
     private static (StripParenthesesError, string) StripParentheses(int start, string expression)
@@ -183,7 +184,11 @@ public static class RightOfCursor
                     nested--;
                     if (nested == 0)
                     {
+                        // `(x)` のようなケースでは丸括弧を剥がす
+                        var willStrip = i - start == 2;
+
                         // ここで探索を打ち切るが、右側にコンビネーターか変数があるか確認
+                        if (!willStrip)
                         {
                             string rest = expression[(i + 1)..];
                             rest = rest.Replace(")", "");
