@@ -83,6 +83,9 @@
                         break;
                 }
             }
+
+            // 残りを 葉としてフィックス
+            this.currentNode.FlushLeafNode();
         }
     }
 }
