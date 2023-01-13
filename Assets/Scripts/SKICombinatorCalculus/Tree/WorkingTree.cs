@@ -12,7 +12,7 @@
     {
         public WorkingTree(string content)
         {
-            this.source = content;
+            this.targetText = SKICombinatorCalculator.TrimAllSpaces(content);
 
             // content を先頭から読取る
             // TODO 1. "(" が出てくるまで Leaf とする
@@ -27,9 +27,9 @@
         private int cursor = 0;
 
         /// <summary>
-        /// 元の文字列
+        /// 元の文字列から、空白を除去したもの
         /// </summary>
-        private string source;
+        private string targetText;
 
         /// <summary>
         /// 現在のノード
@@ -46,10 +46,10 @@
             // ルート・ノード
             this.currentNode = new SeekedNode(null);
 
-            while (this.cursor < this.source.Length)
+            while (this.cursor < this.targetText.Length)
             {
                 // 単調増加
-                char ch = this.source[this.cursor];
+                char ch = this.targetText[this.cursor];
                 this.cursor++;
 
                 switch (ch)

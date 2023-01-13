@@ -4,10 +4,20 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-public class SKICombinatorCalculator
+internal class SKICombinatorCalculator
 {
     public static string combinatorCharacters = "SKI";
     public static string variableCharacters = "abcdefghijklmnopqrstuvwxyz";
+
+    /// <summary>
+    /// ‘S‚Ä‚Ì”¼Šp‹ó”’‚ğœ‹
+    /// </summary>
+    /// <param name="source"></param>
+    /// <returns></returns>
+    public static string TrimAllSpaces(string source)
+    {
+        return source.Replace(" ", "");
+    }
 
     /// <summary>
     /// ŒvZÀs
@@ -22,7 +32,7 @@ public class SKICombinatorCalculator
 
         string leftText;
         // ‹ó”’‚Í‹l‚ß‚é
-        string rightText = inputText.Replace(" ", "");
+        string rightText = TrimAllSpaces(inputText);
 
         if (inputText!=rightText)
         {
