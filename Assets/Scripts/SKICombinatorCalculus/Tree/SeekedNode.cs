@@ -60,7 +60,7 @@
         {
             StringBuilder buf = new StringBuilder();
 
-            foreach(var node in this.children)
+            foreach (var node in this.children)
             {
                 if (node is TextNode textNode)
                 {
@@ -77,6 +77,26 @@
             }
 
             return buf.ToString();
+        }
+
+        public TextNode ReadTextNode(SeekHead seekHead)
+        {
+            while (seekHead.Index < this.children.Count)
+            {
+                var node = this.children[seekHead.Index];
+
+                if (node is TextNode textNode)
+                {
+                    return textNode;
+                }
+                else
+                {
+                    seekHead.Index++;
+                }
+            }
+
+            seekHead.Index = 0;
+            return null;
         }
     }
 }

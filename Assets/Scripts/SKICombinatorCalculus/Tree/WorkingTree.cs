@@ -46,6 +46,8 @@
         /// </summary>
         private SeekedNode currentNode;
 
+        private SeekHead seekHead = new SeekHead();
+
         public override string ToString()
         {
             return this.currentNode.ToString();
@@ -98,9 +100,16 @@
             this.currentNode.FlushLeafNode();
         }
 
-        //public TextNode ReadTextNode()
-        //{
-        //    return this.currentNode.ReadTextNode();
-        //}
+        /// <summary>
+        /// テキスト・ノード読取
+        /// 
+        /// - 終点ならヌル
+        /// </summary>
+        /// <returns></returns>
+        public TextNode ReadTextNode()
+        {
+            var textNode = this.currentNode.ReadTextNode(this.seekHead);
+            return textNode;
+        }
     }
 }

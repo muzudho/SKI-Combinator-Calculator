@@ -1,5 +1,6 @@
 ﻿namespace Assets.Scripts.SKICombinatorCalculus
 {
+    using Assets.Scripts.SKICombinatorCalculus.Models;
     using System.Text;
 
     internal static class ICombinator
@@ -27,9 +28,9 @@
                     arg1 = value;
                 });
 
-            calculationProcess.AppendLine($@"
-    I
-      1 {arg1}
+            ICombinatorModel iCombinatorModel = new ICombinatorModel(arg1);
+
+            calculationProcess.AppendLine($@"{iCombinatorModel.ToString()}
       _ {rest}
 ");
 
