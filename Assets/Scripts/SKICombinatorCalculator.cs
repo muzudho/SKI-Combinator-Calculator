@@ -1,3 +1,4 @@
+using Assets.Scripts.SKICombinatorCalculus;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -54,13 +55,13 @@ Very tired...");
             switch (nextCombinator)
             {
                 case 'S':
-                    (isOk, rightText) = RightOfCursor.SolveSCombinator(calculationProcess, rightText);
+                    (isOk, rightText) = SCombinator.Solve(calculationProcess, rightText);
                     break;
                 case 'K':
-                    (isOk, rightText) = RightOfCursor.SolveKCombinator(calculationProcess, rightText);
+                    (isOk, rightText) = KCombinator.Solve(calculationProcess, rightText);
                     break;
                 case 'I':
-                    (isOk, rightText) = RightOfCursor.SolveICombinator(calculationProcess, rightText);
+                    (isOk, rightText) = ICombinator.Solve(calculationProcess, rightText);
                     break;
             }
 

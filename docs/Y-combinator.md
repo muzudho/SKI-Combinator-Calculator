@@ -1,7 +1,6 @@
 Y := S(K(SII))(S(S(KS)K)(K(SII)))
 Y f = 
-    = SII (S(S(KS)K)(K(SII)) f)
-    = S (S(KS)K) (K(SII)) f (S(S(KS)K)(K(SII)) f)
+    = 
     = S(KS)K f (K(SII)f) (S(S(KS)K)(K(SII)) f)
     = K S f (K f) (K(SII)f) (S(S(KS)K)(K(SII)) f)
     = S (K f) (K(SII)f) (S(S(KS)K)(K(SII)) f)
@@ -46,15 +45,23 @@ S(K(SII))(S(S(KS)K)(K(SII))) f
       3 S(S(KS)K)(K(SII))f
     ok
     
-    
-
-IS(S(KS)K)(K(SII))f(IS(S(KS)K)(K(SII))f)
+    # 正 I で始まるので省略している
+    # 現 IS(S(KS)K)(K(SII))f(IS(S(KS)K)(K(SII))f)
 
     I
       1 S
       _ (S(KS)K)(K(SII))f(IS(S(KS)K)(K(SII))f)
 
-S(S(KS)K)(K(SII))f(IS(S(KS)K)(K(SII))f)
+    # 正 S (S(KS)K) (K(SII)) f ( S(S(KS)K)(K(SII))  f)
+    # 現 S (S(KS)K) (K(SII)) f (IS(S(KS)K)(K(SII))  f)
+                                ^
+                                I が混入？ 正しい？ どっちにしろ後で消えるか
+    # 丸括弧の中は積極的にパースしないといけない？
+    # つまり `(Ix)` は積極的に I を消す？
+    # つまり、丸括弧の中の計算可能は、積極的に解消する？ そのときは内側優先か？
+    # つまり、解消は左端だけで起こるわけではない？
+    # つまり、最深部への フォーカスのようなものがある？
+    # では、毎回 ツリー構造 を作る必要がある？
 
     S
       1 S(KS)K
