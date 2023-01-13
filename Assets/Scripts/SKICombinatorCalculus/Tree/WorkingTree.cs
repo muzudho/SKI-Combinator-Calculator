@@ -76,9 +76,7 @@
 
                         // 親要素へ戻る
                         this.currentNode = this.currentNode.Parent;
-
-                        // 抜ける
-                        return;
+                        break;
 
                     default:
                         this.currentNode.Append(ch);

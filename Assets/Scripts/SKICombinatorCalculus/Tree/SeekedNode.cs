@@ -70,6 +70,10 @@
                 {
                     buf.Append($"({seekedNode.ToString()})");
                 }
+                else
+                {
+                    buf.Append($"<Unknown {node.GetType().Name}>");
+                }
             }
 
             return buf.ToString();

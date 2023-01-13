@@ -28,9 +28,9 @@ public class GameManager : MonoBehaviour
 
     public void Run()
     {
-        Debug.Log("テスト開始");
+        Debug.Log($"テスト開始 input:{inputTextbox.text}");
         var workingTree = new WorkingTree(inputTextbox.text);
-        Debug.Log($"テスト終了: {workingTree.ToString()}");
+        Debug.Log($"テスト終了 parsed:{workingTree.ToString()}");
 
         Debug.Log("計算開始");
         outputTextbox.text = SKICombinatorCalculator.Run(inputTextbox.text);
