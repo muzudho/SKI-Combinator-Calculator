@@ -1,4 +1,5 @@
 using Assets.Scripts.SKICombinatorCalculus;
+using Assets.Scripts.SKICombinatorCalculus.Tree;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -10,34 +11,19 @@ internal class SKICombinatorCalculator
     public static string variableCharacters = "abcdefghijklmnopqrstuvwxyz";
 
     /// <summary>
-    /// ‘S‚Ä‚Ì”¼Šp‹ó”’‚ğœ‹
-    /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
-    public static string TrimAllSpaces(string source)
-    {
-        return source.Replace(" ", "");
-    }
-
-    /// <summary>
     /// ŒvZÀs
     /// </summary>
     /// <param name="expression"></param>
     /// <returns></returns>
-    public static string Run(string inputText)
+    public static string Run(WorkingTree workingTree)
     {
         // ŒvZ‰ß’ö
         StringBuilder calculationProcess = new StringBuilder();
-        calculationProcess.AppendLine(inputText);
+
+        string rightText = workingTree.ToString();
+        calculationProcess.AppendLine(rightText);
 
         string leftText;
-        // ‹ó”’‚Í‹l‚ß‚é
-        string rightText = TrimAllSpaces(inputText);
-
-        if (inputText!=rightText)
-        {
-            calculationProcess.AppendLine($"    formatting {rightText}");
-        }
 
         int tired = 0; // ”æ‚ê
         bool isOk = true;
