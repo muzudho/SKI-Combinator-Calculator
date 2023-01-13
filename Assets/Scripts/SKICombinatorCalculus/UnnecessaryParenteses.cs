@@ -12,13 +12,16 @@
         /// <summary>
         /// 不要な丸かっこを剥く
         /// 
+        /// - 不要な丸括弧とは？
+        ///     - `(x)` のように、コンビネーターまたは変数を１つしか含まないもの
+        ///     - TODO 【要検討】 `'((xy))'`のように、丸括弧でくくられているものを１つしか含まないもの
+        /// 
         /// - 指定した開き括弧に対応する閉じ丸括弧を剥く
         /// - ただし、正常な挙動として、剥けないケースもある（必要な丸括弧であるケース）
         ///     - 開き丸括弧に対応する閉じ丸括弧の右側に、コンビネーター、または変数が見当たらない場合は その丸括弧は剥かない
-        ///     - `(x)` のように、コンビネーターまたは変数を１つしか含まないものは丸括弧を剥がす
         /// </summary>
         /// <returns></returns>
-        public static (StripParenthesesError, string) Strip(string expression, int openParenthesesPos)
+        public static (UnnecessaryParenthesesStripError, string) Strip(string expression, int openParenthesesPos)
         {
             // 対応する `)` を消去する
             int i = openParenthesesPos + 1;
@@ -50,7 +53,7 @@
                                 {
                                     // 構文エラー
                                     Debug.Log($"[StripParentheses] 丸括弧を剥けないケースだった rest:{expression[(i + 1)..]}");
-                                    return (StripParenthesesError.NotFoundArgument, "");
+                                    return (UnnecessaryParenthesesStripError.NotFoundArgument, "");
                                 }
                             }
 
@@ -64,7 +67,7 @@
                             var right = expression[(i + 1)..];
                             Debug.Log($"[StripParentheses] expression:{expression} start:{openParenthesesPos} i:{i} ◆{left}◆{middle}◆{right}◆");
                             var newExpression = $"{left}{middle}{right}";
-                            return (StripParenthesesError.None, newExpression);
+                            return (UnnecessaryParenthesesStripError.None, newExpression);
                         }
                         break;
 
@@ -73,7 +76,7 @@
 
             // 構文エラー
             Debug.Log($"[StripParentheses] 構文エラー expression:{expression} start:{openParenthesesPos} nested:{nested} i:{i}");
-            return (StripParenthesesError.Sintax, "");
+            return (UnnecessaryParenthesesStripError.Sintax, "");
         }
     }
 }

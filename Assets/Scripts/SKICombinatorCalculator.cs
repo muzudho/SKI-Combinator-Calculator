@@ -51,17 +51,16 @@ Very tired...");
             }
             Debug.Log($"[Run 1] leftText:{leftText} nextCombinator:{nextCombinator} rightText:{rightText}");
 
-            int startInRightText = 0;
             switch (nextCombinator)
             {
                 case 'S':
-                    (isOk, rightText) = RightOfCursor.SolveSCombinator(calculationProcess, startInRightText, rightText);
+                    (isOk, rightText) = RightOfCursor.SolveSCombinator(calculationProcess, rightText);
                     break;
                 case 'K':
-                    (isOk, rightText) = RightOfCursor.SolveKCombinator(calculationProcess, startInRightText, rightText);
+                    (isOk, rightText) = RightOfCursor.SolveKCombinator(calculationProcess, rightText);
                     break;
                 case 'I':
-                    (isOk, rightText) = RightOfCursor.SolveICombinator(calculationProcess, startInRightText, rightText);
+                    (isOk, rightText) = RightOfCursor.SolveICombinator(calculationProcess, rightText);
                     break;
             }
 

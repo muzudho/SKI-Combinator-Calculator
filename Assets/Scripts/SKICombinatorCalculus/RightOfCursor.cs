@@ -29,19 +29,19 @@ internal static class RightOfCursor
                         var (error, rest2) = UnnecessaryParenteses.Strip(rest, i);
                         switch (error)
                         {
-                            case StripParenthesesError.None:
+                            case UnnecessaryParenthesesStripError.None:
                                 rest = rest2;
                                 calculationProcess.AppendLine($"    stripped {rest}");
                                 i = 0;
                                 break;
 
-                            case StripParenthesesError.NotFoundArgument:
+                            case UnnecessaryParenthesesStripError.NotFoundArgument:
                                 // 正常な挙動。エラーではない
                                 // calculationProcess.AppendLine($"    can't stripped {rest}");
                                 i++;
                                 break;
 
-                            case StripParenthesesError.Sintax:
+                            case UnnecessaryParenthesesStripError.Sintax:
                                 // 構文エラー
                                 calculationProcess.AppendLine($"    sintax error. rest:{rest}");
                                 Debug.Log("[NextCombinator] 構文エラー");
@@ -80,27 +80,57 @@ internal static class RightOfCursor
         return (false, "", ' ', "");
     }
 
-    public static (bool, string) SolveSCombinator(StringBuilder calculationProcess, int start, string rest)
+    /// <summary>
+    /// カーソルは 0 から始まります
+    /// </summary>
+    /// <param name="calculationProcess"></param>
+    /// <param name="start"></param>
+    /// <param name="rest"></param>
+    /// <returns></returns>
+    public static (bool, string) SolveSCombinator(StringBuilder calculationProcess, string rest)
     {
         bool isOk;
         string arg1;
         string arg2;
         string arg3;
-        (isOk, arg1, rest) = RightOfCursor.Parse(start, rest);
+        (isOk, arg1, rest) = RightOfCursor.Parse(rest);
         if (!isOk)
         {
             return (false, "");
         }
-        (isOk, arg2, rest) = RightOfCursor.Parse(start, rest);
+
+        Parenteses.Strip(
+            expression: arg1,
+            onOk: (value) =>
+            {
+                arg1 = value;
+            });
+
+        (isOk, arg2, rest) = RightOfCursor.Parse(rest);
         if (!isOk)
         {
             return (false, "");
         }
-        (isOk, arg3, rest) = RightOfCursor.Parse(start, rest);
+
+        Parenteses.Strip(
+            expression: arg2,
+            onOk: (value) =>
+            {
+                arg2 = value;
+            });
+
+        (isOk, arg3, rest) = RightOfCursor.Parse(rest);
         if (!isOk)
         {
             return (false, "");
         }
+
+        Parenteses.Strip(
+            expression: arg3,
+            onOk: (value) =>
+            {
+                arg3 = value;
+            });
 
         calculationProcess.AppendLine($@"
     S
@@ -112,21 +142,43 @@ internal static class RightOfCursor
 
         return (true, $"{arg1}{arg3}({arg2}{arg3}){rest}");
     }
-    public static (bool, string) SolveKCombinator(StringBuilder calculationProcess, int start, string rest)
+
+    /// <summary>
+    /// カーソルは 0 から始まります
+    /// </summary>
+    /// <param name="calculationProcess"></param>
+    /// <param name="rest"></param>
+    /// <returns></returns>
+    public static (bool, string) SolveKCombinator(StringBuilder calculationProcess, string rest)
     {
         bool isOk;
         string arg1;
         string arg2;
-        (isOk, arg1, rest) = RightOfCursor.Parse(start, rest);
+        (isOk, arg1, rest) = RightOfCursor.Parse(rest);
         if (!isOk)
         {
             return (false, "");
         }
-        (isOk, arg2, rest) = RightOfCursor.Parse(start, rest);
+
+        Parenteses.Strip(
+            expression: arg1,
+            onOk: (value) =>
+            {
+                arg1 = value;
+            });
+
+        (isOk, arg2, rest) = RightOfCursor.Parse(rest);
         if (!isOk)
         {
             return (false, "");
         }
+
+        Parenteses.Strip(
+            expression: arg2,
+            onOk: (value) =>
+            {
+                arg2 = value;
+            });
 
         calculationProcess.AppendLine($@"
     K
@@ -137,15 +189,29 @@ internal static class RightOfCursor
 
         return (true, $"{arg1}{rest}");
     }
-    public static (bool, string) SolveICombinator(StringBuilder calculationProcess, int start, string rest)
+
+    /// <summary>
+    /// カーソルは 0 から始まります
+    /// </summary>
+    /// <param name="calculationProcess"></param>
+    /// <param name="rest"></param>
+    /// <returns></returns>
+    public static (bool, string) SolveICombinator(StringBuilder calculationProcess, string rest)
     {
         bool isOk;
         string arg1;
-        (isOk, arg1, rest) = RightOfCursor.Parse(start, rest);
+        (isOk, arg1, rest) = RightOfCursor.Parse(rest);
         if (!isOk)
         {
             return (false, "");
         }
+
+        Parenteses.Strip(
+            expression: arg1,
+            onOk: (value) =>
+            {
+                arg1 = value;
+            });
 
         calculationProcess.AppendLine($@"
     I
@@ -156,8 +222,15 @@ internal static class RightOfCursor
         return (true, $"{arg1}{rest}");
     }
 
-    private static (bool, string, string) Parse(int start, string expression)
+    /// <summary>
+    /// カーソルは 0 から始まります
+    /// </summary>
+    /// <param name="expression"></param>
+    /// <returns></returns>
+    private static (bool, string, string) Parse(string expression)
     {
+        var start = 0;
+
         if (expression.Length <= start)
         {
             Debug.Log($"[Parse] オーバー length:{expression.Length} start:{start}");

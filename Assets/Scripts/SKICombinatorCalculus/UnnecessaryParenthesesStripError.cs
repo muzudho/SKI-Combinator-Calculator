@@ -1,6 +1,6 @@
 ﻿namespace Assets.Scripts.SKICombinatorCalculus
 {
-    internal enum StripParenthesesError
+    internal enum UnnecessaryParenthesesStripError
     {
         /// <summary>
         /// エラーなし
