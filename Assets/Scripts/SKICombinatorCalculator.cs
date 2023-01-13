@@ -15,13 +15,18 @@ public class SKICombinatorCalculator
     /// <returns></returns>
     public static string Run(string inputText)
     {
+        // ŒvŽZ‰ß’ö
+        StringBuilder calculationProcess = new StringBuilder();
+        calculationProcess.AppendLine(inputText);
+
         string leftText;
         // ‹ó”’‚Í‹l‚ß‚é
         string rightText = inputText.Replace(" ", "");
 
-        // ŒvŽZ‰ß’ö
-        StringBuilder calculationProcess = new StringBuilder();
-        calculationProcess.AppendLine(inputText);
+        if (inputText!=rightText)
+        {
+            calculationProcess.AppendLine($"    formatting {rightText}");
+        }
 
         int tired = 0; // ”æ‚ê
         bool isOk = true;
