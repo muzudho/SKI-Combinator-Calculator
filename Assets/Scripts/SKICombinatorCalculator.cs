@@ -1,5 +1,6 @@
 using Assets.Scripts.SKICombinatorCalculus.Text;
 using Assets.Scripts.SKICombinatorCalculus.Tree;
+using System.Text;
 
 internal class SKICombinatorCalculator
 {
@@ -13,8 +14,22 @@ internal class SKICombinatorCalculator
     /// <returns></returns>
     public static string Run(WorkingTree workingTree)
     {
+        // ツリー型のパーサー
+        var treeTypeParser = new TreeTypeParser();
+        var treeTypeResult = treeTypeParser.Parse();
+
         // テキスト型のパーサー
         string rightText = workingTree.ToString();
-        return TextTypeParser.Parse(rightText);
+        var textTypeResult = TextTypeParser.Parse(rightText);
+
+        return $@"Tree type parser
+
+{treeTypeResult}
+
+----------
+Text type parser
+
+{textTypeResult}
+";
     }
 }
