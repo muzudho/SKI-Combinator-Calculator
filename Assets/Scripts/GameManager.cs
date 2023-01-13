@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Assets.Scripts.SKICombinatorCalculus.Tree;
 
 public class GameManager : MonoBehaviour
 {
@@ -27,8 +28,11 @@ public class GameManager : MonoBehaviour
 
     public void Run()
     {
-        Debug.Log("計算開始");
+        Debug.Log("テスト開始");
+        var workingTree = new WorkingTree(inputTextbox.text);
+        Debug.Log($"テスト終了: {workingTree.ToString()}");
 
+        Debug.Log("計算開始");
         outputTextbox.text = SKICombinatorCalculator.Run(inputTextbox.text);
     }
 }
