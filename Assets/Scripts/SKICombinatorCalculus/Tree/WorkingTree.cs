@@ -97,5 +97,10 @@
             // 残りを 葉としてフィックス
             this.currentNode.FlushLeafNode();
         }
+
+        //public TextNode ReadTextNode()
+        //{
+        //    return this.currentNode.ReadTextNode();
+        //}
     }
 }

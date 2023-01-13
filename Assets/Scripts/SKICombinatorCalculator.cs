@@ -16,7 +16,7 @@ internal class SKICombinatorCalculator
     {
         // ツリー型のパーサー
         var treeTypeParser = new TreeTypeParser();
-        var treeTypeResult = treeTypeParser.Parse();
+        var treeTypeResult = treeTypeParser.Parse(workingTree);
 
         // テキスト型のパーサー
         string rightText = workingTree.ToString();

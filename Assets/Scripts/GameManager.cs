@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
 using Assets.Scripts.SKICombinatorCalculus.Tree;
 using System.Text;
+using TMPro;
+using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
