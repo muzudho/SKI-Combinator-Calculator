@@ -36,27 +36,11 @@ namespace Assets.Scripts.SKICombinatorCalculus.Tree
             {
                 if (0 < textNode.Text.Length)
                 {
-                    var ch = textNode.Text[0];
-
-                    switch (ch)
+                    var iCombinatorModel = textNode.RemoveICombinatorModel();
+                    if (iCombinatorModel!=null)
                     {
-                        case 'I':
-                            {
-                                if (1 < textNode.Text.Length)
-                                {
-                                    var arg1 = textNode.Text[1];
-
-                                    ICombinatorModel iCombinatorModel = new ICombinatorModel($"{arg1}");
-
-                                    calculationProcess.AppendLine($@"{iCombinatorModel.ToString()}
+                        calculationProcess.AppendLine($@"{iCombinatorModel.ToString()}
 ");
-
-                                    //// 先頭の "I" を除去
-                                    //textNode.Text = textNode.Text[1..];
-                                    //// TODO カーソルずらしたい
-                                }
-                            }
-                            break;
                     }
                 }
             }
