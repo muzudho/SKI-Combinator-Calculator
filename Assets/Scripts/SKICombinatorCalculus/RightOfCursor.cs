@@ -1,13 +1,11 @@
 using Assets.Scripts.SKICombinatorCalculus;
-using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
 /// <summary>
 /// 数式上のカーソルより右側
 /// </summary>
-public static class RightOfCursor
+internal static class RightOfCursor
 {
     public static (bool, string, char, string) NextCombinator(StringBuilder calculationProcess, string expression1)
     {
@@ -27,8 +25,8 @@ public static class RightOfCursor
 
                 case '(':
                     {
-                        // 丸かっこを剥く（剥けないケースもある）
-                        var (error, rest2) = StripParentheses(i, rest);
+                        // 指定した開き括弧に対応する閉じ丸括弧を剥く（剥けないケースもある）
+                        var (error, rest2) = UnnecessaryParenteses.Strip(rest, i);
                         switch (error)
                         {
                             case StripParenthesesError.None:
@@ -156,71 +154,6 @@ public static class RightOfCursor
 ");
 
         return (true, $"{arg1}{rest}");
-    }
-
-    /// <summary>
-    /// 丸かっこを剥く
-    /// 
-    /// - ただし、開き丸括弧に対応する閉じ丸括弧の右側に、コンビネーター、または変数が見当たらない場合は その丸括弧は剥かない
-    /// - ただし、`(x)` のように、コンビネーターまたは変数を１つしか含まないものは丸括弧を剥がす
-    /// </summary>
-    /// <returns></returns>
-    private static (StripParenthesesError, string) StripParentheses(int start, string expression)
-    {
-        // 対応する `)` を消去する
-        int i = start + 1;
-        var nested = 1;
-
-        for (; i < expression.Length; i++)
-        {
-            var ch = expression[i];
-
-            switch (ch)
-            {
-                case '(':
-                    nested++;
-                    break;
-                case ')':
-                    nested--;
-                    if (nested == 0)
-                    {
-                        // `(x)` のようなケースでは丸括弧を剥がす
-                        var willStrip = i - start == 2;
-
-                        // ここで探索を打ち切るが、右側にコンビネーターか変数があるか確認
-                        if (!willStrip)
-                        {
-                            string rest = expression[(i + 1)..];
-                            rest = rest.Replace(")", "");
-                            rest = rest.Replace("(", "");
-                            if (rest.Length < 1)
-                            {
-                                // 構文エラー
-                                Debug.Log($"[StripParentheses] 丸括弧を剥けないケースだった rest:{expression[(i + 1)..]}");
-                                return (StripParenthesesError.NotFoundArgument, "");
-                            }
-                        }
-
-                        // 先頭の `(` と、対応する `)` を消去した数式
-                        string left = string.Empty;
-                        if (0 < start)
-                        {
-                            left = expression[0..start];
-                        }
-                        var middle = expression[(start + 1)..i];
-                        var right = expression[(i + 1)..];
-                        Debug.Log($"[StripParentheses] expression:{expression} start:{start} i:{i} ◆{left}◆{middle}◆{right}◆");
-                        var newExpression = $"{left}{middle}{right}";
-                        return (StripParenthesesError.None, newExpression);
-                    }
-                    break;
-
-            }
-        }
-
-        // 構文エラー
-        Debug.Log($"[StripParentheses] 構文エラー expression:{expression} start:{start} nested:{nested} i:{i}");
-        return (StripParenthesesError.Sintax, "");
     }
 
     private static (bool, string, string) Parse(int start, string expression)
