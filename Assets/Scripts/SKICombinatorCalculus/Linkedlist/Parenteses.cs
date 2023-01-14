@@ -6,8 +6,7 @@
     {
         public Parenteses()
         {
-            StartElement = new StartElement(this);
-            StartElement.AppendNext(new EndElement(this));
+            StartElement = new StartElement(new EndElement(this));
         }
 
         public StartElement StartElement { get; private set; }

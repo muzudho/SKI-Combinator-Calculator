@@ -20,7 +20,7 @@
         /// </summary>
         IElement Next { get; set; }
 
-        void AppendNext(IElement next);
+        void InsertNext(IElement next);
 
         /// <summary>
         /// 丸括弧であれば、その内部の始端の '(' を返します。

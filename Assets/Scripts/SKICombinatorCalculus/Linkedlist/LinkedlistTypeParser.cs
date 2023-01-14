@@ -9,9 +9,7 @@
             var expression = SKICombinatorCalculator.TrimAllSpaces(inputText);
 
             // トップ・レベルの始端と終端
-            var startElement = new StartElement(null);
-            var endElement = new EndElement(null);
-            startElement.AppendNext(endElement);
+            var startElement = new StartElement(new EndElement(null));
 
             // 生成
             {

@@ -1,4 +1,6 @@
-﻿namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
+﻿using UnityEngine.Assertions;
+
+namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 {
     internal abstract class AbstractElement : IElement
     {
@@ -6,26 +8,34 @@
         public IElement Previous { get; set; }
         public IElement Next { get; set; }
 
-        public void AppendNext(IElement next)
+        public void InsertNext(IElement removable)
         {
+            Assert.IsNotNull(removable);
+
+            // 後ろに回る要素
             var oldNext = Next;
-            Next = next;
+            Next = removable;
 
-            if (next != null)
+            // 挿し込まれる要素
             {
-                var oldPrevious = next.Previous;
-                next.Previous = this;
+                var removableOldPrevious = removable.Previous;
+                var removableOldNext = removable.Next;
 
-                if (oldPrevious != null)
+                removable.Previous = this;
+                removable.Next = oldNext;
+
+                if (removableOldPrevious != null)
                 {
-                    oldPrevious.Next = null;
+                    removableOldPrevious.Next = removableOldNext;
+                }
+
+                if (removableOldNext != null)
+                {
+                    removableOldNext.Previous = removableOldPrevious;
                 }
             }
 
-            if (oldNext != null)
-            {
-                oldNext.Previous = null;
-            }
+            oldNext.Previous = removable;
         }
 
         /// <summary>

@@ -21,7 +21,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                 case 'S':
                     {
                         var next = new SCombinator();
-                        Current.AppendNext(next);
+                        Current.InsertNext(next);
                         Current = next;
                     }
                     break;
@@ -29,7 +29,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                 case 'K':
                     {
                         var next = new KCombinator();
-                        Current.AppendNext(next);
+                        Current.InsertNext(next);
                         Current = next;
                     }
                     break;
@@ -37,7 +37,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                 case 'I':
                     {
                         var next = new IdCombinator();
-                        Current.AppendNext(next);
+                        Current.InsertNext(next);
                         Current = next;
                     }
                     break;
@@ -45,7 +45,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                 case '(':
                     {
                         var parenteses = new Parenteses();
-                        Current.AppendNext(parenteses);
+                        Current.InsertNext(parenteses);
                         Current = parenteses.StepIn();
                         Assert.IsNotNull(Current, $"parenteses.StartElement:{parenteses.StartElement}");
                     }
@@ -64,7 +64,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                         if (SKICombinatorCalculator.variableCharacters.Contains(ch))
                         {
                             var next = new Variable(ch);
-                            Current.AppendNext(next);
+                            Current.InsertNext(next);
                             Current = next;
                         }
                     }
@@ -93,7 +93,13 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
             else if (current is EndElement endElement)
             {
                 current = endElement;
-                Current = endElement.Parent.Next;
+                Parenteses parenteses2 = endElement.Parent;
+                if (parenteses2 == null)
+                {
+                    return null;
+                }
+
+                Current = parenteses2.Next;
                 return current;
             }
 

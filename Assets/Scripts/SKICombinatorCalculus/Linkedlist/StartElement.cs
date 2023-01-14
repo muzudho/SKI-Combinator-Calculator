@@ -11,10 +11,10 @@
         /// <summary>
         /// 生成
         /// </summary>
-        /// <param name="parenteses">親要素。トップ・レベルであれば、ヌル</param>
-        public StartElement(Parenteses parenteses)
+        /// <param name="endElement">終端要素</param>
+        public StartElement(EndElement endElement)
         {
-            Parent = parenteses;
+            Next = endElement;
         }
 
         public override string ToString()
