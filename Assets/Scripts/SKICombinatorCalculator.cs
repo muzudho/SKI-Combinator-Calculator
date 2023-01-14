@@ -1,3 +1,4 @@
+using Assets.Scripts.SKICombinatorCalculus.Linkedlist;
 using Assets.Scripts.SKICombinatorCalculus.Text;
 using Assets.Scripts.SKICombinatorCalculus.Tree;
 using System.Text;
@@ -12,8 +13,11 @@ internal class SKICombinatorCalculator
     /// </summary>
     /// <param name="expression"></param>
     /// <returns></returns>
-    public static string Run(WorkingTree workingTree)
+    public static string Run(string inputText, WorkingTree workingTree)
     {
+        // リンクリスト型のパーサー
+        var linkedlistTypeParserResult = LinkedlistTypeParser.Parse(inputText);
+
         // ツリー型のパーサー
         var treeTypeParser = new TreeTypeParser();
         var treeTypeResult = treeTypeParser.Parse(workingTree);
@@ -22,11 +26,18 @@ internal class SKICombinatorCalculator
         string rightText = workingTree.ToString();
         var textTypeResult = TextTypeParser.Parse(rightText);
 
-        return $@"Tree type parser
+        return $@"Linked type parser
+
+{linkedlistTypeParserResult}
+
+--------
+
+Tree type parser
 
 {treeTypeResult}
 
-----------
+--------
+
 Text type parser
 
 {textTypeResult}

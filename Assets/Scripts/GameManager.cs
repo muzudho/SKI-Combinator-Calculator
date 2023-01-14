@@ -41,8 +41,8 @@ public class GameManager : MonoBehaviour
             buf.AppendLine($@"    formatting {expression}");
         }
 
-        Debug.Log("木計算開始");
-        var text = SKICombinatorCalculator.Run(workingTree);
+        Debug.Log("計算開始");
+        var text = SKICombinatorCalculator.Run(inputTextbox.text, workingTree);
         buf.AppendLine($@"
 {text}
 ");
