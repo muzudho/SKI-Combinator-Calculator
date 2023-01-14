@@ -3,16 +3,16 @@
     /// <summary>
     /// 生成用のカーソル
     /// </summary>
-    internal class CursorForSpawn
+    internal class Cursor
     {
-        public CursorForSpawn(IElement startElement)
+        public Cursor(IElement startElement)
         {
             Current = startElement;
         }
 
         private IElement Current { get; set; }
 
-        public void Read(char ch)
+        public void Write(char ch)
         {
             switch (ch)
             {
@@ -67,7 +67,18 @@
                     }
                     break;
             }
+        }
 
+        public IElement Read()
+        {
+            var element = Current;
+
+            if (Current is Parenteses parenteses)
+            {
+                return parenteses.StartElement;
+            }
+
+            return element;
         }
     }
 }

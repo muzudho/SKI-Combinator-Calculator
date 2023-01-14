@@ -8,25 +8,43 @@
         {
             var expression = SKICombinatorCalculator.TrimAllSpaces(inputText);
 
-            var startElement = new StartElement();
+            // トップ・レベルの始端と終端
+            var startElement = new StartElement(null);
             var endElement = new EndElement();
             startElement.AppendNext(endElement);
 
-            var cursorForSpawn = new CursorForSpawn(startElement);
-
-            var currentElement = startElement;
-
-            // 先頭から順に読んでいくだけ
-            foreach (var ch in expression)
+            // 生成
             {
-                cursorForSpawn.Read(ch);
+                var cursor = new Cursor(startElement);
 
+                // 先頭から順に書いていくだけ
+                foreach (var ch in expression)
+                {
+                    cursor.Write(ch);
+                }
+            }
+
+            // 文字列化
+            string resultText;
+            {
+                StringBuilder buf = new StringBuilder();
+
+                var cursor = new Cursor(startElement);
+
+                // 先頭から順に読んでいくだけ
+                foreach (var ch in expression)
+                {
+                    var element = cursor.Read();
+                    buf.Append(element.ToString());                    
+                }
+
+                resultText = buf.ToString();
             }
 
             StringBuilder calculationProcess = new StringBuilder();
 
             calculationProcess.AppendLine($@"Last state:
-    {inputText}
+    {resultText}
 ");
 
             return calculationProcess.ToString();

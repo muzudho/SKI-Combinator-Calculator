@@ -8,5 +8,13 @@
     /// </summary>
     internal class StartElement : AbstractElement
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parenteses">親要素。トップ・レベルであれば、ヌル</param>
+        public StartElement(Parenteses parenteses)
+        {
+            Parent = parenteses;
+        }
     }
 }

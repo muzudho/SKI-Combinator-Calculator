@@ -4,7 +4,7 @@
     {
         public Parenteses()
         {
-            StartElement = new StartElement();
+            StartElement = new StartElement(this);
             var endElement = new EndElement();
             StartElement.AppendNext(endElement);
         }
