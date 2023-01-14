@@ -88,7 +88,7 @@
             var current = Current;
 
             // トップ・レベルの先頭要素は飛ばす
-            if (current is StartElement startElement && startElement.Parent==null)
+            if (current is StartElement startElement && startElement.Parent == null)
             {
                 Current = current.Next;
                 current = Current;
@@ -149,9 +149,36 @@
         }
 
         /// <summary>
+        /// 読取（逆方向）
+        /// 
+        /// - 丸括弧の内側には入りません
+        /// - 丸括弧の外側には出ません
+        /// </summary>
+        /// <returns>終端を超えたら、ヌル</returns>
+        public IElement ReadBackElement()
+        {
+            var current = Current;
+
+            if (current == null)
+            {
+                return null;
+            }
+
+            Current = current.Previous;
+
+            // トップ・レベルの先頭要素は、カーソルは指さない
+            if (current is StartElement startElement && startElement.Parent == null)
+            {
+                return null;
+            }
+
+            return current;
+        }
+
+        /// <summary>
         /// 評価
         /// </summary>
-        public bool Evaluate()
+        public bool EvaluateElements()
         {
             var element0 = ReadElement();
 
@@ -160,61 +187,68 @@
                 if (combinator is IdCombinator)
                 {
                     var arg1 = ReadElement();
-                    if (arg1 != null)
+
+                    if (arg1 == null)
                     {
-                        element0.Remove();
-                        return true;
+                        // `I` しかないケース
+                        return false;
                     }
+
+                    element0.Remove();
+                    return true;
                 }
                 else if (combinator is KCombinator)
                 {
-                    var arg1 = ReadElement();
-                    if (arg1!=null)
+                    var _arg1 = ReadElement();
+                    var arg2 = ReadElement();
+
+                    if (arg2 == null)
                     {
-                        var arg2 = ReadElement();
-                        if (arg2 != null)
-                        {
-                            element0.Remove();
-                            arg2.Remove();
-                            return true;
-                        }
+                        // `K` や、 `Kx` しかないケース
+                        return false;
                     }
+
+                    element0.Remove();
+                    arg2.Remove();
+                    return true;
                 }
                 else if (combinator is SCombinator)
                 {
                     var arg1 = ReadElement();
-                    if (arg1 != null)
+                    var arg2 = ReadElement();
+                    var arg3 = ReadElement();
+
+                    if (arg3 == null)
                     {
-                        var arg2 = ReadElement();
-                        if (arg2 != null)
-                        {
-                            var arg3 = ReadElement();
-                            if (arg3 != null)
-                            {
-                                // とりあえず、引数を全部抜く
-                                arg1.Remove();
-                                arg2.Remove();
-                                arg3.Remove();
-
-                                // 複製
-                                var clone1 = arg1.Duplicate();
-                                var clone2 = arg3.Duplicate();
-                                var clone3o1 = arg2.Duplicate();
-                                var clone3o2 = arg3.Duplicate();
-
-                                Parenteses clone3 = new Parenteses();
-                                clone3.StepIn().InsertNext(clone3o1).InsertNext(clone3o2);
-
-                                // 複製を追加する
-                                element0.InsertNext(clone1).InsertNext(clone2).InsertNext(clone3);
-
-                                // コンビネーター削除
-                                element0.Remove();
-                                return true;
-                            }
-                        }
+                        // `S` や、 `Sa` や、 `Sab` しかないケース
+                        return false;
                     }
+
+                    // とりあえず、引数を全部抜く
+                    arg1.Remove();
+                    arg2.Remove();
+                    arg3.Remove();
+
+                    // 複製
+                    var clone1 = arg1.Duplicate();
+                    var clone2 = arg3.Duplicate();
+                    var clone3o1 = arg2.Duplicate();
+                    var clone3o2 = arg3.Duplicate();
+
+                    Parenteses clone3 = new Parenteses();
+                    clone3.StepIn().InsertNext(clone3o1).InsertNext(clone3o2);
+
+                    // 複製を追加する
+                    element0.InsertNext(clone1).InsertNext(clone2).InsertNext(clone3);
+
+                    // コンビネーター削除
+                    element0.Remove();
+                    return true;
                 }
+            }
+            else if (element0 is Parenteses parenteses)
+            {
+                // TODO 丸括弧を外していいケースかどうかは、ここでは分からない
             }
 
             return false;

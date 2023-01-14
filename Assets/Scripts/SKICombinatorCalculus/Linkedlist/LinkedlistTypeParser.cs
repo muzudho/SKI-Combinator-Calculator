@@ -9,11 +9,11 @@
             var expression = SKICombinatorCalculator.TrimAllSpaces(inputText);
 
             // トップ・レベルの始端と終端
-            var startElement = new StartElement(new EndElement(null));
+            var topLevelStartElement = new StartElement(new EndElement(null));
 
             // 生成
             {
-                var cursor = new Cursor(startElement);
+                var cursor = new Cursor(topLevelStartElement);
 
                 // 先頭から順に書いていくだけ
                 foreach (var ch in expression)
@@ -27,18 +27,21 @@
 
             // 文字列化
             {
-                string resultText = Stringify(startElement);
+                string resultText = Stringify(topLevelStartElement);
                 calculationProcess.AppendLine(resultText);
             }
 
             // 評価
             {
-                var cursor = new Cursor(startElement);
-                if (cursor.Evaluate())
+                var cursor = new Cursor(topLevelStartElement);
+
+                while (cursor.EvaluateElements())
                 {
                     // 文字列化
-                    var resultText = Stringify(startElement);
+                    var resultText = Stringify(topLevelStartElement);
                     calculationProcess.AppendLine(resultText);
+
+                    cursor = new Cursor(topLevelStartElement);
                 }
             }
 
