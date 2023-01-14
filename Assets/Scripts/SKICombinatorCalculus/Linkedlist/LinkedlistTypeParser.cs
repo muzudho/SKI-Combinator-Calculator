@@ -10,7 +10,7 @@
 
             // トップ・レベルの始端と終端
             var startElement = new StartElement(null);
-            var endElement = new EndElement();
+            var endElement = new EndElement(null);
             startElement.AppendNext(endElement);
 
             // 生成

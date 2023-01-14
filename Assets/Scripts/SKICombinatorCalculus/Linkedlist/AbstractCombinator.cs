@@ -2,6 +2,5 @@
 {
     internal abstract class AbstractCombinator : AbstractElement, ICombinator
     {
-        public abstract char Character { get; }
     }
 }

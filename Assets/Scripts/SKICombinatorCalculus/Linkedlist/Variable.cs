@@ -8,5 +8,10 @@
         }
 
         public char Character { get; protected set; }
+
+        public override string ToString()
+        {
+            return $"{Character}";
+        }
     }
 }

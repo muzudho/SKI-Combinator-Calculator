@@ -2,16 +2,9 @@
 {
     internal class KCombinator : AbstractCombinator
     {
-        public KCombinator()
+        public override string ToString()
         {
-        }
-
-        public override char Character
-        {
-            get
-            {
-                return 'K';
-            }
+            return "K";
         }
     }
 }

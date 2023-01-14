@@ -9,12 +9,22 @@
     internal class StartElement : AbstractElement
     {
         /// <summary>
-        /// 
+        /// 生成
         /// </summary>
         /// <param name="parenteses">親要素。トップ・レベルであれば、ヌル</param>
         public StartElement(Parenteses parenteses)
         {
             Parent = parenteses;
+        }
+
+        public override string ToString()
+        {
+            if (Parent != null)
+            {
+                return "(";
+            }
+
+            return string.Empty;
         }
     }
 }

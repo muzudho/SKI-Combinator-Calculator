@@ -2,16 +2,9 @@
 {
     internal class SCombinator : AbstractCombinator
     {
-        public SCombinator()
+        public override string ToString()
         {
-        }
-
-        public override char Character
-        {
-            get
-            {
-                return 'S';
-            }
+            return "S";
         }
     }
 }
