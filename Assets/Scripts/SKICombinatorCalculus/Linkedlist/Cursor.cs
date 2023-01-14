@@ -1,5 +1,6 @@
 ﻿namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 {
+    using UnityEngine;
     using UnityEngine.Assertions;
 
     /// <summary>
@@ -180,77 +181,101 @@
         /// </summary>
         public bool EvaluateElements()
         {
-            var element0 = ReadElement();
+            IElement element0 = ReadElement();
+            Debug.Log($"[EvaluateElements] element0:{element0.ToString()}");
 
-            if (element0 is ICombinator combinator)
+            while (element0 != null)
             {
-                if (combinator is IdCombinator)
+                if (element0 is ICombinator combinator)
                 {
-                    var arg1 = ReadElement();
-
-                    if (arg1 == null)
+                    if (combinator is IdCombinator)
                     {
-                        // `I` しかないケース
-                        return false;
+                        var arg1 = ReadElement();
+
+                        if (arg1 == null)
+                        {
+                            // `I` しかないケース
+                            return false;
+                        }
+
+                        element0.Remove();
+                        return true;
+                    }
+                    else if (combinator is KCombinator)
+                    {
+                        var _arg1 = ReadElement();
+                        var arg2 = ReadElement();
+
+                        if (arg2 == null)
+                        {
+                            // `K` や、 `Kx` しかないケース
+                            return false;
+                        }
+
+                        element0.Remove();
+                        arg2.Remove();
+                        return true;
+                    }
+                    else if (combinator is SCombinator)
+                    {
+                        var arg1 = ReadElement();
+                        var arg2 = ReadElement();
+                        var arg3 = ReadElement();
+
+                        if (arg3 == null)
+                        {
+                            // `S` や、 `Sa` や、 `Sab` しかないケース
+                            return false;
+                        }
+
+                        // とりあえず、引数を全部抜く
+                        arg1.Remove();
+                        arg2.Remove();
+                        arg3.Remove();
+
+                        // 複製
+                        var clone1 = arg1.Duplicate();
+                        var clone2 = arg3.Duplicate();
+                        var clone3o1 = arg2.Duplicate();
+                        var clone3o2 = arg3.Duplicate();
+
+                        Parenteses clone3 = new Parenteses();
+                        clone3.StepIn().InsertNext(clone3o1).InsertNext(clone3o2);
+
+                        // 複製を追加する
+                        element0.InsertNext(clone1).InsertNext(clone2).InsertNext(clone3);
+
+                        // コンビネーター削除
+                        element0.Remove();
+                        return true;
                     }
 
-                    element0.Remove();
-                    return true;
+                    throw new System.Exception($"unknown combinator:{combinator.GetType().Name}");
                 }
-                else if (combinator is KCombinator)
+                else if (element0 is Variable || element0 is StartElement)
                 {
-                    var _arg1 = ReadElement();
-                    var arg2 = ReadElement();
-
-                    if (arg2 == null)
-                    {
-                        // `K` や、 `Kx` しかないケース
-                        return false;
-                    }
-
-                    element0.Remove();
-                    arg2.Remove();
-                    return true;
+                    // 変数、`(` なら評価はできない
                 }
-                else if (combinator is SCombinator)
+                else if (element0 is Parenteses parenteses)
                 {
-                    var arg1 = ReadElement();
-                    var arg2 = ReadElement();
-                    var arg3 = ReadElement();
+                    Debug.Log($"丸括弧のケース parenteses:{parenteses.ToString()}");
+                    // TODO 丸括弧を外していいケースかどうかは、ここでは分からない
 
-                    if (arg3 == null)
-                    {
-                        // `S` や、 `Sa` や、 `Sab` しかないケース
-                        return false;
-                    }
+                    // 丸括弧の内側を（再帰的に）評価することはできるだろう
+                    Current = parenteses.StepIn(); // `(`
+                    Current = ReadChar(); // 丸括弧の内側の先頭要素
+                    Debug.Log($"丸括弧のケース Current:{Current.ToString()}");
+                    var isOk = EvaluateElements(); // 再帰
 
-                    // とりあえず、引数を全部抜く
-                    arg1.Remove();
-                    arg2.Remove();
-                    arg3.Remove();
-
-                    // 複製
-                    var clone1 = arg1.Duplicate();
-                    var clone2 = arg3.Duplicate();
-                    var clone3o1 = arg2.Duplicate();
-                    var clone3o2 = arg3.Duplicate();
-
-                    Parenteses clone3 = new Parenteses();
-                    clone3.StepIn().InsertNext(clone3o1).InsertNext(clone3o2);
-
-                    // 複製を追加する
-                    element0.InsertNext(clone1).InsertNext(clone2).InsertNext(clone3);
-
-                    // コンビネーター削除
-                    element0.Remove();
-                    return true;
+                    // TODO 丸括弧の右側を評価してはいけない
+                    return isOk;
                 }
+
+                // 次の要素へ、読み進める
+                element0 = ReadElement();
             }
-            else if (element0 is Parenteses parenteses)
-            {
-                // TODO 丸括弧を外していいケースかどうかは、ここでは分からない
-            }
 
+            // 何も評価せず、終端まで来てしまった
             return false;
         }
     }
