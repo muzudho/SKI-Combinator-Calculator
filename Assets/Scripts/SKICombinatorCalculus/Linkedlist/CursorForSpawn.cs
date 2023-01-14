@@ -42,13 +42,17 @@
 
                 case '(':
                     {
-                        // TODO
+                        var next = new Parenteses();
+                        Current.AppendNext(next);
+                        Current = next;
+                        Current = Current.StepIn();
                     }
                     break;
 
                 case ')':
                     {
-                        // TODO
+                        var parenteses = Current.StepOut();
+                        Current = parenteses;
                     }
                     break;
 

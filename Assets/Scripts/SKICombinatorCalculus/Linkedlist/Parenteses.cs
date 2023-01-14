@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
+﻿namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 {
-    internal class Parenteses : IElement
+    internal class Parenteses : AbstractElement
     {
+        public Parenteses()
+        {
+            StartElement = new StartElement();
+            var endElement = new EndElement();
+            StartElement.AppendNext(endElement);
+        }
+
+        public IElement StartElement { get; private set; }
     }
 }
