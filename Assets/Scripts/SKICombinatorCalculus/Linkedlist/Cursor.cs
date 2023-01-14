@@ -140,7 +140,8 @@
                 current = Current;
             }
 
-            if (current == null)
+            // `)` はヌル扱いです
+            if (current == null || current is EndElement)
             {
                 return null;
             }
@@ -211,6 +212,8 @@
                             // `K` や、 `Kx` しかないケース
                             return false;
                         }
+
+                        Debug.Log($"[EvaluateElements] K _arg1:{_arg1} arg2:{arg2}");
 
                         element0.Remove();
                         arg2.Remove();
