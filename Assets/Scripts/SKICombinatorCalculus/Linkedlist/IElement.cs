@@ -20,6 +20,11 @@
         /// </summary>
         IElement Next { get; set; }
 
+        /// <summary>
+        /// 前後の要素から切り離します
+        /// </summary>
+        void Remove();
+
         void InsertNext(IElement next);
 
         /// <summary>

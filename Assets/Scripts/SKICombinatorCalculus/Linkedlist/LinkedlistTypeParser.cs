@@ -22,31 +22,48 @@
                 }
             }
 
-            // 文字列化
-            string resultText;
-            {
-                StringBuilder buf = new StringBuilder();
-
-                var cursor = new Cursor(startElement);
-
-                // 先頭から順に読んでいくだけ
-                var current = cursor.Read();
-                while (current != null)
-                {
-                    buf.Append(current.ToString());
-                    current = cursor.Read();
-                }
-
-                resultText = buf.ToString();
-            }
-
+            // 計算過程
             StringBuilder calculationProcess = new StringBuilder();
 
-            calculationProcess.AppendLine($@"Last state:
-    {resultText}
-");
+            // 文字列化
+            {
+                string resultText = Stringify(startElement);
+                calculationProcess.AppendLine(resultText);
+            }
+
+            // 評価
+            {
+                var cursor = new Cursor(startElement);
+                if (cursor.Evaluate())
+                {
+                    // 文字列化
+                    var resultText = Stringify(startElement);
+                    calculationProcess.AppendLine(resultText);
+                }
+            }
 
             return calculationProcess.ToString();
+        }
+
+        /// <summary>
+        /// 文字列化
+        /// </summary>
+        /// <returns></returns>
+        public static string Stringify(StartElement startElement)
+        {
+            StringBuilder buf = new StringBuilder();
+
+            var cursor = new Cursor(startElement);
+
+            // 先頭から順に読んでいくだけ
+            var current = cursor.Read();
+            while (current != null)
+            {
+                buf.Append(current.ToString());
+                current = cursor.Read();
+            }
+
+            return buf.ToString();
         }
     }
 }

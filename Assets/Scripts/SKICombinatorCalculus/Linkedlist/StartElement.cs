@@ -23,9 +23,20 @@
         /// </summary>
         private EndElement endElement;
 
+        /// <summary>
+        /// 終端要素の親と同じ
+        /// </summary>
+        public new Parenteses Parent
+        {
+            get
+            {
+                return this.endElement.Parent;
+            }
+        }
+
         public override string ToString()
         {
-            if (this.endElement.Parent != null)
+            if (this.Parent != null)
             {
                 return "(";
             }

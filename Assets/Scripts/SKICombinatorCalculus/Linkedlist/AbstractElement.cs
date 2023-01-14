@@ -8,6 +8,25 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         public IElement Previous { get; set; }
         public IElement Next { get; set; }
 
+        /// <summary>
+        /// 前後の要素から切り離します
+        /// </summary>
+        public void Remove()
+        {
+            Assert.IsFalse(this is StartElement);
+            Assert.IsFalse(this is EndElement);
+
+            var oldPrevious = this.Previous;
+            var oldNext = this.Next;
+
+            oldPrevious.Next = oldNext;
+            oldNext.Previous = oldPrevious;
+        }
+
+        /// <summary>
+        /// 次の要素を挿入します
+        /// </summary>
+        /// <param name="removable"></param>
         public void InsertNext(IElement removable)
         {
             Assert.IsNotNull(removable);
