@@ -11,15 +11,21 @@
         /// <summary>
         /// 生成
         /// </summary>
-        /// <param name="endElement">終端要素</param>
+        /// <param name="endElement">対応する終端要素</param>
         public StartElement(EndElement endElement)
         {
+            this.endElement = endElement;
             Next = endElement;
         }
 
+        /// <summary>
+        /// 対応する終端要素は変わりません
+        /// </summary>
+        private EndElement endElement;
+
         public override string ToString()
         {
-            if (Parent != null)
+            if (this.endElement.Parent != null)
             {
                 return "(";
             }
