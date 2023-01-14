@@ -1,4 +1,3 @@
-using Assets.Scripts.SKICombinatorCalculus.Tree;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -27,11 +26,8 @@ public class GameManager : MonoBehaviour
 
     public void Run()
     {
-        // 木構造へ変換
-        var workingTree = new WorkingTree(inputTextbox.text);
-
         // 文字列へ戻す（空白除去済）
-        var expression = workingTree.ToString();
+        var expression = SKICombinatorCalculator.TrimAllSpaces(inputTextbox.text);
 
         StringBuilder buf = new StringBuilder();
         buf.AppendLine(inputTextbox.text);
@@ -42,7 +38,7 @@ public class GameManager : MonoBehaviour
         }
 
         Debug.Log("計算開始");
-        var text = SKICombinatorCalculator.Run(inputTextbox.text, workingTree);
+        var text = SKICombinatorCalculator.Run(inputTextbox.text);
         buf.AppendLine($@"
 --------
 
