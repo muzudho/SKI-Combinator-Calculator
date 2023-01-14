@@ -52,11 +52,11 @@
         /// 文字列化
         /// </summary>
         /// <returns></returns>
-        public static string Stringify(StartElement startElement)
+        public static string Stringify(IElement element)
         {
             StringBuilder buf = new StringBuilder();
 
-            var cursor = new Cursor(startElement);
+            var cursor = new Cursor(element);
 
             // 先頭から順に読んでいくだけ
             var current = cursor.ReadChar();

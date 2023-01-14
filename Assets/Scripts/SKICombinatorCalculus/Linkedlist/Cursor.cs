@@ -8,12 +8,18 @@
     /// </summary>
     internal class Cursor
     {
-        public Cursor(IElement startElement)
+        public Cursor(IElement element)
         {
-            Current = startElement;
+            Current = element;
+            SourceElement = element;
         }
 
         private IElement Current { get; set; }
+
+        /// <summary>
+        /// カーソルに渡された要素
+        /// </summary>
+        private IElement SourceElement { get; set; }
 
         /// <summary>
         /// 書込
@@ -133,17 +139,17 @@
         {
             var current = Current;
 
+            // `)` はヌル扱いです
+            if (current == null || current is EndElement)
+            {
+                return null;
+            }
+
             // トップ・レベルの先頭要素は飛ばす
             if (current is StartElement startElement && startElement.Parent == null)
             {
                 Current = current.Next;
                 current = Current;
-            }
-
-            // `)` はヌル扱いです
-            if (current == null || current is EndElement)
-            {
-                return null;
             }
 
             Current = current.Next;
@@ -199,7 +205,9 @@
                             return false;
                         }
 
-                        element0.Remove();
+                        Debug.Log($"[EvaluateElements] I arg1:{arg1}");
+
+                        combinator.Remove();
                         return true;
                     }
                     else if (combinator is KCombinator)
@@ -215,7 +223,7 @@
 
                         Debug.Log($"[EvaluateElements] K _arg1:{_arg1} arg2:{arg2}");
 
-                        element0.Remove();
+                        combinator.Remove();
                         arg2.Remove();
                         return true;
                     }
@@ -231,6 +239,8 @@
                             return false;
                         }
 
+                        Debug.Log($"[EvaluateElements] S 1:{arg1} 2:{arg2} 3:{arg3}");
+
                         // とりあえず、引数を全部抜く
                         arg1.Remove();
                         arg2.Remove();
@@ -242,14 +252,21 @@
                         var clone3o1 = arg2.Duplicate();
                         var clone3o2 = arg3.Duplicate();
 
+                        Debug.Log($"[EvaluateElements] S clone1:{clone1} clone2:{clone2} clone3o1:{clone3o1} clone3o2:{clone3o2}");
+
                         Parenteses clone3 = new Parenteses();
                         clone3.StepIn().InsertNext(clone3o1).InsertNext(clone3o2);
 
+                        Debug.Log($"[EvaluateElements] S clone3:{clone3}");
+
                         // 複製を追加する
-                        element0.InsertNext(clone1).InsertNext(clone2).InsertNext(clone3);
+                        combinator.InsertNext(clone1).InsertNext(clone2).InsertNext(clone3);
+
+                        Debug.Log($"[EvaluateElements] S Result:{LinkedlistTypeParser.Stringify(SourceElement)}");
+                        
 
                         // コンビネーター削除
-                        element0.Remove();
+                        combinator.Remove();
                         return true;
                     }
 
