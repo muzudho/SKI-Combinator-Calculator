@@ -9,6 +9,16 @@ internal class SKICombinatorCalculator
     public static string variableCharacters = "abcdefghijklmnopqrstuvwxyz";
 
     /// <summary>
+    /// ‘S‚Ä‚Ì”¼Šp‹ó”’‚ğœ‹
+    /// </summary>
+    /// <param name="source"></param>
+    /// <returns></returns>
+    public static string TrimAllSpaces(string source)
+    {
+        return source.Replace(" ", "");
+    }
+
+    /// <summary>
     /// ŒvZÀs
     /// </summary>
     /// <param name="expression"></param>

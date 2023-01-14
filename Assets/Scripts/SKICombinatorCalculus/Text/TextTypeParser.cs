@@ -41,13 +41,13 @@ Very tired...");
                 switch (nextCombinator)
                 {
                     case 'S':
-                        (isOk, rightText) = SCombinator.Solve(calculationProcess, rightText);
+                        (isOk, rightText) = SCombinatorAsTextType.Solve(calculationProcess, rightText);
                         break;
                     case 'K':
-                        (isOk, rightText) = KCombinator.Solve(calculationProcess, rightText);
+                        (isOk, rightText) = KCombinatorAsTextType.Solve(calculationProcess, rightText);
                         break;
                     case 'I':
-                        (isOk, rightText) = ICombinator.Solve(calculationProcess, rightText);
+                        (isOk, rightText) = ICombinatorAsTextType.Solve(calculationProcess, rightText);
                         break;
                 }
 

@@ -10,19 +10,9 @@
 
     internal class WorkingTree
     {
-        /// <summary>
-        /// 全ての半角空白を除去
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        public static string TrimAllSpaces(string source)
-        {
-            return source.Replace(" ", "");
-        }
-
         public WorkingTree(string content)
         {
-            this.targetText = TrimAllSpaces(content);
+            this.targetText = SKICombinatorCalculator.TrimAllSpaces(content);
 
             // content を先頭から読取る
             // TODO 1. "(" が出てくるまで Leaf とする

@@ -3,7 +3,7 @@
     using Assets.Scripts.SKICombinatorCalculus.Models;
     using System.Text;
 
-    internal static class ICombinator
+    internal static class ICombinatorAsTextType
     {
         /// <summary>
         /// カーソルは 0 から始まります
@@ -21,7 +21,7 @@
                 return (false, "");
             }
 
-            Parenteses.Strip(
+            ParentesesAsTextType.Strip(
                 expression: arg1,
                 onOk: (value) =>
                 {
