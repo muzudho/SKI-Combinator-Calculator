@@ -36,11 +36,46 @@ namespace Assets.Scripts.SKICombinatorCalculus.Tree
             {
                 if (0 < textNode.Text.Length)
                 {
-                    var iCombinatorModel = textNode.RemoveICombinatorModel();
-                    if (iCombinatorModel!=null)
+                    var nodeContainer = textNode.RemoveFirstNode();
+
+                    if (nodeContainer != null)
                     {
-                        calculationProcess.AppendLine($@"{iCombinatorModel.ToString()}
+                        if (nodeContainer.NodeModel is TextNodeModel textNodeModel)
+                        {
+                            switch (textNodeModel.Text)
+                            {
+                                case "S":
+                                    break;
+                                case "K":
+                                    {
+                                        var kCombinatorModel = textNode.RemoveKCombinatorModel();
+                                        if (kCombinatorModel != null)
+                                        {
+                                            calculationProcess.AppendLine($@"{kCombinatorModel.ToString()}
 ");
+                                        }
+                                    }
+                                    break;
+                                case "I":
+                                    {
+                                        var nodeContainer2 = textNode.RemoveFirstNode();
+
+                                        if (nodeContainer2 != null)
+                                        {
+                                            var iCombinatorModel = new ICombinatorModel(nodeContainer2);
+
+                                            calculationProcess.AppendLine($@"{iCombinatorModel.ToString()}
+");
+                                        }
+                                        else
+                                        {
+                                            calculationProcess.AppendLine($@"[ICombinator ParseError]
+");
+                                        }
+                                    }
+                                    break;
+                            }
+                        }
                     }
                 }
             }

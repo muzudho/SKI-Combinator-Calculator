@@ -28,7 +28,7 @@
                     arg1 = value;
                 });
 
-            ICombinatorModel iCombinatorModel = new ICombinatorModel(arg1);
+            ICombinatorTextTypeModel iCombinatorModel = new ICombinatorTextTypeModel(arg1);
 
             calculationProcess.AppendLine($@"{iCombinatorModel.ToString()}
       _ {rest}
