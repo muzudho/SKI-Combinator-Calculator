@@ -78,9 +78,12 @@
 
         /// <summary>
         /// 読取
+        /// 
+        /// - 丸括弧の内側に入ります
+        /// - 丸括弧の外側に出ます
         /// </summary>
         /// <returns>終端を超えたら、ヌル</returns>
-        public IElement Read()
+        public IElement ReadChar()
         {
             var current = Current;
 
@@ -119,19 +122,63 @@
         }
 
         /// <summary>
+        /// 読取
+        /// 
+        /// - 丸括弧の内側には入りません
+        /// - 丸括弧の外側には出ません
+        /// </summary>
+        /// <returns>終端を超えたら、ヌル</returns>
+        public IElement ReadElement()
+        {
+            var current = Current;
+
+            // トップ・レベルの先頭要素は飛ばす
+            if (current is StartElement startElement && startElement.Parent == null)
+            {
+                Current = current.Next;
+                current = Current;
+            }
+
+            if (current == null)
+            {
+                return null;
+            }
+
+            Current = current.Next;
+            return current;
+        }
+
+        /// <summary>
         /// 評価
         /// </summary>
         public bool Evaluate()
         {
-            var current = Read();
+            var element0 = ReadElement();
 
-            if (current is ICombinator combinator)
+            if (element0 is ICombinator combinator)
             {
                 if (combinator is IdCombinator)
                 {
-                    var arg1 = Read();
-                    current.Remove();
-                    return true;
+                    var arg1 = ReadElement();
+                    if (arg1 != null)
+                    {
+                        element0.Remove();
+                        return true;
+                    }
+                }
+                else if (combinator is KCombinator)
+                {
+                    var arg1 = ReadElement();
+                    if (arg1!=null)
+                    {
+                        var arg2 = ReadElement();
+                        if (arg2 != null)
+                        {
+                            element0.Remove();
+                            arg2.Remove();
+                            return true;
+                        }
+                    }
                 }
             }
 

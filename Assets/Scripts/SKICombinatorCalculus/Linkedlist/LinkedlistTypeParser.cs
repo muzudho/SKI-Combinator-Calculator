@@ -56,11 +56,11 @@
             var cursor = new Cursor(startElement);
 
             // 先頭から順に読んでいくだけ
-            var current = cursor.Read();
+            var current = cursor.ReadChar();
             while (current != null)
             {
                 buf.Append(current.ToString());
-                current = cursor.Read();
+                current = cursor.ReadChar();
             }
 
             return buf.ToString();
