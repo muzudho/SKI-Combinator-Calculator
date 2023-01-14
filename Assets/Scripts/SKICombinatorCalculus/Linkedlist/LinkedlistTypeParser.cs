@@ -12,52 +12,15 @@
             var endElement = new EndElement();
             startElement.AppendNext(endElement);
 
+            var cursorForSpawn = new CursorForSpawn(startElement);
+
             var currentElement = startElement;
 
             // 先頭から順に読んでいくだけ
             foreach (var ch in expression)
             {
-                switch (ch)
-                {
-                    case 'S':
-                        {
-                            currentElement.AppendNext(new SCombinator());
-                        }
-                        break;
+                cursorForSpawn.Read(ch);
 
-                    case 'K':
-                        {
-                            currentElement.AppendNext(new KCombinator());
-                        }
-                        break;
-
-                    case 'I':
-                        {
-                            currentElement.AppendNext(new IdCombinator());
-                        }
-                        break;
-
-                    case '(':
-                        {
-                            // TODO
-                        }
-                        break;
-
-                    case ')':
-                        {
-                            // TODO
-                        }
-                        break;
-
-                    default:
-                        {
-                            if (SKICombinatorCalculator.variableCharacters.Contains(ch))
-                            {
-                                currentElement.AppendNext(new Variable(ch));
-                            }
-                        }
-                        break;
-                }
             }
 
             StringBuilder calculationProcess = new StringBuilder();
