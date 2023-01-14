@@ -32,10 +32,11 @@
                 var cursor = new Cursor(startElement);
 
                 // 先頭から順に読んでいくだけ
-                foreach (var ch in expression)
+                var current = cursor.Read();
+                while (current != null)
                 {
-                    var element = cursor.Read();
-                    buf.Append(element.ToString());                    
+                    buf.Append(current.ToString());
+                    current = cursor.Read();
                 }
 
                 resultText = buf.ToString();

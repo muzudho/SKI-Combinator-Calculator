@@ -7,11 +7,10 @@
         public Parenteses()
         {
             StartElement = new StartElement(this);
-            var endElement = new EndElement(this);
-            StartElement.AppendNext(endElement);
+            StartElement.AppendNext(new EndElement(this));
         }
 
-        public IElement StartElement { get; private set; }
+        public StartElement StartElement { get; private set; }
 
         public override string ToString()
         {

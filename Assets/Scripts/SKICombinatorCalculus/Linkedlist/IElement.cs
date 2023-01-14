@@ -23,13 +23,14 @@
         void AppendNext(IElement next);
 
         /// <summary>
-        /// 始端を返します
+        /// 丸括弧であれば、その内部の始端の '(' を返します。
+        /// 丸括弧以外はヌルを返します
         /// </summary>
         /// <returns></returns>
-        IElement StepIn();
+        StartElement StepIn();
 
         /// <summary>
-        /// 前要素を辿っていき、その最前要素の親を返します
+        /// 後要素を辿っていき、その最後尾要素の親を返します
         /// 
         /// - トップ・レベルであれば、ヌルを返します
         /// </summary>

@@ -44,6 +44,8 @@ public class GameManager : MonoBehaviour
         Debug.Log("ŒvŽZŠJŽn");
         var text = SKICombinatorCalculator.Run(inputTextbox.text, workingTree);
         buf.AppendLine($@"
+--------
+
 {text}
 ");
         outputTextbox.text = buf.ToString();

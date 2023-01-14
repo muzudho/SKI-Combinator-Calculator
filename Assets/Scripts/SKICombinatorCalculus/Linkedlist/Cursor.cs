@@ -1,4 +1,6 @@
-﻿namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
+﻿using UnityEngine.Assertions;
+
+namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 {
     /// <summary>
     /// 生成用のカーソル
@@ -42,16 +44,17 @@
 
                 case '(':
                     {
-                        var next = new Parenteses();
-                        Current.AppendNext(next);
-                        Current = next;
-                        Current = Current.StepIn();
+                        var parenteses = new Parenteses();
+                        Current.AppendNext(parenteses);
+                        Current = parenteses.StepIn();
+                        Assert.IsNotNull(Current, $"parenteses.StartElement:{parenteses.StartElement}");
                     }
                     break;
 
                 case ')':
                     {
-                        var parenteses = Current.StepOut();
+                        Parenteses parenteses = Current.StepOut();
+                        Assert.IsNotNull(parenteses, $"Current:{Current}");
                         Current = parenteses;
                     }
                     break;
@@ -69,16 +72,33 @@
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>終端を超えたら、ヌル</returns>
         public IElement Read()
         {
-            var element = Current;
+            var current = Current;
 
-            if (Current is Parenteses parenteses)
+            if (current == null)
             {
-                return parenteses.StartElement;
+                return null;
+            }
+            else if (current is Parenteses parenteses)
+            {
+                current = parenteses.StartElement;
+                Current = current.Next;
+                return current;
+            }
+            else if (current is EndElement endElement)
+            {
+                current = endElement;
+                Current = endElement.Parent.Next;
+                return current;
             }
 
-            return element;
+            Current = current.Next;
+            return current;
         }
     }
 }
