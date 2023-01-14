@@ -21,11 +21,21 @@
         IElement Next { get; set; }
 
         /// <summary>
+        /// 複製します
+        /// </summary>
+        IElement Duplicate();
+
+        /// <summary>
         /// 前後の要素から切り離します
         /// </summary>
         void Remove();
 
-        void InsertNext(IElement next);
+        /// <summary>
+        /// 次の要素を挿入
+        /// </summary>
+        /// <param name="removable"></param>
+        /// <returns>引数の removable をそのまま返す</returns>
+        IElement InsertNext(IElement removable);
 
         /// <summary>
         /// 丸括弧であれば、その内部の始端の '(' を返します。

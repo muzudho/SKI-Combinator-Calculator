@@ -180,6 +180,41 @@
                         }
                     }
                 }
+                else if (combinator is SCombinator)
+                {
+                    var arg1 = ReadElement();
+                    if (arg1 != null)
+                    {
+                        var arg2 = ReadElement();
+                        if (arg2 != null)
+                        {
+                            var arg3 = ReadElement();
+                            if (arg3 != null)
+                            {
+                                // とりあえず、引数を全部抜く
+                                arg1.Remove();
+                                arg2.Remove();
+                                arg3.Remove();
+
+                                // 複製
+                                var clone1 = arg1.Duplicate();
+                                var clone2 = arg3.Duplicate();
+                                var clone3o1 = arg2.Duplicate();
+                                var clone3o2 = arg3.Duplicate();
+
+                                Parenteses clone3 = new Parenteses();
+                                clone3.StepIn().InsertNext(clone3o1).InsertNext(clone3o2);
+
+                                // 複製を追加する
+                                element0.InsertNext(clone1).InsertNext(clone2).InsertNext(clone3);
+
+                                // コンビネーター削除
+                                element0.Remove();
+                                return true;
+                            }
+                        }
+                    }
+                }
             }
 
             return false;

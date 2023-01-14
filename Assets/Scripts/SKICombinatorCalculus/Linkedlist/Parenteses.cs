@@ -9,6 +9,11 @@
             StartElement = new StartElement(new EndElement(this));
         }
 
+        public Parenteses(StartElement startElement)
+        {
+            StartElement = startElement;
+        }
+
         public StartElement StartElement { get; private set; }
 
         public override string ToString()
