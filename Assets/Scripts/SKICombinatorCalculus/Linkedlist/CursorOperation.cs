@@ -1,4 +1,4 @@
-﻿using UnityEngine.Assertions;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 {
@@ -16,19 +16,29 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         /// <returns></returns>
         public static bool StripUnnecessaryParentheses(IElement topLevelStartElement)
         {
+            Debug.Log("不要な丸括弧の除去開始");
+
             Parentheses parentheses = FindParenthesesEachElement(topLevelStartElement);
             if (parentheses == null)
             {
+                Debug.Log("丸括弧 not found");
                 return false;
             }
+
+            Debug.Log($"丸括弧発見 parentheses:{parentheses}");
 
             bool necessary = CheckNecessaryParentheses(parentheses);
             if (!necessary)
             {
-                ParserResult parserResult = StripParentheses(parentheses);
-                return true;
+                Debug.Log("丸括弧 不要");
+                return false;
+                //ParserResult parserResult = StripParentheses(parentheses);
+
+                //Debug.Log("丸括弧 除去済");
+                //return true;
             }
 
+            Debug.Log("丸括弧 必要");
             return false;
         }
 
@@ -37,10 +47,14 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         /// </summary>
         private static Parentheses FindParenthesesEachElement(IElement topLevelStartElement)
         {
+            Debug.Log($"丸括弧を探す topLevelStartElement:{topLevelStartElement}");
+
             var cursor = new Cursor(topLevelStartElement);
 
             for (IElement current = cursor.ReadElement(); current != null; current = cursor.ReadElement())
             {
+                Debug.Log($"丸括弧を探す current:{current}");
+
                 if (current is Parentheses parentheses)
                 {
                     return parentheses;
@@ -78,7 +92,9 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                 }
             }
 
-            return variable < 2;
+            Debug.Log($"丸括弧必要判定 variable:{variable}");
+
+            return 1 < variable;
         }
 
         /// <summary>
