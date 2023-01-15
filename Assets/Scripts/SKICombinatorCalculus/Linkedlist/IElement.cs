@@ -13,7 +13,7 @@
         /// <summary>
         /// 前要素
         /// </summary>
-        IElement Previous { get; set; }
+        IElement Previous { get; }
 
         /// <summary>
         /// 後要素
@@ -53,7 +53,15 @@
         Parentheses StepOut();
 
         /// <summary>
-        /// Nextプロパティを上書きします
+        /// Previous プロパティを上書きします
+        /// 
+        /// - リンクの貼り直しは自動で行われません
+        /// </summary>
+        /// <param name="previous"></param>
+        void SetPreviousManually(IElement previous);
+
+        /// <summary>
+        /// Next プロパティを上書きします
         /// 
         /// - リンクの貼り直しは自動で行われません
         /// </summary>

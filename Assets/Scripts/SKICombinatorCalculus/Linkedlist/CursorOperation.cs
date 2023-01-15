@@ -94,37 +94,40 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         /// </summary>
         private static bool CheckNecessaryParentheses(Parentheses parentheses)
         {
-            int variable = 0;
+            int variableNum = 0;
 
             var cursor = new Cursor(parentheses.StartElement);
 
             for (IElement current = cursor.ReadElementWithinEndElement(); current != null; current = cursor.ReadElementWithinEndElement())
             {
+                Debug.Log($"[丸括弧必要判定] Loop current:{current} {current.GetType().Name}");
+
                 if (current is Variable)
                 {
-                    variable++;
+                    variableNum++;
 
-                    if (2 <= variable)
+                    if (2 <= variableNum)
                     {
-                        break;
+                        // 変数が２個連続していたら、丸括弧は必要
+                        Debug.Log($"[丸括弧必要判定] true 変数が２個連続していたら、丸括弧は必要 current:{current} {current.GetType().Name}");
+                        return true;
                     }
                 }
                 else if (current is StartElement || current is EndElement)
                 {
                     // Ignored
-                    break;
                 }
                 else
                 {
                     // 変数以外が混じっていたなら
-                    Debug.Log($"[丸括弧必要判定] false 変数以外混合 current:{current} {current.GetType().Name}");
+                    Debug.Log($"[丸括弧必要判定] true 変数以外混合 current:{current} {current.GetType().Name}");
                     return true;
                 }
             }
 
-            Debug.Log($"[丸括弧必要判定] variable:{variable}");
-
-            return 1 < variable;
+            // 変数が２個未満だから、丸括弧は不要
+            Debug.Log($"[丸括弧必要判定] 変数が２個未満だから不要 variable num:{variableNum}");
+            return false;
         }
 
         /// <summary>

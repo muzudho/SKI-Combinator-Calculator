@@ -6,6 +6,10 @@
     {
         public Parentheses Parent { get; set; }
         public IElement Previous { get; set; }
+        public void SetPreviousManually(IElement previous)
+        {
+            this.Previous = previous;
+        }
         public IElement Next { get; private set; }
         public void SetNextManually(IElement next)
         {
@@ -74,7 +78,7 @@
             var oldNext = this.Next;
 
             oldPrevious.SetNextManually(oldNext);
-            oldNext.Previous = oldPrevious;
+            oldNext.SetPreviousManually(oldPrevious);
         }
 
         /// <summary>
@@ -99,7 +103,7 @@
                 var expressionStartElementOldPrevious = expressionStartElement.Previous;
                 var expressionEndElementOldNext = expressionEndElement.Next;
 
-                expressionStartElement.Previous = this;
+                expressionStartElement.SetPreviousManually(this);
                 expressionStartElement.SetNextManually(oldNext);
 
                 if (expressionStartElementOldPrevious != null)
@@ -109,11 +113,11 @@
 
                 if (expressionEndElementOldNext != null)
                 {
-                    expressionEndElementOldNext.Previous = expressionStartElementOldPrevious;
+                    expressionEndElementOldNext.SetPreviousManually(expressionStartElementOldPrevious);
                 }
             }
 
-            oldNext.Previous = expressionEndElement;
+            oldNext.SetPreviousManually(expressionEndElement);
             return expressionEndElement;
         }
 
