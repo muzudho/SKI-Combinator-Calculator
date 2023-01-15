@@ -262,7 +262,7 @@
                         // 複製を追加する
                         combinator.InsertNext(clone1).InsertNext(clone2).InsertNext(clone3);
 
-                        Debug.Log($"[EvaluateElements] S Result:{LinkedlistTypeParser.Stringify(SourceElement)}");
+                        Debug.Log($"[EvaluateElements] S Result:{CursorOperation.Stringify(SourceElement)}");
 
 
                         // コンビネーター削除

@@ -14,58 +14,46 @@
             // 計算過程
             StringBuilder calculationProcess = new StringBuilder();
 
-            // 文字列化
+            // 文字列化（入力した式）
             {
-                string resultText = Stringify(topLevelStartElement);
+                string resultText = CursorOperation.Stringify(topLevelStartElement);
                 calculationProcess.AppendLine(resultText);
             }
 
-            // TODO 評価する前に、不要な丸括弧を外す必要がある
+            int tired = 0;
+
+            for (; tired < 100; tired++)
             {
+                // 評価する前に、不要な丸括弧をすべて外す必要がある
                 while (CursorOperation.StripUnnecessaryParentheses(topLevelStartElement))
                 {
                     // 文字列化
-                    var resultText = Stringify(topLevelStartElement);
-                    calculationProcess.AppendLine(resultText);
+                    var strippedResultText = CursorOperation.Stringify(topLevelStartElement);
+                    calculationProcess.AppendLine($"    stripped {strippedResultText}");
                 }
+
+                // 評価（１回だけ）
+                var cursor = new Cursor(topLevelStartElement);
+                if (!cursor.EvaluateElements())
+                {
+                    // TODO 評価できなかったら終了
+                    break;
+                }
+
+                // 文字列化
+                var evaluatedResultText = CursorOperation.Stringify(topLevelStartElement);
+                calculationProcess.AppendLine(evaluatedResultText);
+
+                cursor = new Cursor(topLevelStartElement);
             }
 
-            // 評価
+            if (100 <= tired)
             {
-                var cursor = new Cursor(topLevelStartElement);
-
-                while (cursor.EvaluateElements())
-                {
-                    // 文字列化
-                    var resultText = Stringify(topLevelStartElement);
-                    calculationProcess.AppendLine(resultText);
-
-                    cursor = new Cursor(topLevelStartElement);
-                }
+                // 計算中断
+                calculationProcess.AppendLine("very tired...");
             }
 
             return new ParserResult(topLevelStartElement, calculationProcess.ToString());
-        }
-
-        /// <summary>
-        /// 文字列化
-        /// </summary>
-        /// <returns></returns>
-        public static string Stringify(IElement element)
-        {
-            StringBuilder buf = new StringBuilder();
-
-            var cursor = new Cursor(element);
-
-            // 先頭から順に読んでいくだけ
-            var current = cursor.ReadChar();
-            while (current != null)
-            {
-                buf.Append(current.ToString());
-                current = cursor.ReadChar();
-            }
-
-            return buf.ToString();
         }
     }
 }

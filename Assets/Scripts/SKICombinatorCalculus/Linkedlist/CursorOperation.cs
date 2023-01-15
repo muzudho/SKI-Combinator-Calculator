@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Text;
+using UnityEngine;
 
 namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 {
@@ -123,7 +124,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         private static void StripParentheses(Parentheses parentheses)
         {
             // 丸括弧の中身
-            var expression = parentheses.ToString();
+            var expression = CursorOperation.Stringify(parentheses.StartElement);
             Debug.Log($"丸括弧の中身 expression:{expression}");
 
             // 生成
@@ -167,6 +168,27 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 
             // 必ず取得できるはずなので、エラー
             throw new System.Exception($"[CursorOperation GetEndElement] failed 1");
+        }
+
+        /// <summary>
+        /// 文字列化
+        /// </summary>
+        /// <returns></returns>
+        public static string Stringify(IElement element)
+        {
+            StringBuilder buf = new StringBuilder();
+
+            var cursor = new Cursor(element);
+
+            // 先頭から順に読んでいくだけ
+            var current = cursor.ReadChar();
+            while (current != null)
+            {
+                buf.Append(current.ToString());
+                current = cursor.ReadChar();
+            }
+
+            return buf.ToString();
         }
     }
 }
