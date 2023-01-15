@@ -176,7 +176,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         /// <param name="elementAsStart"></param>
         /// <returns></returns>
         [Obsolete]
-        public static IElement GetEndSiblingElementOldtype(IElement elementAsStart)
+        public static IElement GetLastSiblingOfContentWithoutEndElement(IElement elementAsStart)
         {
             var cursor = new CursorIO(elementAsStart);
 
@@ -188,6 +188,39 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 
                 // Next
                 current = cursor.ReadElementWithoutEndElement();
+
+                // Over
+                if (current == null)
+                {
+                    return previous;
+                }
+            }
+
+            // 必ず取得できるはずなので、エラー
+            throw new System.Exception($"[CursorOperation GetEndElement] failed 1");
+        }
+
+        /// <summary>
+        /// 兄弟の最後の要素を取得
+        /// 
+        /// - `GetEndElementEachSibling()` を使いたい
+        /// - 最初の要素と同一のケースを含む
+        /// </summary>
+        /// <param name="elementAsStart"></param>
+        /// <returns></returns>
+        [Obsolete]
+        public static IElement GetLastSiblingWithinEndElement(IElement elementAsStart)
+        {
+            var cursor = new CursorIO(elementAsStart);
+
+            IElement current = cursor.ReadElementWithinEndElement();
+
+            while (current != null)
+            {
+                IElement previous = current;
+
+                // Next
+                current = cursor.ReadElementWithinEndElement();
 
                 // Over
                 if (current == null)

@@ -105,23 +105,24 @@
             Assert.IsNotNull(expressionStartElement);
             Debug.Log($"[InsertNext] expressionStartElement:{expressionStartElement} {expressionStartElement.GetType().Name}");
 
-            // 最後の要素（最初の要素と同一であるケースを含む）
-            IElement expressionEndElement = CursorOperation.GetEndSiblingElementOldtype(expressionStartElement);
+            // 最後の要素の１つ前（最初の要素と同一であるケースを含む）
+            // IElement expressionEndElement = CursorOperation.GetEndSiblingElementOldtypeWithinEndElement(expressionStartElement);
+            IElement contentLastElement = CursorOperation.GetLastSiblingOfContentWithoutEndElement(expressionStartElement);
             // IElement expressionEndElement = CursorOperation.GetEndElementEachSibling(expressionStartElement);
-            Assert.IsNotNull(expressionEndElement);
-            Debug.Log($"[InsertNext] expressionEndElement:{expressionEndElement} {expressionEndElement.GetType().Name}");
+            Assert.IsNotNull(contentLastElement);
+            Debug.Log($"[InsertNext] contentLastElement:{contentLastElement} {contentLastElement.GetType().Name}");
 
             // FIXME 丸括弧の次の要素がヌルのケースがある
-            var expressionEndElementOldNext = expressionEndElement.Next;
-            if (expressionEndElementOldNext != null)
+            var contentLastElementOldNext = contentLastElement.Next;
+            if (contentLastElementOldNext != null)
             {
-                Assert.IsNotNull(expressionEndElementOldNext);
-                Debug.Log($"[InsertNext] expressionEndElementOldNext:{expressionEndElementOldNext} {expressionEndElementOldNext.GetType().Name}");
+                Assert.IsNotNull(contentLastElementOldNext);
+                Debug.Log($"[InsertNext] contentLastElementOldNext:{contentLastElementOldNext} {contentLastElementOldNext.GetType().Name}");
             }
             else
             {
                 // FIXME
-                Debug.Log($"[InsertNext] expressionEndElementOldNext:null ★");
+                Debug.Log($"[InsertNext] expressionEndElementOldNext:null ★おかしい");
             }
 
             // 後ろに回る要素
@@ -139,18 +140,18 @@
 
                 // 新しいつながりを得る
                 expressionStartElement.SetPreviousManually(this);
-                expressionEndElement.SetNextManually(oldRightElement);
+                contentLastElement.SetNextManually(oldRightElement);
 
                 // 元から抜ける
                 {
                     if (expressionStartElementOldPrevious != null)
                     {
-                        expressionStartElementOldPrevious.SetNextManually(expressionEndElementOldNext);
+                        expressionStartElementOldPrevious.SetNextManually(contentLastElementOldNext);
                     }
 
-                    if (expressionEndElementOldNext != null)
+                    if (contentLastElementOldNext != null)
                     {
-                        expressionEndElementOldNext.SetPreviousManually(expressionStartElementOldPrevious);
+                        contentLastElementOldNext.SetPreviousManually(expressionStartElementOldPrevious);
                     }
                 }
             }
@@ -159,9 +160,9 @@
             Next = expressionStartElement;
 
             // 元からあった後ろの要素は、新しいつながりを得る
-            oldRightElement.SetPreviousManually(expressionEndElement);
+            oldRightElement.SetPreviousManually(contentLastElement);
 
-            return expressionEndElement;
+            return contentLastElement;
         }
 
         /// <summary>
