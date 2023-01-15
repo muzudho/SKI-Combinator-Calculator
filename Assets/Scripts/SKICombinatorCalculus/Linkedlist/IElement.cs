@@ -18,7 +18,7 @@
         /// <summary>
         /// 後要素
         /// </summary>
-        IElement Next { get; set; }
+        IElement Next { get; }
 
         /// <summary>
         /// 複製します
@@ -51,5 +51,13 @@
         /// </summary>
         /// <returns></returns>
         Parentheses StepOut();
+
+        /// <summary>
+        /// Nextプロパティを上書きします
+        /// 
+        /// - リンクの貼り直しは自動で行われません
+        /// </summary>
+        /// <param name="next"></param>
+        void SetNextManually(IElement next);
     }
 }

@@ -6,7 +6,11 @@
     {
         public Parentheses Parent { get; set; }
         public IElement Previous { get; set; }
-        public IElement Next { get; set; }
+        public IElement Next { get; private set; }
+        public void SetNextManually(IElement next)
+        {
+            this.Next = next;
+        }
 
         /// <summary>
         /// 複製します
@@ -69,7 +73,7 @@
             var oldPrevious = this.Previous;
             var oldNext = this.Next;
 
-            oldPrevious.Next = oldNext;
+            oldPrevious.SetNextManually(oldNext);
             oldNext.Previous = oldPrevious;
         }
 
@@ -88,7 +92,7 @@
 
             // 後ろに回る要素
             var oldNext = Next;
-            Next = expressionStartElement;
+            SetNextManually(expressionStartElement);
 
             // 挿し込まれる要素
             {
@@ -96,11 +100,11 @@
                 var expressionEndElementOldNext = expressionEndElement.Next;
 
                 expressionStartElement.Previous = this;
-                expressionStartElement.Next = oldNext;
+                expressionStartElement.SetNextManually(oldNext);
 
                 if (expressionStartElementOldPrevious != null)
                 {
-                    expressionStartElementOldPrevious.Next = expressionEndElementOldNext;
+                    expressionStartElementOldPrevious.SetNextManually(expressionEndElementOldNext);
                 }
 
                 if (expressionEndElementOldNext != null)

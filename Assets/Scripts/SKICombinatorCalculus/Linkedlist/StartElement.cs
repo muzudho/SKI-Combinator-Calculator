@@ -15,7 +15,7 @@
         public StartElement(EndElement endElement)
         {
             this.endElement = endElement;
-            Next = endElement;
+            SetNextManually(endElement);
         }
 
         /// <summary>
