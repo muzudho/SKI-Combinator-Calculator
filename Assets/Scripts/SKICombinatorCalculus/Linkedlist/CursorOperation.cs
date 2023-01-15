@@ -136,23 +136,30 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
             // - そこで、リンクの貼り直しを行う
             Debug.Log($"[丸括弧を剥がす] parentheses:{parentheses}");
 
+            // 丸括弧のクローン作成
+            Parentheses clonedParentheses = (Parentheses)parentheses.Duplicate();
+            Debug.Log($"[丸括弧を剥がす] clonedParentheses:{clonedParentheses}");
+
             // 丸括弧の中身の最初の要素
-            IElement firstChild = parentheses.StartElement.Next;
-            Debug.Log($"[丸括弧を剥がす] firstChild:{firstChild}");
+            Debug.Log($"[丸括弧を剥がす] clonedParentheses.StartElement:{clonedParentheses.StartElement}");
+            IElement clonedFirstChild = clonedParentheses.StartElement.Next;
+            Debug.Log($"[丸括弧を剥がす] clonedFirstChild:{clonedFirstChild}");
 
             // - `()` のような空丸括弧のケースなら、単純にこの丸括弧を削除するだけでよい
             // - それ以外のケースでは、リンクを貼り直す
-            if (!(firstChild is EndElement))
+            if (!(clonedFirstChild is EndElement))
             {
                 // 丸括弧の中身の最後の要素
-                IElement lastChild = CursorOperation.GetEndElementEachSibling(firstChild).Previous;
-                Debug.Log($"[丸括弧を剥がす] lastChild:{lastChild}");
+                IElement clonedLastChild = CursorOperation.GetEndElementEachSibling(clonedFirstChild).Previous;
+                Debug.Log($"[丸括弧を剥がす] clonedLastChild:{clonedLastChild}");
+                Debug.Log($"[丸括弧を剥がす] parentheses.Previous:{clonedParentheses.Previous} {parentheses.Previous.GetType().Name}");
+                Debug.Log($"[丸括弧を剥がす] parentheses.Next:{clonedParentheses.Next} {parentheses.Next.GetType().Name}");
 
                 // リンクの張り直し
                 // 丸括弧の前要素
-                parentheses.Previous.Next = firstChild;
+                parentheses.Previous.Next = clonedFirstChild;
                 // 丸括弧の後要素
-                parentheses.Next.Previous = lastChild;
+                parentheses.Next.Previous = clonedLastChild;
             }
 
             // 丸括弧の削除
