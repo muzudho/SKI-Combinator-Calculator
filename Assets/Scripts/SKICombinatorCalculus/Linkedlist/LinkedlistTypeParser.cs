@@ -12,12 +12,12 @@
             StartElement topLevelStartElement = CursorOperation.Spawn(expression);
 
             // 計算過程
-            StringBuilder calculationProcess = new StringBuilder();
+            StringBuilder calculationProcessStr = new StringBuilder();
 
             // 文字列化（入力した式）
             {
                 string resultText = CursorOperation.Stringify(topLevelStartElement);
-                calculationProcess.AppendLine($"input {resultText}");
+                calculationProcessStr.AppendLine($"input {resultText}");
             }
 
             int tired = 0;
@@ -34,21 +34,25 @@
 
                     // 文字列化
                     var strippedResultText = CursorOperation.Stringify(topLevelStartElement);
-                    calculationProcess.AppendLine($"    stripped {strippedResultText}");
+                    calculationProcessStr.AppendLine($"    stripped {strippedResultText}");
                 }
 
                 // 評価（１回だけ）
                 var cursor = new Cursor(topLevelStartElement);
-                if (cursor.EvaluateElements())
+                var calculationProcessObj = cursor.EvaluateElements();
+                if (calculationProcessObj != null)
                 {
                     evaluated = true;
 
                     // 文字列化
+                    calculationProcessStr.AppendLine(calculationProcessObj.ToString());
+
+                    // 文字列化
                     var evaluatedResultText = CursorOperation.Stringify(topLevelStartElement);
-                    calculationProcess.AppendLine($"evaluated {evaluatedResultText}");
+                    calculationProcessStr.AppendLine($"evaluated {evaluatedResultText}");
                 }
 
-                if(!strippedUnnecessaryParentheses && !evaluated)
+                if (!strippedUnnecessaryParentheses && !evaluated)
                 {
                     // 丸括弧を剥かず、かつ、評価できなかったら終了
                     break;
@@ -60,10 +64,10 @@
             if (100 <= tired)
             {
                 // 計算中断
-                calculationProcess.AppendLine("very tired...");
+                calculationProcessStr.AppendLine("very tired...");
             }
 
-            return new ParserResult(topLevelStartElement, calculationProcess.ToString());
+            return new ParserResult(topLevelStartElement, calculationProcessStr.ToString());
         }
     }
 }

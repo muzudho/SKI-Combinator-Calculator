@@ -1,5 +1,6 @@
 ﻿namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 {
+    using Assets.Scripts.SKICombinatorCalculus.Linkedlist.Process;
     using System;
     using UnityEngine;
     using UnityEngine.Assertions;
@@ -216,10 +217,10 @@
         /// <summary>
         /// 評価
         /// </summary>
-        public bool EvaluateElements()
+        public CalculationProcess EvaluateElements()
         {
-            IElement element0 = ReadElementWithoutEndElement();
-            Debug.Log($"[EvaluateElements] element0:{element0.ToString()}");
+            IElement element0 = ReadElementWithinEndElement();
+            Debug.Log($"[EvaluateElements] element0:{element0}");
 
             while (element0 != null)
             {
@@ -227,46 +228,51 @@
                 {
                     if (combinator is IdCombinator)
                     {
-                        var arg1 = ReadElementWithoutEndElement();
+                        var arg1 = ReadElementWithinEndElement();
 
-                        if (arg1 == null)
+                        if (arg1 == null || arg1 is EndElement)
                         {
                             // `I` しかないケース
-                            return false;
+                            return null;
                         }
 
                         Debug.Log($"[EvaluateElements] I arg1:{arg1}");
 
                         combinator.Remove();
-                        return true;
+                        return new CalculationProcess(
+                            combinator: "I",
+                            arg1: arg1.ToString());
                     }
                     else if (combinator is KCombinator)
                     {
-                        var _arg1 = ReadElementWithoutEndElement();
-                        var arg2 = ReadElementWithoutEndElement();
+                        var arg1 = ReadElementWithinEndElement();
+                        var arg2 = ReadElementWithinEndElement();
 
-                        if (arg2 == null)
+                        if (arg2 == null || arg2 is EndElement)
                         {
                             // `K` や、 `Kx` しかないケース
-                            return false;
+                            return null;
                         }
 
-                        Debug.Log($"[EvaluateElements] K _arg1:{_arg1} arg2:{arg2}");
+                        Debug.Log($"[EvaluateElements] K arg1:{arg1} arg2:{arg2}");
 
                         combinator.Remove();
                         arg2.Remove();
-                        return true;
+                        return new CalculationProcess(
+                            combinator: "K",
+                            arg1: arg1.ToString(),
+                            arg2: arg2.ToString());
                     }
                     else if (combinator is SCombinator)
                     {
-                        var arg1 = ReadElementWithoutEndElement();
-                        var arg2 = ReadElementWithoutEndElement();
-                        var arg3 = ReadElementWithoutEndElement();
+                        var arg1 = ReadElementWithinEndElement();
+                        var arg2 = ReadElementWithinEndElement();
+                        var arg3 = ReadElementWithinEndElement();
 
-                        if (arg3 == null)
+                        if (arg3 == null || arg3 is EndElement)
                         {
                             // `S` や、 `Sa` や、 `Sab` しかないケース
-                            return false;
+                            return null;
                         }
 
                         Debug.Log($"[EvaluateElements] S 1:{arg1} 2:{arg2} 3:{arg3}");
@@ -297,14 +303,18 @@
 
                         // コンビネーター削除
                         combinator.Remove();
-                        return true;
+                        return new CalculationProcess(
+                            combinator: "S",
+                            arg1: arg1.ToString(),
+                            arg2: arg2.ToString(),
+                            arg3: arg3.ToString());
                     }
 
                     throw new System.Exception($"unknown combinator:{combinator.GetType().Name}");
                 }
-                else if (element0 is Variable || element0 is StartElement)
+                else if (element0 is Variable || element0 is StartElement || element0 is EndElement)
                 {
-                    // 変数、`(` なら評価はできない
+                    // 変数、`(`、`)` なら評価はできない
                 }
                 else if (element0 is Parentheses parentheses)
                 {
@@ -315,18 +325,18 @@
                     Current = parentheses.StepIn(); // `(`
                     Current = ReadChar(); // 丸括弧の内側の先頭要素
                     Debug.Log($"丸括弧のケース Current:{Current.ToString()}");
-                    var isOk = EvaluateElements(); // 再帰
+                    var calculationProcess = EvaluateElements(); // 再帰
 
                     // TODO 丸括弧の右側を評価してはいけない
-                    return isOk;
+                    return calculationProcess;
                 }
 
                 // 次の要素へ、読み進める
-                element0 = ReadElementWithoutEndElement();
+                element0 = ReadElementWithinEndElement();
             }
 
             // 何も評価せず、終端まで来てしまった
-            return false;
+            return null;
         }
     }
 }
