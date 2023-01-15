@@ -1,5 +1,6 @@
 ﻿namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 {
+    using UnityEngine;
     using UnityEngine.Assertions;
 
     internal abstract class AbstractElement : IElement
@@ -8,11 +9,23 @@
         public IElement Previous { get; set; }
         public void SetPreviousManually(IElement previous)
         {
+            if (this is StartElement)
+            {
+                // FIXME
+                throw new System.Exception("StartElementでPrevious操作するとおかしくなる");
+            }
+
             this.Previous = previous;
         }
         public IElement Next { get; private set; }
         public void SetNextManually(IElement next)
         {
+            if (this is EndElement)
+            {
+                // FIXME
+                throw new System.Exception("EndElementでNext操作するとおかしくなる");
+            }
+
             this.Next = next;
         }
 
@@ -49,7 +62,7 @@
 
                 // 生成
                 {
-                    var cursor = new Cursor(newStartElement);
+                    var cursor = new CursorIO(newStartElement);
 
                     // 先頭から順に書いていくだけ
                     foreach (var ch in content)
@@ -90,35 +103,55 @@
         {
             // FIXME 丸括弧を追加するときに不具合がある？
             Assert.IsNotNull(expressionStartElement);
+            Debug.Log($"[InsertNext] expressionStartElement:{expressionStartElement} {expressionStartElement.GetType().Name}");
 
             // 最後の要素（最初の要素と同一であるケースを含む）
             IElement expressionEndElement = CursorOperation.GetEndSiblingElementOldtype(expressionStartElement);
             Assert.IsNotNull(expressionEndElement);
+            Debug.Log($"[InsertNext] expressionEndElement:{expressionEndElement} {expressionEndElement.GetType().Name}");
 
             // 後ろに回る要素
-            var oldNext = Next;
+            var oldRightElement = Next;
+            Assert.IsNotNull(oldRightElement);
+            Debug.Log($"[InsertNext] oldRightElement:{oldRightElement} {oldRightElement.GetType().Name}");
+
             SetNextManually(expressionStartElement);
 
             // 挿し込まれる要素
             {
                 var expressionStartElementOldPrevious = expressionStartElement.Previous;
+                Assert.IsNotNull(expressionStartElement);
+                Debug.Log($"[InsertNext] expressionStartElement:{expressionStartElement} {expressionStartElement.GetType().Name}");
+
                 var expressionEndElementOldNext = expressionEndElement.Next;
-
-                expressionStartElement.SetPreviousManually(this);
-                expressionStartElement.SetNextManually(oldNext);
-
-                if (expressionStartElementOldPrevious != null)
-                {
-                    expressionStartElementOldPrevious.SetNextManually(expressionEndElementOldNext);
-                }
-
                 if (expressionEndElementOldNext != null)
                 {
-                    expressionEndElementOldNext.SetPreviousManually(expressionStartElementOldPrevious);
+                    Assert.IsNotNull(expressionEndElementOldNext);
+                    Debug.Log($"[InsertNext] expressionEndElementOldNext:{expressionEndElementOldNext} {expressionEndElementOldNext.GetType().Name}");
+                }
+
+                // 新しいつながりを得る
+                expressionStartElement.SetPreviousManually(this);
+                expressionEndElement.SetNextManually(oldRightElement);
+
+                // 元から抜ける
+                {
+                    if (expressionStartElementOldPrevious != null)
+                    {
+                        expressionStartElementOldPrevious.SetNextManually(expressionEndElementOldNext);
+                    }
+
+                    if (expressionEndElementOldNext != null)
+                    {
+                        expressionEndElementOldNext.SetPreviousManually(expressionStartElementOldPrevious);
+                    }
                 }
             }
 
-            oldNext.SetPreviousManually(expressionEndElement);
+            // 新しいつながりを得る
+            Next = expressionStartElement;
+            oldRightElement.SetPreviousManually(expressionEndElement);
+
             return expressionEndElement;
         }
 

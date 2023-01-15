@@ -1,16 +1,14 @@
 ﻿namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 {
-    using Assets.Scripts.SKICombinatorCalculus.Linkedlist.Process;
     using System;
-    using UnityEngine;
     using UnityEngine.Assertions;
 
     /// <summary>
-    /// 生成用のカーソル
+    /// 読み書き用のカーソル
     /// </summary>
-    internal class Cursor
+    internal class CursorIO
     {
-        public Cursor(IElement element)
+        public CursorIO(IElement element)
         {
             Current = element;
             SourceElement = element;

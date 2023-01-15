@@ -38,7 +38,7 @@
                 }
 
                 // 評価（１回だけ）
-                var cursor = new Cursor(topLevelStartElement);
+                var cursor = new CursorIO(topLevelStartElement);
                 var calculationProcessObj = CursorOperation.EvaluateElements(cursor);
                 if (calculationProcessObj != null)
                 {
@@ -58,7 +58,7 @@
                     break;
                 }
 
-                cursor = new Cursor(topLevelStartElement);
+                cursor = new CursorIO(topLevelStartElement);
             }
 
             if (100 <= tired)

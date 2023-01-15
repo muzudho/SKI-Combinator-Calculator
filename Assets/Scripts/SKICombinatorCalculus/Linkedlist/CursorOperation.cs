@@ -18,7 +18,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
             // トップ・レベルの始端と終端
             StartElement topLevelStartElement = new StartElement(new EndElement(null));
 
-            var cursor = new Cursor(topLevelStartElement);
+            var cursor = new CursorIO(topLevelStartElement);
 
             // 先頭から順に書いていくだけ
             foreach (var ch in expression)
@@ -73,7 +73,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         {
             // Debug.Log($"丸括弧を探す topLevelStartElement:{topLevelStartElement}");
 
-            var cursor = new Cursor(topLevelStartElement);
+            var cursor = new CursorIO(topLevelStartElement);
 
             for (IElement current = cursor.ReadElementWithinEndElement(); current != null; current = cursor.ReadElementWithinEndElement())
             {
@@ -97,7 +97,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         {
             int variableNum = 0;
 
-            var cursor = new Cursor(parentheses.StartElement);
+            var cursor = new CursorIO(parentheses.StartElement);
 
             for (IElement current = cursor.ReadElementWithinEndElement(); current != null; current = cursor.ReadElementWithinEndElement())
             {
@@ -178,7 +178,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         [Obsolete]
         public static IElement GetEndSiblingElementOldtype(IElement elementAsStart)
         {
-            var cursor = new Cursor(elementAsStart);
+            var cursor = new CursorIO(elementAsStart);
 
             IElement current = cursor.ReadElementWithoutEndElement();
 
@@ -209,7 +209,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         /// <returns></returns>
         public static IElement GetEndElementEachSibling(IElement elementAsStart)
         {
-            var cursor = new Cursor(elementAsStart);
+            var cursor = new CursorIO(elementAsStart);
 
             IElement current = cursor.ReadElementWithinEndElement();
             // Debug.Log($"[CursorOperation GetEndElementEachSibling] current:{current} {current.GetType().Name}");
@@ -243,7 +243,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         {
             StringBuilder buf = new StringBuilder();
 
-            var cursor = new Cursor(element);
+            var cursor = new CursorIO(element);
 
             // 先頭から順に読んでいくだけ
             var current = cursor.ReadChar();
@@ -259,7 +259,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         /// <summary>
         /// 評価
         /// </summary>
-        public static CalculationProcess EvaluateElements(Cursor cursor)
+        public static CalculationProcess EvaluateElements(CursorIO cursor)
         {
             IElement element0 = cursor.ReadElementWithinEndElement();
             Debug.Log($"[EvaluateElements] element0:{element0}");
