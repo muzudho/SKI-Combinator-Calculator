@@ -8,19 +8,8 @@
         {
             var expression = SKICombinatorCalculator.TrimAllSpaces(inputText);
 
-            // トップ・レベルの始端と終端
-            var topLevelStartElement = new StartElement(new EndElement(null));
-
             // 生成
-            {
-                var cursor = new Cursor(topLevelStartElement);
-
-                // 先頭から順に書いていくだけ
-                foreach (var ch in expression)
-                {
-                    cursor.Write(ch);
-                }
-            }
+            StartElement topLevelStartElement = CursorOperation.Spawn(expression);
 
             // 計算過程
             StringBuilder calculationProcess = new StringBuilder();

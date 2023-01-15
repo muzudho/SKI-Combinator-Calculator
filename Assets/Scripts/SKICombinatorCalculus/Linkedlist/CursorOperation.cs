@@ -5,6 +5,27 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
     internal static class CursorOperation
     {
         /// <summary>
+        /// 生成
+        /// </summary>
+        /// <param name="expression">空白除去済みの式</param>
+        /// <returns>topLevelStartElement</returns>
+        public static StartElement Spawn(string expression)
+        {
+            // トップ・レベルの始端と終端
+            StartElement topLevelStartElement = new StartElement(new EndElement(null));
+
+            var cursor = new Cursor(topLevelStartElement);
+
+            // 先頭から順に書いていくだけ
+            foreach (var ch in expression)
+            {
+                cursor.Write(ch);
+            }
+
+            return topLevelStartElement;
+        }
+
+        /// <summary>
         /// TODO 不要な丸括弧を剥く
         /// 
         /// ３つの要素がある
@@ -31,11 +52,10 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
             if (!necessary)
             {
                 Debug.Log("丸括弧 不要");
-                return false;
-                //ParserResult parserResult = StripParentheses(parentheses);
+                StripParentheses(parentheses);
 
-                //Debug.Log("丸括弧 除去済");
-                //return true;
+                Debug.Log("丸括弧 除去済");
+                return true;
             }
 
             Debug.Log("丸括弧 必要");
@@ -100,13 +120,14 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         /// <summary>
         /// TODO 丸括弧を剥がす
         /// </summary>
-        private static ParserResult StripParentheses(Parentheses parentheses)
+        private static void StripParentheses(Parentheses parentheses)
         {
             // 丸括弧の中身
-            var text = parentheses.ToString();
+            var expression = parentheses.ToString();
+            Debug.Log($"丸括弧の中身 expression:{expression}");
 
-            // リンクリスト型のパーサー
-            var parserResult = LinkedlistTypeParser.Parse(text);
+            // 生成
+            StartElement topLevelStartElement = CursorOperation.Spawn(expression);
 
             var previous = parentheses.Previous;
 
@@ -114,9 +135,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
             parentheses.Remove();
 
             // 挿入
-            previous.InsertNext(parserResult.StartElement);
-
-            return parserResult;
+            previous.InsertNext(topLevelStartElement);
         }
 
         /// <summary>
