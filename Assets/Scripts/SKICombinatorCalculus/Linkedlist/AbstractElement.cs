@@ -31,7 +31,10 @@
             }
             else if (this is Parentheses parentheses)
             {
-                var expression = parentheses.ToString();
+                // 両端の丸括弧含む
+                var text = parentheses.ToString();
+                // 両端の丸括弧を含まない
+                var content = text[1..(text.Length - 1)];
 
                 // トップ・レベルの始端と終端
                 var newStartElement = new StartElement(new EndElement(null));
@@ -41,7 +44,7 @@
                     var cursor = new Cursor(newStartElement);
 
                     // 先頭から順に書いていくだけ
-                    foreach (var ch in expression)
+                    foreach (var ch in content)
                     {
                         cursor.Write(ch);
                     }
