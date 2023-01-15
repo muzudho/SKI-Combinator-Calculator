@@ -1,5 +1,7 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 {
@@ -72,7 +74,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 
             var cursor = new Cursor(topLevelStartElement);
 
-            for (IElement current = cursor.ReadElement(); current != null; current = cursor.ReadElement())
+            for (IElement current = cursor.ReadElementWithoutEndElement(); current != null; current = cursor.ReadElementWithoutEndElement())
             {
                 Debug.Log($"丸括弧を探す current:{current}");
 
@@ -96,7 +98,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 
             var cursor = new Cursor(parentheses.StartElement);
 
-            for (IElement current = cursor.ReadElement(); current != null; current = cursor.ReadElement())
+            for (IElement current = cursor.ReadElementWithoutEndElement(); current != null; current = cursor.ReadElementWithoutEndElement())
             {
                 if (current is Variable)
                 {
@@ -128,15 +130,15 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
             Debug.Log($"丸括弧を剥がす parentheses:{parentheses}");
 
             // 丸括弧の中身の最初の要素
-            IElement firstElement = parentheses.StartElement.Next;
-            Debug.Log($"丸括弧を剥がす firstElement:{firstElement}");
+            IElement firstChild = parentheses.StartElement.Next;
+            Debug.Log($"丸括弧を剥がす firstElement:{firstChild}");
 
             // - `()` のような空丸括弧のケースなら、単純にこの丸括弧を削除するだけでよい
             // - それ以外のケースでは、リンクを貼り直す
-            if (!(firstElement is EndElement))
+            if (!(firstChild is EndElement))
             {
                 // 丸括弧の中身の最後の要素
-                IElement lastElement = CursorOperation.GetEndSiblingElement(firstElement).Previous;
+                IElement lastElement = CursorOperation.GetEndElementEachSibling(firstChild).Previous;
                 Debug.Log($"丸括弧を剥がす lastElement:{lastElement}");
 
                 // 丸括弧の前要素
@@ -145,7 +147,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                 IElement nextElement = parentheses.Next;
 
                 // リンクの張り直し
-                previousElement.Next = firstElement;
+                previousElement.Next = firstChild;
                 nextElement.Previous = lastElement;
             }
 
@@ -156,22 +158,24 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         /// <summary>
         /// 兄弟の最後の要素を取得
         /// 
+        /// - `GetEndElementEachSibling()` を使いたい
         /// - 最初の要素と同一のケースを含む
         /// </summary>
         /// <param name="elementAsStart"></param>
         /// <returns></returns>
-        public static IElement GetEndSiblingElement(IElement elementAsStart)
+        [Obsolete]
+        public static IElement GetEndSiblingElementOldtype(IElement elementAsStart)
         {
             var cursor = new Cursor(elementAsStart);
 
-            IElement current = cursor.ReadElement();
+            IElement current = cursor.ReadElementWithoutEndElement();
 
             while (current != null)
             {
                 IElement previous = current;
 
                 // Next
-                current = cursor.ReadElement();
+                current = cursor.ReadElementWithoutEndElement();
 
                 // Over
                 if (current == null)
@@ -182,6 +186,41 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 
             // 必ず取得できるはずなので、エラー
             throw new System.Exception($"[CursorOperation GetEndElement] failed 1");
+        }
+
+        /// <summary>
+        /// 兄弟の最後の要素を取得
+        /// 
+        /// - 最初の要素と同一のケースを含む
+        /// </summary>
+        /// <param name="elementAsStart"></param>
+        /// <returns></returns>
+        public static IElement GetEndElementEachSibling(IElement elementAsStart)
+        {
+            var cursor = new Cursor(elementAsStart);
+
+            IElement current = cursor.ReadElementWithinEndElement();
+            Debug.Log($"[CursorOperation GetEndElementEachSibling] current:{current} {current.GetType().Name}");
+            if (current==null)
+            {
+                throw new System.Exception("[CursorOperation GetEndElementEachSibling] null 1");
+            }
+
+            while (!(current is EndElement))
+            {
+                // Next
+                current = cursor.ReadElementWithinEndElement();
+                if (current == null)
+                {
+                    throw new System.Exception("[CursorOperation GetEndElementEachSibling] null 2");
+                }
+
+                Debug.Log($"[CursorOperation GetEndElementEachSibling] current:{current} {current.GetType().Name}");
+            }
+
+            // `)`
+            Assert.IsTrue(current is EndElement);
+            return current;
         }
 
         /// <summary>

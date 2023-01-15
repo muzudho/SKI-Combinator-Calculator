@@ -1,5 +1,6 @@
 ﻿namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 {
+    using System;
     using UnityEngine;
     using UnityEngine.Assertions;
 
@@ -131,16 +132,45 @@
         /// <summary>
         /// 読取
         /// 
+        /// - `ReadElementWithinEndElement()` を使うようにしたい
         /// - 丸括弧の内側には入りません
         /// - 丸括弧の外側には出ません
         /// </summary>
         /// <returns>終端を超えたら、ヌル</returns>
-        public IElement ReadElement()
+        [Obsolete]
+        public IElement ReadElementWithoutEndElement()
         {
             var current = Current;
 
             // `)` はヌル扱いです
             if (current == null || current is EndElement)
+            {
+                return null;
+            }
+
+            // トップ・レベルの先頭要素は飛ばす
+            if (current is StartElement startElement && startElement.Parent == null)
+            {
+                Current = current.Next;
+                current = Current;
+            }
+
+            Current = current.Next;
+            return current;
+        }
+
+        /// <summary>
+        /// 読取
+        /// 
+        /// - 丸括弧の内側には入りません
+        /// - 丸括弧の外側には出ません
+        /// </summary>
+        /// <returns>終端を超えたら、ヌル</returns>
+        public IElement ReadElementWithinEndElement()
+        {
+            var current = Current;
+
+            if (current == null)
             {
                 return null;
             }
@@ -188,7 +218,7 @@
         /// </summary>
         public bool EvaluateElements()
         {
-            IElement element0 = ReadElement();
+            IElement element0 = ReadElementWithoutEndElement();
             Debug.Log($"[EvaluateElements] element0:{element0.ToString()}");
 
             while (element0 != null)
@@ -197,7 +227,7 @@
                 {
                     if (combinator is IdCombinator)
                     {
-                        var arg1 = ReadElement();
+                        var arg1 = ReadElementWithoutEndElement();
 
                         if (arg1 == null)
                         {
@@ -212,8 +242,8 @@
                     }
                     else if (combinator is KCombinator)
                     {
-                        var _arg1 = ReadElement();
-                        var arg2 = ReadElement();
+                        var _arg1 = ReadElementWithoutEndElement();
+                        var arg2 = ReadElementWithoutEndElement();
 
                         if (arg2 == null)
                         {
@@ -229,9 +259,9 @@
                     }
                     else if (combinator is SCombinator)
                     {
-                        var arg1 = ReadElement();
-                        var arg2 = ReadElement();
-                        var arg3 = ReadElement();
+                        var arg1 = ReadElementWithoutEndElement();
+                        var arg2 = ReadElementWithoutEndElement();
+                        var arg3 = ReadElementWithoutEndElement();
 
                         if (arg3 == null)
                         {
@@ -292,7 +322,7 @@
                 }
 
                 // 次の要素へ、読み進める
-                element0 = ReadElement();
+                element0 = ReadElementWithoutEndElement();
             }
 
             // 何も評価せず、終端まで来てしまった
