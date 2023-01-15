@@ -107,8 +107,22 @@
 
             // 最後の要素（最初の要素と同一であるケースを含む）
             IElement expressionEndElement = CursorOperation.GetEndSiblingElementOldtype(expressionStartElement);
+            // IElement expressionEndElement = CursorOperation.GetEndElementEachSibling(expressionStartElement);
             Assert.IsNotNull(expressionEndElement);
             Debug.Log($"[InsertNext] expressionEndElement:{expressionEndElement} {expressionEndElement.GetType().Name}");
+
+            // FIXME 丸括弧の次の要素がヌルのケースがある
+            var expressionEndElementOldNext = expressionEndElement.Next;
+            if (expressionEndElementOldNext != null)
+            {
+                Assert.IsNotNull(expressionEndElementOldNext);
+                Debug.Log($"[InsertNext] expressionEndElementOldNext:{expressionEndElementOldNext} {expressionEndElementOldNext.GetType().Name}");
+            }
+            else
+            {
+                // FIXME
+                Debug.Log($"[InsertNext] expressionEndElementOldNext:null ★");
+            }
 
             // 後ろに回る要素
             var oldRightElement = Next;
@@ -122,13 +136,6 @@
                 var expressionStartElementOldPrevious = expressionStartElement.Previous;
                 Assert.IsNotNull(expressionStartElement);
                 Debug.Log($"[InsertNext] expressionStartElement:{expressionStartElement} {expressionStartElement.GetType().Name}");
-
-                var expressionEndElementOldNext = expressionEndElement.Next;
-                if (expressionEndElementOldNext != null)
-                {
-                    Assert.IsNotNull(expressionEndElementOldNext);
-                    Debug.Log($"[InsertNext] expressionEndElementOldNext:{expressionEndElementOldNext} {expressionEndElementOldNext.GetType().Name}");
-                }
 
                 // 新しいつながりを得る
                 expressionStartElement.SetPreviousManually(this);
@@ -148,8 +155,10 @@
                 }
             }
 
-            // 新しいつながりを得る
+            // この要素は、新しいつながりを得る
             Next = expressionStartElement;
+
+            // 元からあった後ろの要素は、新しいつながりを得る
             oldRightElement.SetPreviousManually(expressionEndElement);
 
             return expressionEndElement;
