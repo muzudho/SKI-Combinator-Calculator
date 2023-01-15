@@ -80,7 +80,7 @@
             Assert.IsNotNull(expressionStartElement);
 
             // 最後の要素（最初の要素と同一であるケースを含む）
-            IElement expressionEndElement = CursorOperation.GetEndElement(expressionStartElement);
+            IElement expressionEndElement = CursorOperation.GetEndSiblingElement(expressionStartElement);
             Assert.IsNotNull(expressionEndElement);
 
             // 後ろに回る要素

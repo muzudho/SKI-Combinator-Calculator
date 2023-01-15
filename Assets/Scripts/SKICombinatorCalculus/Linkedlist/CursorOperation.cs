@@ -119,34 +119,48 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         }
 
         /// <summary>
-        /// TODO 丸括弧を剥がす
+        /// 丸括弧を剥がす
         /// </summary>
         private static void StripParentheses(Parentheses parentheses)
         {
-            // 丸括弧の中身
-            var expression = CursorOperation.Stringify(parentheses.StartElement);
-            Debug.Log($"丸括弧の中身 expression:{expression}");
+            // - StartElement と EndElement が付いた状態が最小の単位なので、「丸括弧を剥がした状態」というものは、この設計の構造では存在しない
+            // - そこで、リンクの貼り直しを行う
+            Debug.Log($"丸括弧を剥がす parentheses:{parentheses}");
 
-            // 生成
-            StartElement topLevelStartElement = CursorOperation.Spawn(expression);
+            // 丸括弧の中身の最初の要素
+            IElement firstElement = parentheses.StartElement.Next;
+            Debug.Log($"丸括弧を剥がす firstElement:{firstElement}");
 
-            var previous = parentheses.Previous;
+            // - `()` のような空丸括弧のケースなら、単純にこの丸括弧を削除するだけでよい
+            // - それ以外のケースでは、リンクを貼り直す
+            if (!(firstElement is EndElement))
+            {
+                // 丸括弧の中身の最後の要素
+                IElement lastElement = CursorOperation.GetEndSiblingElement(firstElement).Previous;
+                Debug.Log($"丸括弧を剥がす lastElement:{lastElement}");
+
+                // 丸括弧の前要素
+                IElement previousElement = parentheses.Previous;
+                // 丸括弧の後要素
+                IElement nextElement = parentheses.Next;
+
+                // リンクの張り直し
+                previousElement.Next = firstElement;
+                nextElement.Previous = lastElement;
+            }
 
             // 丸括弧の削除
             parentheses.Remove();
-
-            // 挿入
-            previous.InsertNext(topLevelStartElement);
         }
 
         /// <summary>
-        /// 最後の要素を取得
+        /// 兄弟の最後の要素を取得
         /// 
         /// - 最初の要素と同一のケースを含む
         /// </summary>
         /// <param name="elementAsStart"></param>
         /// <returns></returns>
-        public static IElement GetEndElement(IElement elementAsStart)
+        public static IElement GetEndSiblingElement(IElement elementAsStart)
         {
             var cursor = new Cursor(elementAsStart);
 
