@@ -17,16 +17,21 @@
             // 文字列化（入力した式）
             {
                 string resultText = CursorOperation.Stringify(topLevelStartElement);
-                calculationProcess.AppendLine(resultText);
+                calculationProcess.AppendLine($"input {resultText}");
             }
 
             int tired = 0;
 
             for (; tired < 100; tired++)
             {
+                bool strippedUnnecessaryParentheses = false;
+                bool evaluated = false;
+
                 // 評価する前に、不要な丸括弧をすべて外す必要がある
                 while (CursorOperation.StripUnnecessaryParentheses(topLevelStartElement))
                 {
+                    strippedUnnecessaryParentheses = true;
+
                     // 文字列化
                     var strippedResultText = CursorOperation.Stringify(topLevelStartElement);
                     calculationProcess.AppendLine($"    stripped {strippedResultText}");
@@ -34,15 +39,20 @@
 
                 // 評価（１回だけ）
                 var cursor = new Cursor(topLevelStartElement);
-                if (!cursor.EvaluateElements())
+                if (cursor.EvaluateElements())
                 {
-                    // TODO 評価できなかったら終了
-                    break;
+                    evaluated = true;
+
+                    // 文字列化
+                    var evaluatedResultText = CursorOperation.Stringify(topLevelStartElement);
+                    calculationProcess.AppendLine($"evaluated {evaluatedResultText}");
                 }
 
-                // 文字列化
-                var evaluatedResultText = CursorOperation.Stringify(topLevelStartElement);
-                calculationProcess.AppendLine(evaluatedResultText);
+                if(!strippedUnnecessaryParentheses && !evaluated)
+                {
+                    // 丸括弧を剥かず、かつ、評価できなかったら終了
+                    break;
+                }
 
                 cursor = new Cursor(topLevelStartElement);
             }
