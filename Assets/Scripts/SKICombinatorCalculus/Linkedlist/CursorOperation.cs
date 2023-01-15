@@ -74,7 +74,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 
             var cursor = new Cursor(topLevelStartElement);
 
-            for (IElement current = cursor.ReadElementWithoutEndElement(); current != null; current = cursor.ReadElementWithoutEndElement())
+            for (IElement current = cursor.ReadElementWithinEndElement(); current != null; current = cursor.ReadElementWithinEndElement())
             {
                 Debug.Log($"丸括弧を探す current:{current}");
 
@@ -98,7 +98,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 
             var cursor = new Cursor(parentheses.StartElement);
 
-            for (IElement current = cursor.ReadElementWithoutEndElement(); current != null; current = cursor.ReadElementWithoutEndElement())
+            for (IElement current = cursor.ReadElementWithinEndElement(); current != null; current = cursor.ReadElementWithinEndElement())
             {
                 if (current is Variable)
                 {
@@ -109,13 +109,20 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                         break;
                     }
                 }
+                else if (current is StartElement || current is EndElement)
+                {
+                    // Ignored
+                    break;
+                }
                 else
                 {
-                    break;
+                    // 変数以外が混じっていたなら
+                    Debug.Log($"[丸括弧必要判定] false 変数以外混合 current:{current} {current.GetType().Name}");
+                    return true;
                 }
             }
 
-            Debug.Log($"丸括弧必要判定 variable:{variable}");
+            Debug.Log($"[丸括弧必要判定] variable:{variable}");
 
             return 1 < variable;
         }
@@ -127,28 +134,25 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         {
             // - StartElement と EndElement が付いた状態が最小の単位なので、「丸括弧を剥がした状態」というものは、この設計の構造では存在しない
             // - そこで、リンクの貼り直しを行う
-            Debug.Log($"丸括弧を剥がす parentheses:{parentheses}");
+            Debug.Log($"[丸括弧を剥がす] parentheses:{parentheses}");
 
             // 丸括弧の中身の最初の要素
             IElement firstChild = parentheses.StartElement.Next;
-            Debug.Log($"丸括弧を剥がす firstElement:{firstChild}");
+            Debug.Log($"[丸括弧を剥がす] firstChild:{firstChild}");
 
             // - `()` のような空丸括弧のケースなら、単純にこの丸括弧を削除するだけでよい
             // - それ以外のケースでは、リンクを貼り直す
             if (!(firstChild is EndElement))
             {
                 // 丸括弧の中身の最後の要素
-                IElement lastElement = CursorOperation.GetEndElementEachSibling(firstChild).Previous;
-                Debug.Log($"丸括弧を剥がす lastElement:{lastElement}");
-
-                // 丸括弧の前要素
-                IElement previousElement = parentheses.Previous;
-                // 丸括弧の後要素
-                IElement nextElement = parentheses.Next;
+                IElement lastChild = CursorOperation.GetEndElementEachSibling(firstChild).Previous;
+                Debug.Log($"[丸括弧を剥がす] lastChild:{lastChild}");
 
                 // リンクの張り直し
-                previousElement.Next = firstChild;
-                nextElement.Previous = lastElement;
+                // 丸括弧の前要素
+                parentheses.Previous.Next = firstChild;
+                // 丸括弧の後要素
+                parentheses.Next.Previous = lastChild;
             }
 
             // 丸括弧の削除
