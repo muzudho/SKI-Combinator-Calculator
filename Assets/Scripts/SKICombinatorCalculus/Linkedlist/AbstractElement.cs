@@ -1,5 +1,6 @@
 ﻿namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 {
+    using System;
     using UnityEngine;
     using UnityEngine.Assertions;
 
@@ -99,6 +100,7 @@
         /// </summary>
         /// <param name="expressionStartElement">単一の要素、または一連の要素</param>
         /// <returns>引数の expressionStartElement の EndElement を返す</returns>
+        [Obsolete]
         public IElement InsertNext(IElement expressionStartElement)
         {
             // FIXME 丸括弧を追加するときに不具合がある？
@@ -109,6 +111,76 @@
             // IElement expressionEndElement = CursorOperation.GetEndSiblingElementOldtypeWithinEndElement(expressionStartElement);
             IElement contentLastElement = CursorOperation.GetLastSiblingOfContentWithoutEndElement(expressionStartElement);
             // IElement expressionEndElement = CursorOperation.GetEndElementEachSibling(expressionStartElement);
+            Assert.IsNotNull(contentLastElement);
+            Debug.Log($"[InsertNext] contentLastElement:{contentLastElement} {contentLastElement.GetType().Name}");
+
+            // FIXME 丸括弧の次の要素がヌルのケースがある
+            var contentLastElementOldNext = contentLastElement.Next;
+            if (contentLastElementOldNext != null)
+            {
+                Assert.IsNotNull(contentLastElementOldNext);
+                Debug.Log($"[InsertNext] contentLastElementOldNext:{contentLastElementOldNext} {contentLastElementOldNext.GetType().Name}");
+            }
+            else
+            {
+                // FIXME
+                Debug.Log($"[InsertNext] expressionEndElementOldNext:null ★おかしい");
+            }
+
+            // 後ろに回る要素
+            var oldRightElement = Next;
+            Assert.IsNotNull(oldRightElement);
+            Debug.Log($"[InsertNext] oldRightElement:{oldRightElement} {oldRightElement.GetType().Name}");
+
+            SetNextManually(expressionStartElement);
+
+            // 挿し込まれる要素
+            {
+                var expressionStartElementOldPrevious = expressionStartElement.Previous;
+                Assert.IsNotNull(expressionStartElement);
+                Debug.Log($"[InsertNext] expressionStartElement:{expressionStartElement} {expressionStartElement.GetType().Name}");
+
+                // 新しいつながりを得る
+                expressionStartElement.SetPreviousManually(this);
+                contentLastElement.SetNextManually(oldRightElement);
+
+                // 元から抜ける
+                {
+                    if (expressionStartElementOldPrevious != null)
+                    {
+                        expressionStartElementOldPrevious.SetNextManually(contentLastElementOldNext);
+                    }
+
+                    if (contentLastElementOldNext != null)
+                    {
+                        contentLastElementOldNext.SetPreviousManually(expressionStartElementOldPrevious);
+                    }
+                }
+            }
+
+            // この要素は、新しいつながりを得る
+            Next = expressionStartElement;
+
+            // 元からあった後ろの要素は、新しいつながりを得る
+            oldRightElement.SetPreviousManually(contentLastElement);
+
+            return contentLastElement;
+        }
+
+        /// <summary>
+        /// 次の要素を挿入
+        /// </summary>
+        /// <param name="expressionStartElement">単一の要素、または一連の要素</param>
+        /// <returns>引数の expressionStartElement の EndElement を返す</returns>
+        public IElement InsertNextType2(IElement expressionStartElement)
+        {
+            // FIXME 丸括弧を追加するときに不具合がある？
+            Assert.IsNotNull(expressionStartElement);
+            Debug.Log($"[InsertNext] expressionStartElement:{expressionStartElement} {expressionStartElement.GetType().Name}");
+
+            // 最後の要素の１つ前（最初の要素と同一であるケースを含む）
+            IElement contentLastElement = expressionStartElement;
+            // IElement contentLastElement = CursorOperation.GetLastSiblingOfContentWithoutEndElement(expressionStartElement);
             Assert.IsNotNull(contentLastElement);
             Debug.Log($"[InsertNext] contentLastElement:{contentLastElement} {contentLastElement.GetType().Name}");
 

@@ -366,13 +366,13 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                         Debug.Log($"[EvaluateElements] S clone1:{clone1} clone2:{clone2} clone3o1:{clone3o1} clone3o2:{clone3o2}");
 
                         Parentheses clone3 = new Parentheses();
-                        clone3.StepIn().InsertNext(clone3o1).InsertNext(clone3o2);
+                        clone3.StepIn().InsertNextType2(clone3o1).InsertNextType2(clone3o2);
 
                         Debug.Log($"[EvaluateElements] S clone3:{clone3}");
 
                         // 複製を追加する
                         // FIXME 丸括弧を追加するときに不具合がある？
-                        combinator.InsertNext(clone1).InsertNext(clone2).InsertNext(clone3);
+                        combinator.InsertNextType2(clone1).InsertNextType2(clone2).InsertNextType2(clone3);
 
                         Debug.Log($"[EvaluateElements] S Result:{CursorOperation.Stringify(cursor.GetSourceElement())}");
 
