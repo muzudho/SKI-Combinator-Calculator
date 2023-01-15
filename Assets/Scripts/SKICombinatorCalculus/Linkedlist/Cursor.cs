@@ -18,10 +18,22 @@
 
         private IElement Current { get; set; }
 
+        [Obsolete]
+        public void SetCurrent(IElement current)
+        {
+            this.Current = current;
+        }
+
         /// <summary>
         /// カーソルに渡された要素
         /// </summary>
         private IElement SourceElement { get; set; }
+
+        [Obsolete]
+        public IElement GetSourceElement()
+        {
+            return this.SourceElement;
+        }
 
         /// <summary>
         /// 書込
@@ -214,129 +226,9 @@
             return current;
         }
 
-        /// <summary>
-        /// 評価
-        /// </summary>
-        public CalculationProcess EvaluateElements()
+        public string ToCurrentString()
         {
-            IElement element0 = ReadElementWithinEndElement();
-            Debug.Log($"[EvaluateElements] element0:{element0}");
-
-            while (element0 != null)
-            {
-                if (element0 is ICombinator combinator)
-                {
-                    if (combinator is IdCombinator)
-                    {
-                        var arg1 = ReadElementWithinEndElement();
-
-                        if (arg1 == null || arg1 is EndElement)
-                        {
-                            // `I` しかないケース
-                            return null;
-                        }
-
-                        Debug.Log($"[EvaluateElements] I arg1:{arg1}");
-
-                        combinator.Remove();
-                        return new CalculationProcess(
-                            combinator: "I",
-                            arg1: arg1.ToString());
-                    }
-                    else if (combinator is KCombinator)
-                    {
-                        var arg1 = ReadElementWithinEndElement();
-                        var arg2 = ReadElementWithinEndElement();
-
-                        if (arg2 == null || arg2 is EndElement)
-                        {
-                            // `K` や、 `Kx` しかないケース
-                            return null;
-                        }
-
-                        Debug.Log($"[EvaluateElements] K arg1:{arg1} arg2:{arg2}");
-
-                        combinator.Remove();
-                        arg2.Remove();
-                        return new CalculationProcess(
-                            combinator: "K",
-                            arg1: arg1.ToString(),
-                            arg2: arg2.ToString());
-                    }
-                    else if (combinator is SCombinator)
-                    {
-                        var arg1 = ReadElementWithinEndElement();
-                        var arg2 = ReadElementWithinEndElement();
-                        var arg3 = ReadElementWithinEndElement();
-
-                        if (arg3 == null || arg3 is EndElement)
-                        {
-                            // `S` や、 `Sa` や、 `Sab` しかないケース
-                            return null;
-                        }
-
-                        Debug.Log($"[EvaluateElements] S 1:{arg1} 2:{arg2} 3:{arg3}");
-
-                        // とりあえず、引数を全部抜く
-                        arg1.Remove();
-                        arg2.Remove();
-                        arg3.Remove();
-
-                        // 複製
-                        var clone1 = arg1.Duplicate();
-                        var clone2 = arg3.Duplicate();
-                        var clone3o1 = arg2.Duplicate();
-                        var clone3o2 = arg3.Duplicate();
-
-                        Debug.Log($"[EvaluateElements] S clone1:{clone1} clone2:{clone2} clone3o1:{clone3o1} clone3o2:{clone3o2}");
-
-                        Parentheses clone3 = new Parentheses();
-                        clone3.StepIn().InsertNext(clone3o1).InsertNext(clone3o2);
-
-                        Debug.Log($"[EvaluateElements] S clone3:{clone3}");
-
-                        // 複製を追加する
-                        combinator.InsertNext(clone1).InsertNext(clone2).InsertNext(clone3);
-
-                        Debug.Log($"[EvaluateElements] S Result:{CursorOperation.Stringify(SourceElement)}");
-
-
-                        // コンビネーター削除
-                        combinator.Remove();
-                        return new CalculationProcess(
-                            combinator: "S",
-                            arg1: arg1.ToString(),
-                            arg2: arg2.ToString(),
-                            arg3: arg3.ToString());
-                    }
-
-                    throw new System.Exception($"unknown combinator:{combinator.GetType().Name}");
-                }
-                else if (element0 is Variable || element0 is StartElement || element0 is EndElement)
-                {
-                    // 変数、`(`、`)` なら評価はできない
-                }
-                else if (element0 is Parentheses parentheses)
-                {
-                    Debug.Log($"丸括弧のケース parentheses:{parentheses.ToString()}");
-                    // TODO 丸括弧を外していいケースかどうかは、ここでは分からない
-
-                    // 丸括弧の内側を（再帰的に）評価することはできるだろう
-                    Current = parentheses.StepIn(); // `(`
-                    Current = ReadChar(); // 丸括弧の内側の先頭要素
-                    Debug.Log($"丸括弧のケース Current:{Current.ToString()}");
-                    var calculationProcess = EvaluateElements(); // 再帰
-
-                    // TODO 丸括弧の右側を評価してはいけない
-                    return calculationProcess;
-                }
-
-                // 次の要素へ、読み進める
-                element0 = ReadElementWithinEndElement();
-            }
-
-            // 何も評価せず、終端まで来てしまった
-            return null;
+            return this.Current.ToString();
         }
     }
 }

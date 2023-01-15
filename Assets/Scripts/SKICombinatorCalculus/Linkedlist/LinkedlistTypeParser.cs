@@ -39,7 +39,7 @@
 
                 // 評価（１回だけ）
                 var cursor = new Cursor(topLevelStartElement);
-                var calculationProcessObj = cursor.EvaluateElements();
+                var calculationProcessObj = CursorOperation.EvaluateElements(cursor);
                 if (calculationProcessObj != null)
                 {
                     evaluated = true;
