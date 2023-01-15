@@ -10,7 +10,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         /// - トップ・レベルであれば、ヌル
         /// - 先頭要素でなければ、ヌル
         /// </summary>
-        Parentheses Parent { get; set; }
+        Placeholder Parent { get; set; }
 
         /// <summary>
         /// 前要素
@@ -52,7 +52,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         /// 丸括弧以外はヌルを返します
         /// </summary>
         /// <returns></returns>
-        StartElement StepIn();
+        FirstCap StepIn();
 
         /// <summary>
         /// 後要素を辿っていき、その最後尾要素の親を返します
@@ -60,7 +60,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         /// - トップ・レベルであれば、ヌルを返します
         /// </summary>
         /// <returns></returns>
-        Parentheses StepOut();
+        Placeholder StepOut();
 
         /// <summary>
         /// Previous プロパティを上書きします

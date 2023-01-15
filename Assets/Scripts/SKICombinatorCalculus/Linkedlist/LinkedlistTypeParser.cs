@@ -9,14 +9,14 @@
             var expression = SKICombinatorCalculator.TrimAllSpaces(inputText);
 
             // 生成
-            StartElement topLevelStartElement = CursorOperation.Spawn(expression);
+            Placeholder topLevel = CursorOperation.Spawn(expression);
 
             // 計算過程
             StringBuilder calculationProcessStr = new StringBuilder();
 
             // 文字列化（入力した式）
             {
-                string resultText = CursorOperation.Stringify(topLevelStartElement);
+                string resultText = CursorOperation.Stringify(topLevel.FirstCap);
                 calculationProcessStr.AppendLine($"input {resultText}");
             }
 
@@ -28,17 +28,17 @@
                 bool evaluated = false;
 
                 // 評価する前に、不要な丸括弧をすべて外す必要がある
-                while (CursorOperation.StripUnnecessaryParentheses(topLevelStartElement))
+                while (CursorOperation.StripUnnecessaryParentheses(topLevel.FirstCap))
                 {
                     strippedUnnecessaryParentheses = true;
 
                     // 文字列化
-                    var strippedResultText = CursorOperation.Stringify(topLevelStartElement);
+                    var strippedResultText = CursorOperation.Stringify(topLevel.FirstCap);
                     calculationProcessStr.AppendLine($"    stripped {strippedResultText}");
                 }
 
                 // 評価（１回だけ）
-                var cursor = new CursorIO(topLevelStartElement);
+                var cursor = new CursorIO(topLevel.FirstCap);
                 var calculationProcessObj = CursorOperation.EvaluateElements(cursor);
                 if (calculationProcessObj != null)
                 {
@@ -48,7 +48,7 @@
                     calculationProcessStr.AppendLine(calculationProcessObj.ToString());
 
                     // 文字列化
-                    var evaluatedResultText = CursorOperation.Stringify(topLevelStartElement);
+                    var evaluatedResultText = CursorOperation.Stringify(topLevel.FirstCap);
                     calculationProcessStr.AppendLine($"evaluated {evaluatedResultText}");
                 }
 
@@ -58,7 +58,7 @@
                     break;
                 }
 
-                cursor = new CursorIO(topLevelStartElement);
+                cursor = new CursorIO(topLevel.FirstCap);
             }
 
             if (100 <= tired)
@@ -67,7 +67,7 @@
                 calculationProcessStr.AppendLine("very tired...");
             }
 
-            return new ParserResult(topLevelStartElement, calculationProcessStr.ToString());
+            return new ParserResult(topLevel.FirstCap, calculationProcessStr.ToString());
         }
     }
 }

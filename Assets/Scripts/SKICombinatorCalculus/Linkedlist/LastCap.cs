@@ -6,13 +6,13 @@
     /// - トップ・レベルでは数式の右側の外相当
     /// - 丸括弧では `)` 相当
     /// </summary>
-    internal class EndElement : AbstractElement
+    internal class LastCap : AbstractElement
     {
         /// <summary>
         /// 生成
         /// </summary>
         /// <param name="parentheses">親要素。トップ・レベルであれば、ヌル</param>
-        public EndElement(Parentheses parentheses)
+        public LastCap(Placeholder parentheses)
         {
             Parent = parentheses;
         }

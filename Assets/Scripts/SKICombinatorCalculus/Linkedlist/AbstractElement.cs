@@ -6,11 +6,11 @@
 
     internal abstract class AbstractElement : IElement
     {
-        public Parentheses Parent { get; set; }
+        public Placeholder Parent { get; set; }
         public IElement Previous { get; set; }
         public void SetPreviousManually(IElement previous)
         {
-            if (this is StartElement)
+            if (this is FirstCap)
             {
                 // FIXME
                 throw new System.Exception("StartElementでPrevious操作するとおかしくなる");
@@ -21,7 +21,7 @@
         public IElement Next { get; private set; }
         public void SetNextManually(IElement next)
         {
-            if (this is EndElement)
+            if (this is LastCap)
             {
                 // FIXME
                 throw new System.Exception("EndElementでNext操作するとおかしくなる");
@@ -51,19 +51,19 @@
             {
                 return new Variable(variable.Character);
             }
-            else if (this is Parentheses parentheses)
+            else if (this is Placeholder parentheses)
             {
                 // 両端の丸括弧含む
                 var text = parentheses.ToString();
                 // 両端の丸括弧を含まない
                 var content = text[1..(text.Length - 1)];
 
-                // トップ・レベルの始端と終端
-                var newStartElement = new StartElement(new EndElement(null));
+                // トップ・レベル
+                var newTopLevel = new Placeholder(withParentheses: false);
 
                 // 生成
                 {
-                    var cursor = new CursorIO(newStartElement);
+                    var cursor = new CursorIO(newTopLevel.FirstCap);
 
                     // 先頭から順に書いていくだけ
                     foreach (var ch in content)
@@ -72,7 +72,7 @@
                     }
                 }
 
-                return new Parentheses(newStartElement);
+                return newTopLevel;
             }
             else
             {
@@ -85,8 +85,8 @@
         /// </summary>
         public void Remove()
         {
-            Assert.IsFalse(this is StartElement);
-            Assert.IsFalse(this is EndElement);
+            Assert.IsFalse(this is FirstCap);
+            Assert.IsFalse(this is LastCap);
 
             var oldPrevious = this.Previous;
             var oldNext = this.Next;
@@ -242,11 +242,11 @@
         /// 丸括弧以外はヌルを返します
         /// </summary>
         /// <returns></returns>
-        public StartElement StepIn()
+        public FirstCap StepIn()
         {
-            if (this is Parentheses parentheses)
+            if (this is Placeholder parentheses)
             {
-                return parentheses.StartElement;
+                return parentheses.FirstCap;
             }
 
             return null;
@@ -258,7 +258,7 @@
         /// - トップ・レベルであれば、ヌルを返します
         /// </summary>
         /// <returns></returns>
-        public Parentheses StepOut()
+        public Placeholder StepOut()
         {
             IElement current = this;
             while (current.Next != null)

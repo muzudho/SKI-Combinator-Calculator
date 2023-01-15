@@ -2,13 +2,13 @@
 {
     internal class ParserResult
     {
-        public ParserResult(StartElement startElement, string calculationProcess)
+        public ParserResult(FirstCap startElement, string calculationProcess)
         {
             this.StartElement = startElement;
             CalculationProcess = calculationProcess;
         }
 
-        public StartElement StartElement { get; protected set; }
+        public FirstCap StartElement { get; protected set; }
 
         /// <summary>
         /// 計算過程

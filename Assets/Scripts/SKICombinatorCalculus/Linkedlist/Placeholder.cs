@@ -2,25 +2,27 @@
 {
     using System.Text;
 
-    internal class Parentheses : AbstractElement
+    internal class Placeholder : AbstractElement
     {
-        public Parentheses()
+        public Placeholder(bool withParentheses)
         {
-            StartElement = new StartElement(new EndElement(this));
+            if (withParentheses)
+            {
+                FirstCap = new FirstCap(new LastCap(this));
+            }
+            else
+            {
+                FirstCap = new FirstCap(new LastCap(null));
+            }
         }
 
-        public Parentheses(StartElement startElement)
-        {
-            StartElement = startElement;
-        }
-
-        public StartElement StartElement { get; private set; }
+        public FirstCap FirstCap { get; private set; }
 
         public override string ToString()
         {
             StringBuilder buf = new StringBuilder();
 
-            IElement current = StartElement;
+            IElement current = FirstCap;
             while (current!=null)
             {
                 buf.Append(current.ToString());

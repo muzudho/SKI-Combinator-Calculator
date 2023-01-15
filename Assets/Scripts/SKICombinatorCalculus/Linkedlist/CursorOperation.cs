@@ -13,12 +13,12 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         /// </summary>
         /// <param name="expression">空白除去済みの式</param>
         /// <returns>topLevelStartElement</returns>
-        public static StartElement Spawn(string expression)
+        public static Placeholder Spawn(string expression)
         {
-            // トップ・レベルの始端と終端
-            StartElement topLevelStartElement = new StartElement(new EndElement(null));
+            // トップ・レベル
+            Placeholder topLevel = new Placeholder(withParentheses: false);
 
-            var cursor = new CursorIO(topLevelStartElement);
+            var cursor = new CursorIO(topLevel.FirstCap);
 
             // 先頭から順に書いていくだけ
             foreach (var ch in expression)
@@ -26,7 +26,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                 cursor.Write(ch);
             }
 
-            return topLevelStartElement;
+            return topLevel;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         {
             // Debug.Log("[不要な丸括弧の除去] 開始");
 
-            Parentheses parentheses = FindParenthesesEachElement(topLevelStartElement);
+            Placeholder parentheses = FindParenthesesEachElement(topLevelStartElement);
             if (parentheses == null)
             {
                 // Debug.Log("[不要な丸括弧の除去] 丸括弧 not found");
@@ -69,7 +69,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         /// <summary>
         /// 丸括弧を探す
         /// </summary>
-        private static Parentheses FindParenthesesEachElement(IElement topLevelStartElement)
+        private static Placeholder FindParenthesesEachElement(IElement topLevelStartElement)
         {
             // Debug.Log($"丸括弧を探す topLevelStartElement:{topLevelStartElement}");
 
@@ -79,7 +79,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
             {
                 // Debug.Log($"丸括弧を探す current:{current}");
 
-                if (current is Parentheses parentheses)
+                if (current is Placeholder parentheses)
                 {
                     return parentheses;
                 }
@@ -93,11 +93,11 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         /// 
         /// - `()` や、 `(x)` のような、１つ以下の変数しか含まない丸括弧は不要
         /// </summary>
-        private static bool CheckNecessaryParentheses(Parentheses parentheses)
+        private static bool CheckNecessaryParentheses(Placeholder parentheses)
         {
             int variableNum = 0;
 
-            var cursor = new CursorIO(parentheses.StartElement);
+            var cursor = new CursorIO(parentheses.FirstCap);
 
             for (IElement current = cursor.ReadElementWithinEndElement(); current != null; current = cursor.ReadElementWithinEndElement())
             {
@@ -114,7 +114,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                         return true;
                     }
                 }
-                else if (current is StartElement || current is EndElement)
+                else if (current is FirstCap || current is LastCap)
                 {
                     // Ignored
                 }
@@ -134,24 +134,24 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         /// <summary>
         /// 丸括弧を剥がす
         /// </summary>
-        private static void StripParentheses(Parentheses parentheses)
+        private static void StripParentheses(Placeholder parentheses)
         {
             // - StartElement と EndElement が付いた状態が最小の単位なので、「丸括弧を剥がした状態」というものは、この設計の構造では存在しない
             // - そこで、リンクの貼り直しを行う
             Debug.Log($"[丸括弧を剥がす] parentheses:{parentheses}");
 
             // 丸括弧のクローン作成
-            Parentheses clonedParentheses = (Parentheses)parentheses.Duplicate();
+            Placeholder clonedParentheses = (Placeholder)parentheses.Duplicate();
             Debug.Log($"[丸括弧を剥がす] clonedParentheses(Top Level):{clonedParentheses}");
 
             // 丸括弧の中身の最初の要素
-            Debug.Log($"[丸括弧を剥がす] clonedParentheses(Top Level).StartElement:{clonedParentheses.StartElement}");
-            IElement clonedFirstChild = clonedParentheses.StartElement.Next;
+            Debug.Log($"[丸括弧を剥がす] clonedParentheses(Top Level).StartElement:{clonedParentheses.FirstCap}");
+            IElement clonedFirstChild = clonedParentheses.FirstCap.Next;
             Debug.Log($"[丸括弧を剥がす] clonedFirstChild:{clonedFirstChild}");
 
             // - `()` のような空丸括弧のケースなら、単純にこの丸括弧を削除するだけでよい
             // - それ以外のケースでは、リンクを貼り直す
-            if (!(clonedFirstChild is EndElement))
+            if (!(clonedFirstChild is LastCap))
             {
                 // 丸括弧の中身の最後の要素
                 IElement clonedLastChild = CursorOperation.GetEndElementEachSibling(clonedFirstChild).Previous;
@@ -251,7 +251,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                 throw new System.Exception("[CursorOperation GetEndElementEachSibling] null 1");
             }
 
-            while (!(current is EndElement))
+            while (!(current is LastCap))
             {
                 // Next
                 current = cursor.ReadElementWithinEndElement();
@@ -264,7 +264,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
             }
 
             // `)`
-            Assert.IsTrue(current is EndElement);
+            Assert.IsTrue(current is LastCap);
             return current;
         }
 
@@ -305,7 +305,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                     {
                         var arg1 = cursor.ReadElementWithinEndElement();
 
-                        if (arg1 == null || arg1 is EndElement)
+                        if (arg1 == null || arg1 is LastCap)
                         {
                             // `I` しかないケース
                             return null;
@@ -323,7 +323,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                         var arg1 = cursor.ReadElementWithinEndElement();
                         var arg2 = cursor.ReadElementWithinEndElement();
 
-                        if (arg2 == null || arg2 is EndElement)
+                        if (arg2 == null || arg2 is LastCap)
                         {
                             // `K` や、 `Kx` しかないケース
                             return null;
@@ -344,7 +344,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                         var arg2 = cursor.ReadElementWithinEndElement();
                         var arg3 = cursor.ReadElementWithinEndElement();
 
-                        if (arg3 == null || arg3 is EndElement)
+                        if (arg3 == null || arg3 is LastCap)
                         {
                             // `S` や、 `Sa` や、 `Sab` しかないケース
                             return null;
@@ -365,7 +365,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 
                         Debug.Log($"[EvaluateElements] S clone1:{clone1} clone2:{clone2} clone3o1:{clone3o1} clone3o2:{clone3o2}");
 
-                        Parentheses clone3 = new Parentheses();
+                        Placeholder clone3 = new Placeholder(withParentheses: true);
                         clone3.StepIn().InsertNextType2(clone3o1).InsertNextType2(clone3o2);
 
                         Debug.Log($"[EvaluateElements] S clone3:{clone3}");
@@ -388,11 +388,11 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 
                     throw new System.Exception($"unknown combinator:{combinator.GetType().Name}");
                 }
-                else if (element0 is Variable || element0 is StartElement || element0 is EndElement)
+                else if (element0 is Variable || element0 is FirstCap || element0 is LastCap)
                 {
                     // 変数、`(`、`)` なら評価はできない
                 }
-                else if (element0 is Parentheses parentheses)
+                else if (element0 is Placeholder parentheses)
                 {
                     Debug.Log($"丸括弧のケース parentheses:{parentheses.ToString()}");
                     // TODO 丸括弧を外していいケースかどうかは、ここでは分からない

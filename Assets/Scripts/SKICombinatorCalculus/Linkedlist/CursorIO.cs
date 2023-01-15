@@ -67,16 +67,16 @@
 
                 case '(':
                     {
-                        var parentheses = new Parentheses();
+                        var parentheses = new Placeholder(withParentheses: true);
                         Current.InsertNext(parentheses);
                         Current = parentheses.StepIn();
-                        Assert.IsNotNull(Current, $"parentheses.StartElement:{parentheses.StartElement}");
+                        Assert.IsNotNull(Current, $"parentheses.StartElement:{parentheses.FirstCap}");
                     }
                     break;
 
                 case ')':
                     {
-                        Parentheses parentheses = Current.StepOut();
+                        Placeholder parentheses = Current.StepOut();
                         Assert.IsNotNull(parentheses, $"Current:{Current}");
                         Current = parentheses;
                     }
@@ -107,7 +107,7 @@
             var current = Current;
 
             // トップ・レベルの先頭要素は飛ばす
-            if (current is StartElement startElement && startElement.Parent == null)
+            if (current is FirstCap startElement && startElement.Parent == null)
             {
                 Current = current.Next;
                 current = Current;
@@ -117,16 +117,16 @@
             {
                 return null;
             }
-            else if (current is Parentheses parentheses)
+            else if (current is Placeholder parentheses)
             {
-                current = parentheses.StartElement;
+                current = parentheses.FirstCap;
                 Current = current.Next;
                 return current;
             }
-            else if (current is EndElement endElement)
+            else if (current is LastCap endElement)
             {
                 current = endElement;
-                Parentheses parentheses2 = endElement.Parent;
+                Placeholder parentheses2 = endElement.Parent;
                 if (parentheses2 == null)
                 {
                     return null;
@@ -154,13 +154,13 @@
             var current = Current;
 
             // `)` はヌル扱いです
-            if (current == null || current is EndElement)
+            if (current == null || current is LastCap)
             {
                 return null;
             }
 
             // トップ・レベルの先頭要素は飛ばす
-            if (current is StartElement startElement && startElement.Parent == null)
+            if (current is FirstCap startElement && startElement.Parent == null)
             {
                 Current = current.Next;
                 current = Current;
@@ -187,7 +187,7 @@
             }
 
             // トップ・レベルの先頭要素は飛ばす
-            if (current is StartElement startElement && startElement.Parent == null)
+            if (current is FirstCap startElement && startElement.Parent == null)
             {
                 Current = current.Next;
                 current = Current;
@@ -216,7 +216,7 @@
             Current = current.Previous;
 
             // トップ・レベルの先頭要素は、カーソルは指さない
-            if (current is StartElement startElement && startElement.Parent == null)
+            if (current is FirstCap startElement && startElement.Parent == null)
             {
                 return null;
             }
