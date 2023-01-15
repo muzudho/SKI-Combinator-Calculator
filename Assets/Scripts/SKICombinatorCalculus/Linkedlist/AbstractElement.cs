@@ -88,6 +88,7 @@
         /// <returns>引数の expressionStartElement の EndElement を返す</returns>
         public IElement InsertNext(IElement expressionStartElement)
         {
+            // FIXME 丸括弧を追加するときに不具合がある？
             Assert.IsNotNull(expressionStartElement);
 
             // 最後の要素（最初の要素と同一であるケースを含む）

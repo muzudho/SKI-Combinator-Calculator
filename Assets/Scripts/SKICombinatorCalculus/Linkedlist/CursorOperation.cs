@@ -41,28 +41,28 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         /// <returns></returns>
         public static bool StripUnnecessaryParentheses(IElement topLevelStartElement)
         {
-            Debug.Log("[不要な丸括弧の除去] 開始");
+            // Debug.Log("[不要な丸括弧の除去] 開始");
 
             Parentheses parentheses = FindParenthesesEachElement(topLevelStartElement);
             if (parentheses == null)
             {
-                Debug.Log("[不要な丸括弧の除去] 丸括弧 not found");
+                // Debug.Log("[不要な丸括弧の除去] 丸括弧 not found");
                 return false;
             }
 
-            Debug.Log($"[不要な丸括弧の除去] 丸括弧発見 parentheses:{parentheses}");
+            // Debug.Log($"[不要な丸括弧の除去] 丸括弧発見 parentheses:{parentheses}");
 
             bool necessary = CheckNecessaryParentheses(parentheses);
             if (!necessary)
             {
-                Debug.Log("[不要な丸括弧の除去] 丸括弧 不要");
+                // Debug.Log("[不要な丸括弧の除去] 丸括弧 不要");
                 StripParentheses(parentheses);
 
-                Debug.Log("[不要な丸括弧の除去] true 丸括弧除去済");
+                // Debug.Log("[不要な丸括弧の除去] true 丸括弧除去済");
                 return true;
             }
 
-            Debug.Log("[不要な丸括弧の除去] false 丸括弧必要");
+            // Debug.Log("[不要な丸括弧の除去] false 丸括弧必要");
             return false;
         }
 
@@ -71,13 +71,13 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         /// </summary>
         private static Parentheses FindParenthesesEachElement(IElement topLevelStartElement)
         {
-            Debug.Log($"丸括弧を探す topLevelStartElement:{topLevelStartElement}");
+            // Debug.Log($"丸括弧を探す topLevelStartElement:{topLevelStartElement}");
 
             var cursor = new Cursor(topLevelStartElement);
 
             for (IElement current = cursor.ReadElementWithinEndElement(); current != null; current = cursor.ReadElementWithinEndElement())
             {
-                Debug.Log($"丸括弧を探す current:{current}");
+                // Debug.Log($"丸括弧を探す current:{current}");
 
                 if (current is Parentheses parentheses)
                 {
@@ -101,7 +101,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 
             for (IElement current = cursor.ReadElementWithinEndElement(); current != null; current = cursor.ReadElementWithinEndElement())
             {
-                Debug.Log($"[丸括弧必要判定] Loop current:{current} {current.GetType().Name}");
+                // Debug.Log($"[丸括弧必要判定] Loop current:{current} {current.GetType().Name}");
 
                 if (current is Variable)
                 {
@@ -110,7 +110,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                     if (2 <= variableNum)
                     {
                         // 変数が２個連続していたら、丸括弧は必要
-                        Debug.Log($"[丸括弧必要判定] true 変数が２個連続していたら、丸括弧は必要 current:{current} {current.GetType().Name}");
+                        // Debug.Log($"[丸括弧必要判定] true 変数が２個連続していたら、丸括弧は必要 current:{current} {current.GetType().Name}");
                         return true;
                     }
                 }
@@ -121,13 +121,13 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                 else
                 {
                     // 変数以外が混じっていたなら
-                    Debug.Log($"[丸括弧必要判定] true 変数以外混合 current:{current} {current.GetType().Name}");
+                    // Debug.Log($"[丸括弧必要判定] true 変数以外混合 current:{current} {current.GetType().Name}");
                     return true;
                 }
             }
 
             // 変数が２個未満だから、丸括弧は不要
-            Debug.Log($"[丸括弧必要判定] 変数が２個未満だから不要 variable num:{variableNum}");
+            // Debug.Log($"[丸括弧必要判定] 変数が２個未満だから不要 variable num:{variableNum}");
             return false;
         }
 
@@ -338,6 +338,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                         Debug.Log($"[EvaluateElements] S clone3:{clone3}");
 
                         // 複製を追加する
+                        // FIXME 丸括弧を追加するときに不具合がある？
                         combinator.InsertNext(clone1).InsertNext(clone2).InsertNext(clone3);
 
                         Debug.Log($"[EvaluateElements] S Result:{CursorOperation.Stringify(cursor.GetSourceElement())}");
