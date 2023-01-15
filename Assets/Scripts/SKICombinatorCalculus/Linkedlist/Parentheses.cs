@@ -2,14 +2,14 @@
 {
     using System.Text;
 
-    internal class Parenteses : AbstractElement
+    internal class Parentheses : AbstractElement
     {
-        public Parenteses()
+        public Parentheses()
         {
             StartElement = new StartElement(new EndElement(this));
         }
 
-        public Parenteses(StartElement startElement)
+        public Parentheses(StartElement startElement)
         {
             StartElement = startElement;
         }

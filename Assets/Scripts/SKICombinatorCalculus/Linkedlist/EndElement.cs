@@ -11,10 +11,10 @@
         /// <summary>
         /// 生成
         /// </summary>
-        /// <param name="parenteses">親要素。トップ・レベルであれば、ヌル</param>
-        public EndElement(Parenteses parenteses)
+        /// <param name="parentheses">親要素。トップ・レベルであれば、ヌル</param>
+        public EndElement(Parentheses parentheses)
         {
-            Parent = parenteses;
+            Parent = parentheses;
         }
 
         public override string ToString()

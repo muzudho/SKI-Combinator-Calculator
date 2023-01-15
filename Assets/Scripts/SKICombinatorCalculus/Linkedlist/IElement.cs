@@ -8,7 +8,7 @@
         /// - トップ・レベルであれば、ヌル
         /// - 先頭要素でなければ、ヌル
         /// </summary>
-        Parenteses Parent { get; set; }
+        Parentheses Parent { get; set; }
 
         /// <summary>
         /// 前要素
@@ -31,7 +31,7 @@
         void Remove();
 
         /// <summary>
-        /// 次の要素を挿入
+        /// 要素１つを、後要素として挿入
         /// </summary>
         /// <param name="removable"></param>
         /// <returns>引数の removable をそのまま返す</returns>
@@ -50,6 +50,6 @@
         /// - トップ・レベルであれば、ヌルを返します
         /// </summary>
         /// <returns></returns>
-        Parenteses StepOut();
+        Parentheses StepOut();
     }
 }

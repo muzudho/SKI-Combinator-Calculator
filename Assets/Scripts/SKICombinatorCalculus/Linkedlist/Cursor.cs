@@ -55,18 +55,18 @@
 
                 case '(':
                     {
-                        var parenteses = new Parenteses();
-                        Current.InsertNext(parenteses);
-                        Current = parenteses.StepIn();
-                        Assert.IsNotNull(Current, $"parenteses.StartElement:{parenteses.StartElement}");
+                        var parentheses = new Parentheses();
+                        Current.InsertNext(parentheses);
+                        Current = parentheses.StepIn();
+                        Assert.IsNotNull(Current, $"parentheses.StartElement:{parentheses.StartElement}");
                     }
                     break;
 
                 case ')':
                     {
-                        Parenteses parenteses = Current.StepOut();
-                        Assert.IsNotNull(parenteses, $"Current:{Current}");
-                        Current = parenteses;
+                        Parentheses parentheses = Current.StepOut();
+                        Assert.IsNotNull(parentheses, $"Current:{Current}");
+                        Current = parentheses;
                     }
                     break;
 
@@ -105,22 +105,22 @@
             {
                 return null;
             }
-            else if (current is Parenteses parenteses)
+            else if (current is Parentheses parentheses)
             {
-                current = parenteses.StartElement;
+                current = parentheses.StartElement;
                 Current = current.Next;
                 return current;
             }
             else if (current is EndElement endElement)
             {
                 current = endElement;
-                Parenteses parenteses2 = endElement.Parent;
-                if (parenteses2 == null)
+                Parentheses parentheses2 = endElement.Parent;
+                if (parentheses2 == null)
                 {
                     return null;
                 }
 
-                Current = parenteses2.Next;
+                Current = parentheses2.Next;
                 return current;
             }
 
@@ -254,7 +254,7 @@
 
                         Debug.Log($"[EvaluateElements] S clone1:{clone1} clone2:{clone2} clone3o1:{clone3o1} clone3o2:{clone3o2}");
 
-                        Parenteses clone3 = new Parenteses();
+                        Parentheses clone3 = new Parentheses();
                         clone3.StepIn().InsertNext(clone3o1).InsertNext(clone3o2);
 
                         Debug.Log($"[EvaluateElements] S clone3:{clone3}");
@@ -263,7 +263,7 @@
                         combinator.InsertNext(clone1).InsertNext(clone2).InsertNext(clone3);
 
                         Debug.Log($"[EvaluateElements] S Result:{LinkedlistTypeParser.Stringify(SourceElement)}");
-                        
+
 
                         // コンビネーター削除
                         combinator.Remove();
@@ -276,13 +276,13 @@
                 {
                     // 変数、`(` なら評価はできない
                 }
-                else if (element0 is Parenteses parenteses)
+                else if (element0 is Parentheses parentheses)
                 {
-                    Debug.Log($"丸括弧のケース parenteses:{parenteses.ToString()}");
+                    Debug.Log($"丸括弧のケース parentheses:{parentheses.ToString()}");
                     // TODO 丸括弧を外していいケースかどうかは、ここでは分からない
 
                     // 丸括弧の内側を（再帰的に）評価することはできるだろう
-                    Current = parenteses.StepIn(); // `(`
+                    Current = parentheses.StepIn(); // `(`
                     Current = ReadChar(); // 丸括弧の内側の先頭要素
                     Debug.Log($"丸括弧のケース Current:{Current.ToString()}");
                     var isOk = EvaluateElements(); // 再帰

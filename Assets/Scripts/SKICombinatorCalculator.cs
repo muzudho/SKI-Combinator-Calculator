@@ -47,7 +47,7 @@ internal class SKICombinatorCalculator
 
         return $@"Linked type parser
 
-{linkedlistTypeParserResult}
+{linkedlistTypeParserResult.CalculationProcess}
 
 --------
 

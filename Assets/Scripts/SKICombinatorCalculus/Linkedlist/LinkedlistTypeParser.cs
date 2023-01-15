@@ -4,7 +4,7 @@
 
     internal static class LinkedlistTypeParser
     {
-        public static string Parse(string inputText)
+        public static ParserResult Parse(string inputText)
         {
             var expression = SKICombinatorCalculator.TrimAllSpaces(inputText);
 
@@ -31,6 +31,16 @@
                 calculationProcess.AppendLine(resultText);
             }
 
+            // TODO 評価する前に、不要な丸括弧を外す必要がある
+            {
+                while (CursorOperation.StripUnnecessaryParentheses(topLevelStartElement))
+                {
+                    // 文字列化
+                    var resultText = Stringify(topLevelStartElement);
+                    calculationProcess.AppendLine(resultText);
+                }
+            }
+
             // 評価
             {
                 var cursor = new Cursor(topLevelStartElement);
@@ -45,7 +55,7 @@
                 }
             }
 
-            return calculationProcess.ToString();
+            return new ParserResult(topLevelStartElement, calculationProcess.ToString());
         }
 
         /// <summary>

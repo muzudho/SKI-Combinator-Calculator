@@ -23,7 +23,7 @@
                 return (false, "");
             }
 
-            ParentesesAsTextType.Strip(
+            ParenthesesAsTextType.Strip(
                 expression: arg1,
                 onOk: (value) =>
                 {
@@ -36,7 +36,7 @@
                 return (false, "");
             }
 
-            ParentesesAsTextType.Strip(
+            ParenthesesAsTextType.Strip(
                 expression: arg2,
                 onOk: (value) =>
                 {
@@ -49,7 +49,7 @@
                 return (false, "");
             }
 
-            ParentesesAsTextType.Strip(
+            ParenthesesAsTextType.Strip(
                 expression: arg3,
                 onOk: (value) =>
                 {

@@ -26,7 +26,7 @@ internal static class RightOfCursor
                 case '(':
                     {
                         // 指定した開き括弧に対応する閉じ丸括弧を剥く（剥けないケースもある）
-                        var (error, rest2) = UnnecessaryParenteses.Strip(rest, i);
+                        var (error, rest2) = UnnecessaryParentheses.Strip(rest, i);
                         switch (error)
                         {
                             case UnnecessaryParenthesesStripError.None:

@@ -21,7 +21,7 @@
                 return (false, "");
             }
 
-            ParentesesAsTextType.Strip(
+            ParenthesesAsTextType.Strip(
                 expression: arg1,
                 onOk: (value) =>
                 {

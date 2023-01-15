@@ -26,7 +26,7 @@
         /// <summary>
         /// 終端要素の親と同じ
         /// </summary>
-        public new Parenteses Parent
+        public new Parentheses Parent
         {
             get
             {

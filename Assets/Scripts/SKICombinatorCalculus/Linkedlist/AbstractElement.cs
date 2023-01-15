@@ -4,7 +4,7 @@
 
     internal abstract class AbstractElement : IElement
     {
-        public Parenteses Parent { get; set; }
+        public Parentheses Parent { get; set; }
         public IElement Previous { get; set; }
         public IElement Next { get; set; }
 
@@ -29,9 +29,9 @@
             {
                 return new Variable(variable.Character);
             }
-            else if (this is Parenteses parenteses)
+            else if (this is Parentheses parentheses)
             {
-                var expression = parenteses.ToString();
+                var expression = parentheses.ToString();
 
                 // トップ・レベルの始端と終端
                 var newStartElement = new StartElement(new EndElement(null));
@@ -47,7 +47,7 @@
                     }
                 }
 
-                return new Parenteses(newStartElement);
+                return new Parentheses(newStartElement);
             }
             else
             {
@@ -73,37 +73,41 @@
         /// <summary>
         /// 次の要素を挿入
         /// </summary>
-        /// <param name="removable"></param>
-        /// <returns>引数の removable をそのまま返す</returns>
-        public IElement InsertNext(IElement removable)
+        /// <param name="expressionStartElement">単一の要素、または一連の要素</param>
+        /// <returns>引数の expressionStartElement の EndElement を返す</returns>
+        public IElement InsertNext(IElement expressionStartElement)
         {
-            Assert.IsNotNull(removable);
+            Assert.IsNotNull(expressionStartElement);
+
+            // 最後の要素（最初の要素と同一であるケースを含む）
+            IElement expressionEndElement = CursorOperation.GetEndElement(expressionStartElement);
+            Assert.IsNotNull(expressionEndElement);
 
             // 後ろに回る要素
             var oldNext = Next;
-            Next = removable;
+            Next = expressionStartElement;
 
             // 挿し込まれる要素
             {
-                var removableOldPrevious = removable.Previous;
-                var removableOldNext = removable.Next;
+                var expressionStartElementOldPrevious = expressionStartElement.Previous;
+                var expressionEndElementOldNext = expressionEndElement.Next;
 
-                removable.Previous = this;
-                removable.Next = oldNext;
+                expressionStartElement.Previous = this;
+                expressionStartElement.Next = oldNext;
 
-                if (removableOldPrevious != null)
+                if (expressionStartElementOldPrevious != null)
                 {
-                    removableOldPrevious.Next = removableOldNext;
+                    expressionStartElementOldPrevious.Next = expressionEndElementOldNext;
                 }
 
-                if (removableOldNext != null)
+                if (expressionEndElementOldNext != null)
                 {
-                    removableOldNext.Previous = removableOldPrevious;
+                    expressionEndElementOldNext.Previous = expressionStartElementOldPrevious;
                 }
             }
 
-            oldNext.Previous = removable;
-            return removable;
+            oldNext.Previous = expressionEndElement;
+            return expressionEndElement;
         }
 
         /// <summary>
@@ -113,9 +117,9 @@
         /// <returns></returns>
         public StartElement StepIn()
         {
-            if (this is Parenteses parenteses)
+            if (this is Parentheses parentheses)
             {
-                return parenteses.StartElement;
+                return parentheses.StartElement;
             }
 
             return null;
@@ -127,7 +131,7 @@
         /// - トップ・レベルであれば、ヌルを返します
         /// </summary>
         /// <returns></returns>
-        public Parenteses StepOut()
+        public Parentheses StepOut()
         {
             IElement current = this;
             while (current.Next != null)

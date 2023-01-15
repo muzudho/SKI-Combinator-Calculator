@@ -3,7 +3,7 @@
     /// <summary>
     /// "(xyz)" のように、 "(" で始まり、")" で終わるような文字列
     /// </summary>
-    internal static class ParentesesAsTextType
+    internal static class ParenthesesAsTextType
     {
         public delegate void SetString(string value);
 

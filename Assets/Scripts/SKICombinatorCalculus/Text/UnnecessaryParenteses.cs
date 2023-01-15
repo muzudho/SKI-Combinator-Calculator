@@ -7,7 +7,7 @@
     /// 
     /// 指定した開き括弧に対応する閉じ丸括弧を剥く（剥けないケースもある）
     /// </summary>
-    internal static class UnnecessaryParenteses
+    internal static class UnnecessaryParentheses
     {
         /// <summary>
         /// 不要な丸かっこを剥く
