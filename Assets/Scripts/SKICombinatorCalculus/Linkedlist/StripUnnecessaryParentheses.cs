@@ -174,7 +174,8 @@
             Debug.Log($"[StripParentheses] stripped parentheses:{strippedPlaceholder} withParentheses:{strippedPlaceholder.WithParentheses}");
 
             // 挿入し直す
-            newLeader.InsertNextAll(new CursorIO(strippedPlaceholder.FirstCap));
+            // TODO 構造が壊れてる？
+            CursorOperation.InsertNextAll(strippedPlaceholder.ToString(), new CursorIO(newLeader));
             // newLeader.InsertNext(strippedPlaceholder);
 
             //// 丸括弧の中身の最初の要素

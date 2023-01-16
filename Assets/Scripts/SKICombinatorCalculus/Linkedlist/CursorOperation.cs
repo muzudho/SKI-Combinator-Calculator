@@ -253,5 +253,18 @@
             // 何も評価せず、終端まで来てしまった
             return null;
         }
+
+        /// <summary>
+        /// 複数の要素を、後要素として挿入
+        /// </summary>
+        /// <param name="readCursor"></param>
+        /// <returns>挿入後の次の要素を返す</returns>
+        public static void InsertNextAll(string expression, CursorIO writeCursor)
+        {
+            foreach (char ch in expression)
+            {
+                writeCursor.Write(ch);
+            }
+        }
     }
 }
