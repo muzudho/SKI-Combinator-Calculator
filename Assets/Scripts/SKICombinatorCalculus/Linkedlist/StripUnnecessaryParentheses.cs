@@ -147,8 +147,8 @@
 
             // 前要素
             Assert.IsTrue(parentheses.Previous!=null);
-            IElement oldPrevious = parentheses.Previous;
-            Debug.Log($"[StripParentheses] oldPrevious:{oldPrevious} {oldPrevious.GetType().Name}");
+            IElement newLeader = parentheses.Previous;
+            Debug.Log($"[StripParentheses] newLeader:{newLeader} {newLeader.GetType().Name}");
 
             // - StartElement と EndElement が付いた状態が最小の単位なので、「丸括弧を剥がした状態」というものは、この設計の構造では存在しない
             // - そこで、リンクの貼り直しを行う
@@ -156,16 +156,17 @@
             // 元の丸括弧の削除
             parentheses.Remove();
 
-            // 丸括弧のクローン作成
-            Placeholder clonedParentheses = (Placeholder)parentheses.Duplicate();
-            Debug.Log($"[StripParentheses] clonedParentheses:{clonedParentheses} withParentheses:{clonedParentheses.WithParentheses}");
+            //// 丸括弧のクローン作成
+            //Placeholder clonedParentheses = (Placeholder)parentheses.Duplicate();
+            //Debug.Log($"[StripParentheses] clonedParentheses:{clonedParentheses} withParentheses:{clonedParentheses.WithParentheses}");
 
             // 丸括弧外す
-            clonedParentheses.SetupStripParenthses();
-            Debug.Log($"[StripParentheses] stripped clonedParentheses:{clonedParentheses} withParentheses:{clonedParentheses.WithParentheses}");
+            parentheses.SetupStripParenthses();
+            Placeholder strippedPlaceholder = parentheses;
+            Debug.Log($"[StripParentheses] stripped parentheses:{strippedPlaceholder} withParentheses:{strippedPlaceholder.WithParentheses}");
 
-            // 挿入
-            oldPrevious.InsertNext(clonedParentheses);
+            // 挿入し直す
+            newLeader.InsertNext(strippedPlaceholder);
 
             //// 丸括弧の中身の最初の要素
             //Debug.Log($"[StripParentheses] clonedParentheses(Top Level).StartElement:{clonedParentheses.FirstCap}");

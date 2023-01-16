@@ -23,9 +23,9 @@
 
                 Placeholder parentheses = (Placeholder)topLevel.FirstCap.Next;
                 Assert.IsTrue(parentheses.WithParentheses, $"'(Ix)' withParentheses: {parentheses.WithParentheses} stringify:{parentheses}");
-                StripUnnecessaryParentheses.StripParentheses(parentheses); // FIXME ★ ここで丸括弧が取れてない？
+                StripUnnecessaryParentheses.StripParentheses(parentheses);
                 Assert.IsTrue(!parentheses.WithParentheses, $"'Ix' withParentheses: {parentheses.WithParentheses} stringify:{parentheses}");
-                result = CursorOperation.Stringify(parentheses); // FIXME ★ ここで丸括弧が付いてしまう？
+                result = CursorOperation.Stringify(parentheses); // FIXME ★ ここで左に丸括弧が付いてしまう？
                 Assert.IsTrue(result == "Ix", $"result: {result}");
 
                 result = CursorOperation.Stringify(topLevel);
