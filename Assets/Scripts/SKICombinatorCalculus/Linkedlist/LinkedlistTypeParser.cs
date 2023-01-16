@@ -28,10 +28,10 @@
                 Assert.IsTrue(!strippedPlaceholder.WithParentheses, $"'Ix' withParentheses: {strippedPlaceholder.WithParentheses} stringify:{strippedPlaceholder}");
                 Assert.IsTrue(strippedPlaceholder.ToString()=="Ix", $"'Ix' == stringify:{strippedPlaceholder}");
                 result = strippedPlaceholder.ToString(); // FIXME ★ ここで左に丸括弧が付いてしまう？
-                Assert.IsTrue(result == "Ix", $"'Ix' = result: {result} stringify:{strippedPlaceholder}");
+                Assert.IsTrue(result == "Ix", $"'Ix' = result: {result} strippedPlaceholder:{strippedPlaceholder}");
 
-                //result = topLevel.ToString();
-                //Assert.IsTrue(result == "Ix", $"result: {result}"); // FIXME ★ ここで空文字列になってしまう？
+                result = topLevel.ToString();
+                Assert.IsTrue(result == "Ix", $"result: {result}"); // FIXME ★ ここで空文字列になってしまう？
             }
         }
 
