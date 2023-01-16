@@ -87,21 +87,21 @@
         {
             // FIXME 丸括弧を追加するときに不具合がある？
             Assert.IsNotNull(expressionStartElement);
-            Debug.Log($"[InsertNext] expressionStartElement:{expressionStartElement} {expressionStartElement.GetType().Name}");
+            // Debug.Log($"[InsertNext] expressionStartElement:{expressionStartElement} {expressionStartElement.GetType().Name}");
 
             // 最後の要素の１つ前（最初の要素と同一であるケースを含む）
             // IElement expressionEndElement = CursorOperation.GetEndSiblingElementOldtypeWithinEndElement(expressionStartElement);
             IElement contentLastElement = CursorOperation.GetLastSiblingOfContentWithoutEndElement(expressionStartElement);
             // IElement expressionEndElement = CursorOperation.GetEndElementEachSibling(expressionStartElement);
             Assert.IsNotNull(contentLastElement);
-            Debug.Log($"[InsertNext] contentLastElement:{contentLastElement} {contentLastElement.GetType().Name}");
+            // Debug.Log($"[InsertNext] contentLastElement:{contentLastElement} {contentLastElement.GetType().Name}");
 
             // FIXME 丸括弧の次の要素がヌルのケースがある
             var contentLastElementOldNext = contentLastElement.Next;
             if (contentLastElementOldNext != null)
             {
                 Assert.IsNotNull(contentLastElementOldNext);
-                Debug.Log($"[InsertNext] contentLastElementOldNext:{contentLastElementOldNext} {contentLastElementOldNext.GetType().Name}");
+                // Debug.Log($"[InsertNext] contentLastElementOldNext:{contentLastElementOldNext} {contentLastElementOldNext.GetType().Name}");
             }
             else
             {
@@ -112,7 +112,7 @@
             // 後ろに回る要素
             var oldRightElement = Next;
             Assert.IsNotNull(oldRightElement);
-            Debug.Log($"[InsertNext] oldRightElement:{oldRightElement} {oldRightElement.GetType().Name}");
+            // Debug.Log($"[InsertNext] oldRightElement:{oldRightElement} {oldRightElement.GetType().Name}");
 
             SetNextManually(expressionStartElement);
 
@@ -120,7 +120,7 @@
             {
                 var expressionStartElementOldPrevious = expressionStartElement.Previous;
                 Assert.IsNotNull(expressionStartElement);
-                Debug.Log($"[InsertNext] expressionStartElement:{expressionStartElement} {expressionStartElement.GetType().Name}");
+                // Debug.Log($"[InsertNext] expressionStartElement:{expressionStartElement} {expressionStartElement.GetType().Name}");
 
                 // 新しいつながりを得る
                 expressionStartElement.SetPreviousManually(this);
@@ -158,31 +158,31 @@
         {
             // FIXME 丸括弧を追加するときに不具合がある？
             Assert.IsNotNull(expressionStartElement);
-            Debug.Log($"[InsertNext] expressionStartElement:{expressionStartElement} {expressionStartElement.GetType().Name}");
+            // Debug.Log($"[InsertNext] expressionStartElement:{expressionStartElement} {expressionStartElement.GetType().Name}");
 
             // 最後の要素の１つ前（最初の要素と同一であるケースを含む）
             IElement contentLastElement = expressionStartElement;
             // IElement contentLastElement = CursorOperation.GetLastSiblingOfContentWithoutEndElement(expressionStartElement);
             Assert.IsNotNull(contentLastElement);
-            Debug.Log($"[InsertNext] contentLastElement:{contentLastElement} {contentLastElement.GetType().Name}");
+            // Debug.Log($"[InsertNext] contentLastElement:{contentLastElement} {contentLastElement.GetType().Name}");
 
             // FIXME 丸括弧の次の要素がヌルのケースがある
             var contentLastElementOldNext = contentLastElement.Next;
             if (contentLastElementOldNext != null)
             {
                 Assert.IsNotNull(contentLastElementOldNext);
-                Debug.Log($"[InsertNext] contentLastElementOldNext:{contentLastElementOldNext} {contentLastElementOldNext.GetType().Name}");
+                // Debug.Log($"[InsertNext] contentLastElementOldNext:{contentLastElementOldNext} {contentLastElementOldNext.GetType().Name}");
             }
             else
             {
                 // FIXME
-                Debug.Log($"[InsertNext] expressionEndElementOldNext:null ★おかしい");
+                // Debug.Log($"[InsertNext] expressionEndElementOldNext:null ★おかしい");
             }
 
             // 後ろに回る要素
             var oldRightElement = Next;
             Assert.IsNotNull(oldRightElement);
-            Debug.Log($"[InsertNext] oldRightElement:{oldRightElement} {oldRightElement.GetType().Name}");
+            // Debug.Log($"[InsertNext] oldRightElement:{oldRightElement} {oldRightElement.GetType().Name}");
 
             SetNextManually(expressionStartElement);
 
@@ -190,7 +190,7 @@
             {
                 var expressionStartElementOldPrevious = expressionStartElement.Previous;
                 Assert.IsNotNull(expressionStartElement);
-                Debug.Log($"[InsertNext] expressionStartElement:{expressionStartElement} {expressionStartElement.GetType().Name}");
+                // Debug.Log($"[InsertNext] expressionStartElement:{expressionStartElement} {expressionStartElement.GetType().Name}");
 
                 // 新しいつながりを得る
                 expressionStartElement.SetPreviousManually(this);

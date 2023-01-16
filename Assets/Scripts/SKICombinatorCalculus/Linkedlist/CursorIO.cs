@@ -60,7 +60,7 @@
                 case 'I':
                     {
                         var next = new IdCombinator();
-                        Current.InsertNext(next);
+                        Current.InsertNextType2(next);
                         Current = next;
                     }
                     break;

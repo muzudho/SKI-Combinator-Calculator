@@ -295,7 +295,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         public static CalculationProcess EvaluateElements(CursorIO cursor)
         {
             IElement element0 = cursor.ReadElementWithinEndElement();
-            Debug.Log($"[EvaluateElements] element0:{element0}");
+            // Debug.Log($"[EvaluateElements] element0:{element0}");
 
             while (element0 != null)
             {
@@ -311,7 +311,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                             return null;
                         }
 
-                        Debug.Log($"[EvaluateElements] I arg1:{arg1}");
+                        // Debug.Log($"[EvaluateElements] I arg1:{arg1}");
 
                         combinator.Remove();
                         return new CalculationProcess(
@@ -329,7 +329,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                             return null;
                         }
 
-                        Debug.Log($"[EvaluateElements] K arg1:{arg1} arg2:{arg2}");
+                        // Debug.Log($"[EvaluateElements] K arg1:{arg1} arg2:{arg2}");
 
                         combinator.Remove();
                         arg2.Remove();
@@ -350,7 +350,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                             return null;
                         }
 
-                        Debug.Log($"[EvaluateElements] S 1:{arg1} 2:{arg2} 3:{arg3}");
+                        // Debug.Log($"[EvaluateElements] S 1:{arg1} 2:{arg2} 3:{arg3}");
 
                         // とりあえず、引数を全部抜く
                         arg1.Remove();
@@ -363,19 +363,18 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                         var clone3o1 = arg2.Duplicate();
                         var clone3o2 = arg3.Duplicate();
 
-                        Debug.Log($"[EvaluateElements] S clone1:{clone1} clone2:{clone2} clone3o1:{clone3o1} clone3o2:{clone3o2}");
+                        // Debug.Log($"[EvaluateElements] S clone1:{clone1} clone2:{clone2} clone3o1:{clone3o1} clone3o2:{clone3o2}");
 
                         Placeholder clone3 = new Placeholder(withParentheses: true);
                         clone3.StepIn().InsertNextType2(clone3o1).InsertNextType2(clone3o2);
 
-                        Debug.Log($"[EvaluateElements] S clone3:{clone3}");
+                        // Debug.Log($"[EvaluateElements] S clone3:{clone3}");
 
                         // 複製を追加する
                         // FIXME 丸括弧を追加するときに不具合がある？
                         combinator.InsertNextType2(clone1).InsertNextType2(clone2).InsertNextType2(clone3);
 
-                        Debug.Log($"[EvaluateElements] S Result:{CursorOperation.Stringify(cursor.GetSourceElement())}");
-
+                        // Debug.Log($"[EvaluateElements] S Result:{CursorOperation.Stringify(cursor.GetSourceElement())}");
 
                         // コンビネーター削除
                         combinator.Remove();
@@ -394,13 +393,13 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                 }
                 else if (element0 is Placeholder parentheses)
                 {
-                    Debug.Log($"丸括弧のケース parentheses:{parentheses.ToString()}");
+                    // Debug.Log($"丸括弧のケース parentheses:{parentheses.ToString()}");
                     // TODO 丸括弧を外していいケースかどうかは、ここでは分からない
 
                     // 丸括弧の内側を（再帰的に）評価することはできるだろう
                     cursor.SetCurrent(parentheses.StepIn()); // `(`
                     cursor.ReadChar(); // 丸括弧の内側の先頭要素
-                    Debug.Log($"丸括弧のケース Current:{cursor.ToCurrentString()}");
+                    // Debug.Log($"丸括弧のケース Current:{cursor.ToCurrentString()}");
                     var calculationProcess = EvaluateElements(cursor); // 再帰
 
                     // TODO 丸括弧の右側を評価してはいけない

@@ -52,7 +52,7 @@
                                 if (rest.Length < 1)
                                 {
                                     // 構文エラー
-                                    Debug.Log($"[StripParentheses] 丸括弧を剥けないケースだった rest:{expression[(i + 1)..]}");
+                                    // Debug.Log($"[StripParentheses] 丸括弧を剥けないケースだった rest:{expression[(i + 1)..]}");
                                     return (UnnecessaryParenthesesStripError.NotFoundArgument, "");
                                 }
                             }
@@ -65,7 +65,7 @@
                             }
                             var middle = expression[(openParenthesesPos + 1)..i];
                             var right = expression[(i + 1)..];
-                            Debug.Log($"[StripParentheses] expression:{expression} start:{openParenthesesPos} i:{i} ◆{left}◆{middle}◆{right}◆");
+                            // Debug.Log($"[StripParentheses] expression:{expression} start:{openParenthesesPos} i:{i} ◆{left}◆{middle}◆{right}◆");
                             var newExpression = $"{left}{middle}{right}";
                             return (UnnecessaryParenthesesStripError.None, newExpression);
                         }

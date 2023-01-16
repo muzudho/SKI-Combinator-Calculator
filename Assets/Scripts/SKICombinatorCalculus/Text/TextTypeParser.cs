@@ -36,7 +36,7 @@ Very tired...");
                     Debug.Log($"[Run] Not found nextCombinator");
                     break;
                 }
-                Debug.Log($"[Run 1] leftText:{leftText} nextCombinator:{nextCombinator} rightText:{rightText}");
+                // Debug.Log($"[Run 1] leftText:{leftText} nextCombinator:{nextCombinator} rightText:{rightText}");
 
                 switch (nextCombinator)
                 {
@@ -58,7 +58,7 @@ Very tired...");
                 }
 
                 // 右テキストにまとめる
-                Debug.Log($"[Run 2] leftText:{leftText} rightText:{rightText}");
+                // Debug.Log($"[Run 2] leftText:{leftText} rightText:{rightText}");
                 rightText = $"{leftText}{rightText}";
                 leftText = "";
                 calculationProcess.AppendLine(rightText);
