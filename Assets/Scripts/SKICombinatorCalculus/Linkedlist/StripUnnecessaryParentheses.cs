@@ -15,7 +15,7 @@
         /// - 不要な丸括弧を剥く
         /// </summary>
         /// <returns></returns>
-        public static bool DoIt(Placeholder topLevel)
+        public static (bool, string) DoIt(Placeholder topLevel)
         {
             Assert.IsTrue(topLevel.FirstCap != null && topLevel.FirstCap is FirstCap);
             Assert.IsTrue(topLevel.FirstCap.Next != null);
@@ -38,14 +38,14 @@
                 StripParentheses(placeholder1);
                 Debug.Log($"[StripUnnecessaryParentheses DoIt] 最初の丸括弧の除去後 topLevel:{topLevel}");
 
-                return true;
+                return (true, "first-parentheses");
             }
 
             Placeholder parentheses = FindParenthesesEachElement(topLevel.FirstCap);
             if (parentheses == null)
             {
                 Debug.Log("[不要な丸括弧の除去] 丸括弧 not found");
-                return false;
+                return (false, string.Empty);
             }
 
             // Debug.Log($"[不要な丸括弧の除去] 丸括弧発見 parentheses:{parentheses}");
@@ -59,11 +59,11 @@
                 StripParentheses(parentheses);
 
                 Debug.Log("[不要な丸括弧の除去] true 丸括弧除去済");
-                return true;
+                return (true, "empty-or-one-variable");
             }
 
             Debug.Log("[不要な丸括弧の除去] false 丸括弧必要");
-            return false;
+            return (false, string.Empty);
         }
 
         /// <summary>

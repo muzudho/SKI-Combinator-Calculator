@@ -54,13 +54,16 @@
                 bool evaluated = false;
 
                 // 評価する前に、不要な丸括弧をすべて外す必要がある
-                while (StripUnnecessaryParentheses.DoIt(topLevel))
+                var (result, reason) = StripUnnecessaryParentheses.DoIt(topLevel);
+                while (result)
                 {
                     strippedUnnecessaryParentheses = true;
 
                     // 文字列化
                     var strippedResultText = topLevel.ToString();
-                    calculationProcessStr.AppendLine($"    stripped {strippedResultText}");
+                    calculationProcessStr.AppendLine($"    stripped {reason} {strippedResultText}");
+
+                    (result, reason) = StripUnnecessaryParentheses.DoIt(topLevel);
                 }
 
                 // 評価（１回だけ）
