@@ -160,7 +160,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                 Debug.Log($"[丸括弧を剥がす] parentheses.Next:{parentheses.Next} {parentheses.Next.GetType().Name}");
 
                 // リンクの張り直し
-                parentheses.InsertNextType2(clonedFirstChild);
+                parentheses.InsertNext(clonedFirstChild);
             }
 
             // 丸括弧の削除
@@ -366,13 +366,13 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                         // Debug.Log($"[EvaluateElements] S clone1:{clone1} clone2:{clone2} clone3o1:{clone3o1} clone3o2:{clone3o2}");
 
                         Placeholder clone3 = new Placeholder(withParentheses: true);
-                        clone3.StepIn().InsertNextType2(clone3o1).InsertNextType2(clone3o2);
+                        clone3.StepIn().InsertNext(clone3o1).InsertNext(clone3o2);
 
                         // Debug.Log($"[EvaluateElements] S clone3:{clone3}");
 
                         // 複製を追加する
                         // FIXME 丸括弧を追加するときに不具合がある？
-                        combinator.InsertNextType2(clone1).InsertNextType2(clone2).InsertNextType2(clone3);
+                        combinator.InsertNext(clone1).InsertNext(clone2).InsertNext(clone3);
 
                         // Debug.Log($"[EvaluateElements] S Result:{CursorOperation.Stringify(cursor.GetSourceElement())}");
 

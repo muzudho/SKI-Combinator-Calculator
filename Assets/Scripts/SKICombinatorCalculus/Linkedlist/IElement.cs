@@ -37,15 +37,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         /// </summary>
         /// <param name="removable"></param>
         /// <returns>引数の removable をそのまま返す</returns>
-        [Obsolete]
         IElement InsertNext(IElement removable);
-
-        /// <summary>
-        /// 要素１つを、後要素として挿入
-        /// </summary>
-        /// <param name="removable"></param>
-        /// <returns>引数の removable をそのまま返す</returns>
-        IElement InsertNextType2(IElement removable);
 
         /// <summary>
         /// 丸括弧であれば、その内部の始端の '(' を返します。

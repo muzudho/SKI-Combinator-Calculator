@@ -44,7 +44,7 @@
                 case 'S':
                     {
                         var next = new SCombinator();
-                        Current.InsertNextType2(next);
+                        Current.InsertNext(next);
                         Current = next;
                     }
                     break;
@@ -52,7 +52,7 @@
                 case 'K':
                     {
                         var next = new KCombinator();
-                        Current.InsertNextType2(next);
+                        Current.InsertNext(next);
                         Current = next;
                     }
                     break;
@@ -60,7 +60,7 @@
                 case 'I':
                     {
                         var next = new IdCombinator();
-                        Current.InsertNextType2(next);
+                        Current.InsertNext(next);
                         Current = next;
                     }
                     break;
@@ -70,7 +70,7 @@
                         // 丸括弧を生成
                         var parentheses = new Placeholder(withParentheses: true);
                         // 丸括弧を挿入
-                        Current.InsertNextType2(parentheses);
+                        Current.InsertNext(parentheses);
                         // カーソルを丸括弧の中へ移動
                         Current = parentheses.StepIn();
                         Assert.IsNotNull(Current, $"parentheses.StartElement:{parentheses.FirstCap}");
@@ -90,7 +90,7 @@
                         if (SKICombinatorCalculator.variableCharacters.Contains(ch))
                         {
                             var next = new Variable(ch);
-                            Current.InsertNextType2(next);
+                            Current.InsertNext(next);
                             Current = next;
                         }
                     }
