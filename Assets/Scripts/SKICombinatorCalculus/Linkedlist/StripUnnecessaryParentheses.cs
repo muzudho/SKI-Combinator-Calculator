@@ -24,7 +24,15 @@
             // Debug.Log("[不要な丸括弧の除去] 開始");
 
             // 最初の要素が丸括弧
-            if (topLevel.FirstCap.Next is Placeholder placeholder1 && placeholder1.WithParentheses)
+            IElement current = topLevel.FirstCap.Next;
+
+            // 変数が連続するなら進める
+            while (current is Variable)
+            {
+                current = current.Next;
+            }
+
+            if (current is Placeholder placeholder1 && placeholder1.WithParentheses)
             {
                 Debug.Log("[StripUnnecessaryParentheses DoIt] 最初の要素が丸括弧 不要");
                 StripParentheses(placeholder1);
