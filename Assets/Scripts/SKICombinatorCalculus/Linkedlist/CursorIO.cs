@@ -52,7 +52,7 @@
                 case 'K':
                     {
                         var next = new KCombinator();
-                        Current.InsertNext(next);
+                        Current.InsertNextType2(next);
                         Current = next;
                     }
                     break;
