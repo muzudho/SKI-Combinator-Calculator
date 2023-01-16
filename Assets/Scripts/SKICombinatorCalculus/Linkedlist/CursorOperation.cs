@@ -397,7 +397,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                     // TODO 丸括弧を外していいケースかどうかは、ここでは分からない
 
                     // 丸括弧の内側を（再帰的に）評価することはできるだろう
-                    cursor.SetCurrent(parentheses.StepIn()); // `(`
+                    cursor.StepIn(); // `(`
                     cursor.ReadChar(); // 丸括弧の内側の先頭要素
                     // Debug.Log($"丸括弧のケース Current:{cursor.ToCurrentString()}");
                     var calculationProcess = EvaluateElements(cursor); // 再帰

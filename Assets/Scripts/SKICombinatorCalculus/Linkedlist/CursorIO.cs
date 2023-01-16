@@ -231,5 +231,10 @@
         {
             return this.Current.ToString();
         }
+
+        public void StepIn()
+        {
+            this.Current = this.Current.StepIn();
+        }
     }
 }
