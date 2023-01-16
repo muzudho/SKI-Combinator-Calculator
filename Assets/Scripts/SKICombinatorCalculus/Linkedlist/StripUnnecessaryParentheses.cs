@@ -137,10 +137,13 @@
         /// <summary>
         /// 丸括弧を剥がす
         /// </summary>
-        private static void StripParentheses(Placeholder parentheses)
+        public static void StripParentheses(Placeholder parentheses)
         {
-            Assert.IsTrue(parentheses is Placeholder placeholder1 && placeholder1.WithParentheses);
+            Debug.Log($"[StripParentheses] ★★ 開始");
+            Assert.IsTrue(parentheses is Placeholder);
             Debug.Log($"[StripParentheses] parentheses:{parentheses} withParentheses:{parentheses.WithParentheses}");
+
+            Assert.IsTrue(parentheses is Placeholder placeholder1 && placeholder1.WithParentheses);
 
             // 前要素
             Assert.IsTrue(parentheses.Previous!=null);

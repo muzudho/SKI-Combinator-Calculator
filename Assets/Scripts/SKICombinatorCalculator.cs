@@ -40,6 +40,8 @@ internal class SKICombinatorCalculator
 
         // リンクリスト型のパーサー
         LinkedlistTypeParser.DoAsserts();
+        return "";
+        
         var linkedlistTypeParserResult = LinkedlistTypeParser.Parse(inputText);
 
         // テキスト型のパーサー
@@ -56,5 +58,6 @@ Text type parser
 
 {textTypeResult}
 ";
+
     }
 }

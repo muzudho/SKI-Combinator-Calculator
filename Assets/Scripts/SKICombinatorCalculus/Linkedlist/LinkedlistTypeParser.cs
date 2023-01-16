@@ -14,12 +14,22 @@
             {
                 Placeholder topLevel = CursorOperation.Spawn("Ix");
                 string result = CursorOperation.Stringify(topLevel);
-                Assert.IsTrue(result=="Ix");
+                Assert.IsTrue(result=="Ix", $"result: {result}");
             }
             {
                 Placeholder topLevel = CursorOperation.Spawn("(Ix)");
                 string result = CursorOperation.Stringify(topLevel);
-                Assert.IsTrue(result == "(Ix)");
+                Assert.IsTrue(result == "(Ix)", $"result: {result}");
+
+                Placeholder parentheses = (Placeholder)topLevel.FirstCap.Next;
+                Assert.IsTrue(parentheses.WithParentheses, $"'(Ix)' withParentheses: {parentheses.WithParentheses} stringify:{parentheses}");
+                StripUnnecessaryParentheses.StripParentheses(parentheses); // FIXME ★ ここで丸括弧が取れてない？
+                Assert.IsTrue(!parentheses.WithParentheses, $"'Ix' withParentheses: {parentheses.WithParentheses} stringify:{parentheses}");
+                result = CursorOperation.Stringify(parentheses); // FIXME ★ ここで丸括弧が付いてしまう？
+                Assert.IsTrue(result == "Ix", $"result: {result}");
+
+                result = CursorOperation.Stringify(topLevel);
+                Assert.IsTrue(result == "Ix", $"result: {result}");
             }
         }
 

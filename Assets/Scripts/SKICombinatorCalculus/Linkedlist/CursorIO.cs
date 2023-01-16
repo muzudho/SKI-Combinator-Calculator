@@ -109,14 +109,14 @@
         {
             var current = Current;
 
-            // トップ・レベルの先頭要素の `(` は飛ばす
-            if (current is FirstCap firstCap1 && firstCap1.Parent == null)
+            // 先頭要素が `(` でなければ飛ばす
+            if (current is FirstCap firstCap1 && (firstCap1.Parent==null || !firstCap1.Parent.WithParentheses))
             {
                 Current = current.Next;
                 current = Current;
             }
-            // トップ・レベルの末尾要素の `)` は飛ばす
-            else if (current is LastCap lastCap1 && lastCap1.Parent == null)
+            // 末尾要素が `)` でなければ飛ばす
+            else if (current is LastCap lastCap1 && (lastCap1.Parent==null || !lastCap1.Parent.WithParentheses))
             {
                 Current = current.Next;
                 current = Current;
