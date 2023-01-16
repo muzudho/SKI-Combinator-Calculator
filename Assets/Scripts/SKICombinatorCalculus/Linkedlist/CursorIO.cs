@@ -87,7 +87,7 @@
                         if (SKICombinatorCalculator.variableCharacters.Contains(ch))
                         {
                             var next = new Variable(ch);
-                            Current.InsertNext(next);
+                            Current.InsertNextType2(next);
                             Current = next;
                         }
                     }
