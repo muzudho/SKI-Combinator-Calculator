@@ -80,71 +80,63 @@
         /// <summary>
         /// 次の要素を挿入
         /// </summary>
-        /// <param name="expressionStartElement">単一の要素、または一連の要素</param>
+        /// <param name="visitor">挿入される要素</param>
         /// <returns>引数の expressionStartElement の EndElement を返す</returns>
-        public IElement InsertNext(IElement expressionStartElement)
+        public IElement InsertNext(IElement visitor)
         {
-            // FIXME 丸括弧を追加するときに不具合がある？
-            Assert.IsNotNull(expressionStartElement);
-            // Debug.Log($"[InsertNext] expressionStartElement:{expressionStartElement} {expressionStartElement.GetType().Name}");
+            Assert.IsNotNull(visitor);
+            Debug.Log($"[InsertNext] ★開始。これを挿入したい→ visitor:{visitor} {visitor.GetType().Name}");
 
-            // 最後の要素の１つ前（最初の要素と同一であるケースを含む）
-            IElement contentLastElement = expressionStartElement;
-            // IElement contentLastElement = CursorOperation.GetLastSiblingOfContentWithoutEndElement(expressionStartElement);
-            Assert.IsNotNull(contentLastElement);
-            // Debug.Log($"[InsertNext] contentLastElement:{contentLastElement} {contentLastElement.GetType().Name}");
+            // リンクを貼り替える前の情報
+            var visitorOldPrevious = visitor.Previous; // ヌルのケースがある
+            var visitorOldNext = visitor.Next; // ヌルのケースがある
+            var targetOldNext = Next; // ヌルのケースがある
 
-            // FIXME 丸括弧の次の要素がヌルのケースがある
-            var contentLastElementOldNext = contentLastElement.Next;
-            if (contentLastElementOldNext != null)
+            if (targetOldNext!=null)
             {
-                Assert.IsNotNull(contentLastElementOldNext);
-                // Debug.Log($"[InsertNext] contentLastElementOldNext:{contentLastElementOldNext} {contentLastElementOldNext.GetType().Name}");
+                Assert.IsNotNull(targetOldNext);
+                Debug.Log($"[InsertNext] targetOldNext:{targetOldNext} {targetOldNext.GetType().Name}");
             }
             else
             {
-                // FIXME
-                // Debug.Log($"[InsertNext] expressionEndElementOldNext:null ★おかしい");
-            }
-
-            // 後ろに回る要素
-            var oldRightElement = Next;
-            Assert.IsNotNull(oldRightElement);
-            // Debug.Log($"[InsertNext] oldRightElement:{oldRightElement} {oldRightElement.GetType().Name}");
-
-            SetNextManually(expressionStartElement);
-
-            // 挿し込まれる要素
-            {
-                var expressionStartElementOldPrevious = expressionStartElement.Previous;
-                Assert.IsNotNull(expressionStartElement);
-                // Debug.Log($"[InsertNext] expressionStartElement:{expressionStartElement} {expressionStartElement.GetType().Name}");
-
-                // 新しいつながりを得る
-                expressionStartElement.SetPreviousManually(this);
-                contentLastElement.SetNextManually(oldRightElement);
-
-                // 元から抜ける
-                {
-                    if (expressionStartElementOldPrevious != null)
-                    {
-                        expressionStartElementOldPrevious.SetNextManually(contentLastElementOldNext);
-                    }
-
-                    if (contentLastElementOldNext != null)
-                    {
-                        contentLastElementOldNext.SetPreviousManually(expressionStartElementOldPrevious);
-                    }
-                }
+                throw new Exception($"[InsertNext] targetOldNext:null トップレベルの末尾 ★おかしい");
             }
 
             // この要素は、新しいつながりを得る
-            Next = expressionStartElement;
+            SetNextManually(visitor);
 
             // 元からあった後ろの要素は、新しいつながりを得る
-            oldRightElement.SetPreviousManually(contentLastElement);
+            targetOldNext.SetPreviousManually(visitor);
 
-            return contentLastElement;
+            // 挿し込まれる要素は、新しいつながりを得る
+            visitor.SetPreviousManually(this);
+            visitor.SetNextManually(targetOldNext);
+
+            // 切り抜かれた元のつながりは、修復する
+            if (visitorOldPrevious != null)
+            {
+                Assert.IsNotNull(visitorOldPrevious);
+                Debug.Log($"[InsertNext] visitorOldPrevious:{visitorOldPrevious} {visitorOldPrevious.GetType().Name}");
+
+                if (visitorOldNext != null)
+                {
+                    Assert.IsNotNull(visitorOldNext);
+                    Debug.Log($"[InsertNext] visitorOldNext:{visitorOldNext} {visitorOldNext.GetType().Name}");
+
+                    visitorOldPrevious.SetNextManually(visitorOldNext);
+                    visitorOldNext.SetPreviousManually(visitorOldPrevious);
+                }
+                else
+                {
+                    Debug.Log($"[InsertNext] visitorOldNext:null （元のつながりはない？）");
+                }
+            }
+            else
+            {
+                Debug.Log($"[InsertNext] guestOldPrevious:null （元のつながりはない？）");
+            }
+
+            return visitor;
         }
 
         /// <summary>

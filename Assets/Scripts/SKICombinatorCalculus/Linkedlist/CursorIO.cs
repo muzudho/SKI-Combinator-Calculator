@@ -109,8 +109,14 @@
         {
             var current = Current;
 
-            // トップ・レベルの先頭要素は飛ばす
-            if (current is FirstCap startElement && startElement.Parent == null)
+            // トップ・レベルの先頭要素の `(` は飛ばす
+            if (current is FirstCap firstCap1 && firstCap1.Parent == null)
+            {
+                Current = current.Next;
+                current = Current;
+            }
+            // トップ・レベルの末尾要素の `)` は飛ばす
+            else if (current is LastCap lastCap1 && lastCap1.Parent == null)
             {
                 Current = current.Next;
                 current = Current;
