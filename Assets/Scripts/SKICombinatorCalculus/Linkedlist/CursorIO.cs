@@ -107,46 +107,53 @@
         /// <returns>終端を超えたら、ヌル</returns>
         public IElement ReadChar()
         {
-            var current = Current;
-
-            // 先頭要素が `(` でなければ飛ばす
-            if (current is FirstCap firstCap1 && (firstCap1.Parent==null || !firstCap1.Parent.WithParentheses))
-            {
-                Current = current.Next;
-                current = Current;
-            }
-            // 末尾要素が `)` でなければ飛ばす
-            else if (current is LastCap lastCap1 && (lastCap1.Parent==null || !lastCap1.Parent.WithParentheses))
-            {
-                Current = current.Next;
-                current = Current;
-            }
-
-            if (current == null)
+            if (Current == null)
             {
                 return null;
             }
-            else if (current is Placeholder parentheses)
+
+            // 先頭要素が `(` でなければ飛ばす
+            if (Current is FirstCap firstCap1 && (firstCap1.Parent==null || !firstCap1.Parent.WithParentheses))
             {
-                current = parentheses.FirstCap;
-                Current = current.Next;
-                return current;
+                var result1 = Current;
+                Current = result1.Next;
+                return result1;
             }
-            else if (current is LastCap endElement)
+
+            // 末尾要素が `)` でなければ飛ばす
+            if (Current is LastCap lastCap1 && (lastCap1.Parent==null || !lastCap1.Parent.WithParentheses))
             {
-                current = endElement;
-                Placeholder parentheses2 = endElement.Parent;
+                var result1 = Current;
+                Current = result1.Next;
+                return result1;
+            }
+
+            // Step in
+            if (Current is Placeholder parentheses)
+            {
+                var result1 = parentheses.FirstCap;
+                Current = result1.Next;
+                return result1;
+            }
+
+            // Step out
+            if (Current is LastCap lastCap2)
+            {
+                var result1 = lastCap2;
+                Placeholder parentheses2 = result1.Parent;
                 if (parentheses2 == null)
                 {
+                    // トップ・レベルの終端
                     return null;
                 }
 
                 Current = parentheses2.Next;
-                return current;
+                return result1;
             }
 
-            Current = current.Next;
-            return current;
+            var result = Current;
+            Current = Current.Next;
+            return result;
         }
 
         /// <summary>

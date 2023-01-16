@@ -24,9 +24,11 @@
                 Placeholder parentheses = (Placeholder)topLevel.FirstCap.Next;
                 Assert.IsTrue(parentheses.WithParentheses, $"'(Ix)' withParentheses: {parentheses.WithParentheses} stringify:{parentheses}");
                 StripUnnecessaryParentheses.StripParentheses(parentheses);
-                Assert.IsTrue(!parentheses.WithParentheses, $"'Ix' withParentheses: {parentheses.WithParentheses} stringify:{parentheses}");
-                result = CursorOperation.Stringify(parentheses); // FIXME ★ ここで左に丸括弧が付いてしまう？
-                Assert.IsTrue(result == "Ix", $"result: {result}");
+                Placeholder strippedPlaceholder = parentheses;
+                Assert.IsTrue(!strippedPlaceholder.WithParentheses, $"'Ix' withParentheses: {strippedPlaceholder.WithParentheses} stringify:{strippedPlaceholder}");
+                Assert.IsTrue(strippedPlaceholder.ToString()=="Ix", $"'Ix' == stringify:{strippedPlaceholder}");
+                result = CursorOperation.Stringify(strippedPlaceholder); // FIXME ★ ここで左に丸括弧が付いてしまう？
+                Assert.IsTrue(result == "Ix", $"'Ix' = result: {result} stringify:{strippedPlaceholder}");
 
                 result = CursorOperation.Stringify(topLevel);
                 Assert.IsTrue(result == "Ix", $"result: {result}");

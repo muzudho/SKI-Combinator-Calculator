@@ -131,8 +131,11 @@
 
         /// <summary>
         /// 文字列化
+        /// 
+        /// ToString() を使った方がマシ
         /// </summary>
         /// <returns></returns>
+        [Obsolete]
         public static string Stringify(IElement element)
         {
             StringBuilder buf = new StringBuilder();
