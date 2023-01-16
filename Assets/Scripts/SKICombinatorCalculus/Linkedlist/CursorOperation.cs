@@ -130,30 +130,6 @@
         }
 
         /// <summary>
-        /// 文字列化
-        /// 
-        /// ToString() を使った方がマシ
-        /// </summary>
-        /// <returns></returns>
-        [Obsolete]
-        public static string Stringify(IElement element)
-        {
-            StringBuilder buf = new StringBuilder();
-
-            var cursor = new CursorIO(element);
-
-            // 先頭から順に読んでいくだけ
-            var current = cursor.ReadChar();
-            while (current != null)
-            {
-                buf.Append(current.ToString());
-                current = cursor.ReadChar();
-            }
-
-            return buf.ToString();
-        }
-
-        /// <summary>
         /// 評価
         /// </summary>
         public static CalculationProcess EvaluateElements(CursorIO cursor)

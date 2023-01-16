@@ -28,7 +28,7 @@
             {
                 Debug.Log("[StripUnnecessaryParentheses DoIt] 最初の要素が丸括弧 不要");
                 StripParentheses(placeholder1);
-                Debug.Log($"[StripUnnecessaryParentheses DoIt] 最初の丸括弧の除去後 stringify:{CursorOperation.Stringify(topLevel)}");
+                Debug.Log($"[StripUnnecessaryParentheses DoIt] 最初の丸括弧の除去後 topLevel:{topLevel}");
 
                 return true;
             }

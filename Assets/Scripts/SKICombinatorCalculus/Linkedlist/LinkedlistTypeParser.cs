@@ -47,7 +47,7 @@
 
             // 文字列化（入力した式）
             {
-                string resultText = CursorOperation.Stringify(topLevel.FirstCap);
+                string resultText = topLevel.ToString();
                 calculationProcessStr.AppendLine($"input {resultText}");
             }
 
@@ -64,7 +64,7 @@
                     strippedUnnecessaryParentheses = true;
 
                     // 文字列化
-                    var strippedResultText = CursorOperation.Stringify(topLevel.FirstCap);
+                    var strippedResultText = topLevel.ToString();
                     calculationProcessStr.AppendLine($"    stripped {strippedResultText}");
                 }
 
@@ -79,7 +79,7 @@
                     calculationProcessStr.AppendLine(calculationProcessObj.ToString());
 
                     // 文字列化
-                    var evaluatedResultText = CursorOperation.Stringify(topLevel.FirstCap);
+                    var evaluatedResultText = topLevel.ToString();
                     calculationProcessStr.AppendLine($"evaluated {evaluatedResultText}");
                 }
 
