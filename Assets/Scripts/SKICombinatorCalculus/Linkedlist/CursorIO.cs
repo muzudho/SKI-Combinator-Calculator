@@ -44,7 +44,7 @@
                 case 'S':
                     {
                         var next = new SCombinator();
-                        Current.InsertNext(next);
+                        Current.InsertNextType2(next);
                         Current = next;
                     }
                     break;
