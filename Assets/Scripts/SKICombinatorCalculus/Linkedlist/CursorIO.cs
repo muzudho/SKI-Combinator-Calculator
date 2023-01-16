@@ -67,8 +67,11 @@
 
                 case '(':
                     {
+                        // 丸括弧を生成
                         var parentheses = new Placeholder(withParentheses: true);
-                        Current.InsertNext(parentheses);
+                        // 丸括弧を挿入
+                        Current.InsertNextType2(parentheses);
+                        // カーソルを丸括弧の中へ移動
                         Current = parentheses.StepIn();
                         Assert.IsNotNull(Current, $"parentheses.StartElement:{parentheses.FirstCap}");
                     }
