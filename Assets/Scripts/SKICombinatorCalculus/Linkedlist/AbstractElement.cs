@@ -84,7 +84,7 @@
         /// <returns>挿入後の次の要素を返す</returns>
         public IElement InsertNextAll(CursorIO cursor)
         {
-            IElement next = this.Next;
+            IElement current = this; // 例えば FirstCap
 
             // 先頭から順に書いていくだけ
             for(IElement ch = cursor.ReadChar();ch!=null; ch = cursor.ReadChar())
@@ -99,11 +99,13 @@
                 }
                 else
                 {
-                    this.InsertNext(ch);
+                    // 順繰り
+                    current.InsertNext(ch);
+                    current = ch;
                 }
             }
 
-            return next;
+            return current;
         }
 
         /// <summary>
@@ -114,7 +116,7 @@
         public IElement InsertNext(IElement visitor)
         {
             Assert.IsNotNull(visitor);
-            Debug.Log($"[InsertNext] ★開始。これを挿入したい→ visitor:{visitor} {visitor.GetType().Name}");
+            Debug.Log($"[InsertNext] ★開始。 visitor:{visitor} {visitor.GetType().Name} を {this.ToString()} {this.GetType().Name} の次へ挿入したい");
 
             // リンクを貼り替える前の情報
             var visitorOldPrevious = visitor.Previous; // ヌルのケースがある
@@ -124,7 +126,7 @@
             if (targetOldNext!=null)
             {
                 Assert.IsNotNull(targetOldNext);
-                Debug.Log($"[InsertNext] targetOldNext:{targetOldNext} {targetOldNext.GetType().Name}");
+                // Debug.Log($"[InsertNext] targetOldNext:{targetOldNext} {targetOldNext.GetType().Name}");
             }
             else
             {
@@ -145,24 +147,24 @@
             if (visitorOldPrevious != null)
             {
                 Assert.IsNotNull(visitorOldPrevious);
-                Debug.Log($"[InsertNext] visitorOldPrevious:{visitorOldPrevious} {visitorOldPrevious.GetType().Name}");
+                // Debug.Log($"[InsertNext] visitorOldPrevious:{visitorOldPrevious} {visitorOldPrevious.GetType().Name}");
 
                 if (visitorOldNext != null)
                 {
                     Assert.IsNotNull(visitorOldNext);
-                    Debug.Log($"[InsertNext] visitorOldNext:{visitorOldNext} {visitorOldNext.GetType().Name}");
+                    // Debug.Log($"[InsertNext] visitorOldNext:{visitorOldNext} {visitorOldNext.GetType().Name}");
 
                     visitorOldPrevious.SetNextManually(visitorOldNext);
                     visitorOldNext.SetPreviousManually(visitorOldPrevious);
                 }
                 else
                 {
-                    Debug.Log($"[InsertNext] visitorOldNext:null （元のつながりはない？）");
+                    // Debug.Log($"[InsertNext] visitorOldNext:null （元のつながりはない？）");
                 }
             }
             else
             {
-                Debug.Log($"[InsertNext] guestOldPrevious:null （元のつながりはない？）");
+                // Debug.Log($"[InsertNext] guestOldPrevious:null （元のつながりはない？）");
             }
 
             return visitor;

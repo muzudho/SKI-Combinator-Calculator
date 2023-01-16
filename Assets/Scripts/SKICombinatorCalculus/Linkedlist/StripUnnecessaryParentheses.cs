@@ -166,8 +166,8 @@
             Debug.Log($"[StripParentheses] stripped parentheses:{strippedPlaceholder} withParentheses:{strippedPlaceholder.WithParentheses}");
 
             // 挿入し直す
-            // newLeader.InsertNextAll(new CursorIO(strippedPlaceholder));
-            newLeader.InsertNext(strippedPlaceholder);
+            newLeader.InsertNextAll(new CursorIO(strippedPlaceholder.FirstCap));
+            // newLeader.InsertNext(strippedPlaceholder);
 
             //// 丸括弧の中身の最初の要素
             //Debug.Log($"[StripParentheses] clonedParentheses(Top Level).StartElement:{clonedParentheses.FirstCap}");

@@ -17,18 +17,18 @@
                 Assert.IsTrue(result=="Ix", $"result: {result}");
             }
             {
-                Placeholder topLevel = CursorOperation.Spawn("(Ix)");
-                Assert.IsTrue(topLevel.ToString() == "(Ix)", $"'Ix' == topLevel:{topLevel}");
+                Placeholder topLevel = CursorOperation.Spawn("(abcdefg)");
+                Assert.IsTrue(topLevel.ToString() == "(abcdefg)", $"'abcdefg' == topLevel:{topLevel}");
 
                 Placeholder parentheses = (Placeholder)topLevel.FirstCap.Next;
-                Assert.IsTrue(parentheses.WithParentheses, $"'(Ix)' withParentheses: {parentheses.WithParentheses} stringify:{parentheses}");
+                Assert.IsTrue(parentheses.WithParentheses, $"'(abcdefg)' withParentheses: {parentheses.WithParentheses} stringify:{parentheses}");
                 StripUnnecessaryParentheses.StripParentheses(parentheses);
                 Placeholder strippedPlaceholder = parentheses;
 
-                Assert.IsTrue(!strippedPlaceholder.WithParentheses, $"'Ix' == strippedPlaceholder:{strippedPlaceholder}. withParentheses:{strippedPlaceholder.WithParentheses}");
-                Assert.IsTrue(strippedPlaceholder.ToString()=="Ix", $"'Ix' == strippedPlaceholder:{strippedPlaceholder}");
+                Assert.IsTrue(!strippedPlaceholder.WithParentheses, $"'abcdefg' == strippedPlaceholder:{strippedPlaceholder}. withParentheses:{strippedPlaceholder.WithParentheses}");
+                Assert.IsTrue(strippedPlaceholder.ToString()== "abcdefg", $"'abcdefg' == strippedPlaceholder:{strippedPlaceholder}, topLevel:{topLevel}");
                 // FIXME ★ ここで空文字列になってしまう？
-                Assert.IsTrue(topLevel.ToString() == "Ix", $"'Ix' == topLevel:{topLevel}");
+                Assert.IsTrue(topLevel.ToString() == "abcdefg", $"'abcdefg' == topLevel:{topLevel}");
             }
         }
 
