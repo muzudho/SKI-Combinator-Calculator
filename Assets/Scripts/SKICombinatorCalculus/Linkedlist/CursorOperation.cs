@@ -160,7 +160,7 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
                 Debug.Log($"[丸括弧を剥がす] parentheses.Next:{parentheses.Next} {parentheses.Next.GetType().Name}");
 
                 // リンクの張り直し
-                parentheses.InsertNext(clonedFirstChild);
+                parentheses.InsertNextType2(clonedFirstChild);
             }
 
             // 丸括弧の削除
