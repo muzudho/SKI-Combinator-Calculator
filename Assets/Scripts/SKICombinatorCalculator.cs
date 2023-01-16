@@ -39,6 +39,7 @@ internal class SKICombinatorCalculator
         // のように 最左に変数がきた場合は、それを無視して直近の右のコンビネーターを評価する
 
         // リンクリスト型のパーサー
+        LinkedlistTypeParser.DoAsserts();
         var linkedlistTypeParserResult = LinkedlistTypeParser.Parse(inputText);
 
         // テキスト型のパーサー

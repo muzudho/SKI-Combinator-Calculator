@@ -1,9 +1,28 @@
 ﻿namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
 {
     using System.Text;
+    using UnityEngine;
+    using UnityEngine.Assertions;
 
     internal static class LinkedlistTypeParser
     {
+        public static void DoAsserts()
+        {
+            // テスト
+            var buf = new StringBuilder();
+
+            {
+                Placeholder topLevel = CursorOperation.Spawn("Ix");
+                string result = CursorOperation.Stringify(topLevel);
+                Assert.IsTrue(result=="Ix");
+            }
+            {
+                Placeholder topLevel = CursorOperation.Spawn("(Ix)");
+                string result = CursorOperation.Stringify(topLevel);
+                Assert.IsTrue(result == "(Ix)");
+            }
+        }
+
         public static ParserResult Parse(string inputText)
         {
             var expression = SKICombinatorCalculator.TrimAllSpaces(inputText);
