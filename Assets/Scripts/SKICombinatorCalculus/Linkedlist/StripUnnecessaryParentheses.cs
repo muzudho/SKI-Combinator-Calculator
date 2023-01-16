@@ -148,7 +148,7 @@
             // 前要素
             Assert.IsTrue(parentheses.Previous != null);
             IElement newLeader = parentheses.Previous;
-            Debug.Log($"[StripParentheses] newLeader:{newLeader} {newLeader.GetType().Name}");
+            // Debug.Log($"[StripParentheses] newLeader:{newLeader} {newLeader.GetType().Name}");
 
             // - StartElement と EndElement が付いた状態が最小の単位なので、「丸括弧を剥がした状態」というものは、この設計の構造では存在しない
             // - そこで、リンクの貼り直しを行う

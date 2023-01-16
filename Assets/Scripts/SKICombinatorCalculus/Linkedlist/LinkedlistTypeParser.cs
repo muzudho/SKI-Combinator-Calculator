@@ -23,12 +23,10 @@
                 Placeholder parentheses = (Placeholder)topLevel.FirstCap.Next;
                 Assert.IsTrue(parentheses.WithParentheses, $"'(abcdefg)' withParentheses: {parentheses.WithParentheses} stringify:{parentheses}");
                 StripUnnecessaryParentheses.StripParentheses(parentheses);
-                Placeholder strippedPlaceholder = parentheses;
+                // parentheses は、空のコンテナーになってる
 
-                Assert.IsTrue(!strippedPlaceholder.WithParentheses, $"'abcdefg' == strippedPlaceholder:{strippedPlaceholder}. withParentheses:{strippedPlaceholder.WithParentheses}");
-                Assert.IsTrue(strippedPlaceholder.ToString()== "abcdefg", $"'abcdefg' == strippedPlaceholder:{strippedPlaceholder}, topLevel:{topLevel}");
-                // FIXME ★ ここで空文字列になってしまう？
                 Assert.IsTrue(topLevel.ToString() == "abcdefg", $"'abcdefg' == topLevel:{topLevel}");
+                Debug.Log($"topLevel:{topLevel}");
             }
         }
 

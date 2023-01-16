@@ -116,7 +116,7 @@
         public IElement InsertNext(IElement visitor)
         {
             Assert.IsNotNull(visitor);
-            Debug.Log($"[InsertNext] ★開始。 visitor:{visitor} {visitor.GetType().Name} を {this.ToString()} {this.GetType().Name} の次へ挿入したい");
+            // Debug.Log($"[InsertNext] ★開始。 visitor:{visitor} {visitor.GetType().Name} を {this.ToString()} {this.GetType().Name} の次へ挿入したい");
 
             // リンクを貼り替える前の情報
             var visitorOldPrevious = visitor.Previous; // ヌルのケースがある
