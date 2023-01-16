@@ -53,26 +53,8 @@
             }
             else if (this is Placeholder parentheses)
             {
-                // 両端の丸括弧含む
-                var text = parentheses.ToString();
-                // 両端の丸括弧を含まない
-                var content = text[1..(text.Length - 1)];
-
-                // トップ・レベル
-                var newTopLevel = new Placeholder(withParentheses: false);
-
-                // 生成
-                {
-                    var cursor = new CursorIO(newTopLevel.FirstCap);
-
-                    // 先頭から順に書いていくだけ
-                    foreach (var ch in content)
-                    {
-                        cursor.Write(ch);
-                    }
-                }
-
-                return newTopLevel;
+                // 文字列からオブジェクトを生成
+                return SpawnHelper.SpawnPlaceholderByText(parentheses.ToString());
             }
             else
             {
