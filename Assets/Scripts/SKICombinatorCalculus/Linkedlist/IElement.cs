@@ -40,6 +40,13 @@ namespace Assets.Scripts.SKICombinatorCalculus.Linkedlist
         IElement InsertNext(IElement removable);
 
         /// <summary>
+        /// 複数の要素を、後要素として挿入
+        /// </summary>
+        /// <param name="cursor"></param>
+        /// <returns>挿入後の次の要素を返す</returns>
+        IElement InsertNextAll(CursorIO cursor);
+
+        /// <summary>
         /// 丸括弧であれば、その内部の始端の '(' を返します。
         /// 丸括弧以外はヌルを返します
         /// </summary>

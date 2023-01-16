@@ -78,6 +78,35 @@
         }
 
         /// <summary>
+        /// 複数の要素を、後要素として挿入
+        /// </summary>
+        /// <param name="cursor"></param>
+        /// <returns>挿入後の次の要素を返す</returns>
+        public IElement InsertNextAll(CursorIO cursor)
+        {
+            IElement next = this.Next;
+
+            // 先頭から順に書いていくだけ
+            for(IElement ch = cursor.ReadChar();ch!=null; ch = cursor.ReadChar())
+            {
+                if (ch is FirstCap)
+                {
+                    // Ignored
+                }
+                else if (ch is LastCap)
+                {
+                    // Ignored
+                }
+                else
+                {
+                    this.InsertNext(ch);
+                }
+            }
+
+            return next;
+        }
+
+        /// <summary>
         /// 次の要素を挿入
         /// </summary>
         /// <param name="visitor">挿入される要素</param>

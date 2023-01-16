@@ -146,7 +146,7 @@
             Assert.IsTrue(parentheses is Placeholder placeholder1 && placeholder1.WithParentheses);
 
             // 前要素
-            Assert.IsTrue(parentheses.Previous!=null);
+            Assert.IsTrue(parentheses.Previous != null);
             IElement newLeader = parentheses.Previous;
             Debug.Log($"[StripParentheses] newLeader:{newLeader} {newLeader.GetType().Name}");
 
@@ -166,6 +166,7 @@
             Debug.Log($"[StripParentheses] stripped parentheses:{strippedPlaceholder} withParentheses:{strippedPlaceholder.WithParentheses}");
 
             // 挿入し直す
+            // newLeader.InsertNextAll(new CursorIO(strippedPlaceholder));
             newLeader.InsertNext(strippedPlaceholder);
 
             //// 丸括弧の中身の最初の要素

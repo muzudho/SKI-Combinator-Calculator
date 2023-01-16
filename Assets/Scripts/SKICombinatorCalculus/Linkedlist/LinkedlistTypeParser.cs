@@ -18,20 +18,17 @@
             }
             {
                 Placeholder topLevel = CursorOperation.Spawn("(Ix)");
-                string result = topLevel.ToString();
-                Assert.IsTrue(result == "(Ix)", $"result: {result}");
+                Assert.IsTrue(topLevel.ToString() == "(Ix)", $"'Ix' == topLevel:{topLevel}");
 
                 Placeholder parentheses = (Placeholder)topLevel.FirstCap.Next;
                 Assert.IsTrue(parentheses.WithParentheses, $"'(Ix)' withParentheses: {parentheses.WithParentheses} stringify:{parentheses}");
                 StripUnnecessaryParentheses.StripParentheses(parentheses);
                 Placeholder strippedPlaceholder = parentheses;
-                Assert.IsTrue(!strippedPlaceholder.WithParentheses, $"'Ix' withParentheses: {strippedPlaceholder.WithParentheses} stringify:{strippedPlaceholder}");
-                Assert.IsTrue(strippedPlaceholder.ToString()=="Ix", $"'Ix' == stringify:{strippedPlaceholder}");
-                result = strippedPlaceholder.ToString(); // FIXME ★ ここで左に丸括弧が付いてしまう？
-                Assert.IsTrue(result == "Ix", $"'Ix' = result: {result} strippedPlaceholder:{strippedPlaceholder}");
 
-                result = topLevel.ToString();
-                Assert.IsTrue(result == "Ix", $"result: {result}"); // FIXME ★ ここで空文字列になってしまう？
+                Assert.IsTrue(!strippedPlaceholder.WithParentheses, $"'Ix' == strippedPlaceholder:{strippedPlaceholder}. withParentheses:{strippedPlaceholder.WithParentheses}");
+                Assert.IsTrue(strippedPlaceholder.ToString()=="Ix", $"'Ix' == strippedPlaceholder:{strippedPlaceholder}");
+                // FIXME ★ ここで空文字列になってしまう？
+                Assert.IsTrue(topLevel.ToString() == "Ix", $"'Ix' == topLevel:{topLevel}");
             }
         }
 
