@@ -40,7 +40,8 @@ internal class SKICombinatorCalculator
 
         // リンクリスト型のパーサー
         LinkedlistTypeParser.DoAsserts();
-        return "";
+        
+        // return "";
         
         var linkedlistTypeParserResult = LinkedlistTypeParser.Parse(inputText);
 
