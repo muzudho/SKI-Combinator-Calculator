@@ -44,7 +44,7 @@ internal static class RightOfCursor
                             case UnnecessaryParenthesesStripError.Sintax:
                                 // 構文エラー
                                 calculationProcess.AppendLine($"    sintax error. rest:{rest}");
-                                Debug.Log("[NextCombinator] 構文エラー");
+                                // Debug.Log("[NextCombinator] 構文エラー");
                                 return (false, "", ' ', "");
 
                             default:
@@ -66,7 +66,7 @@ internal static class RightOfCursor
                         {
                             // 計算不能
                             // calculationProcess.AppendLine($"    incalculable. i:{i}");
-                            Debug.Log($"[NextCombinator] 計算不能 i:{i} first:{cursor} rest:{rest}");
+                            // Debug.Log($"[NextCombinator] 計算不能 i:{i} first:{cursor} rest:{rest}");
                             return (false, "", ' ', "");
                         }
                     }
@@ -94,7 +94,7 @@ internal static class RightOfCursor
 
         if (expression.Length <= start)
         {
-            Debug.Log($"[Parse] オーバー length:{expression.Length} start:{start}");
+            // Debug.Log($"[Parse] オーバー length:{expression.Length} start:{start}");
             return (false, "", "");
         }
 
@@ -126,7 +126,7 @@ internal static class RightOfCursor
             }
 
             // 構文エラー
-            Debug.Log("[Parse] 構文エラー1");
+            // Debug.Log("[Parse] 構文エラー1");
             return (false, "", "");
         }
 
@@ -135,7 +135,7 @@ internal static class RightOfCursor
             return (true, $"{cursor}", expression[1..]);
         }
 
-        Debug.Log("[Parse] 構文エラー2");
+        // Debug.Log("[Parse] 構文エラー2");
         return (false, "", "");
     }
 }

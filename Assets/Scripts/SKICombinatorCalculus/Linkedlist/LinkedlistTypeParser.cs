@@ -28,7 +28,7 @@
                 bool evaluated = false;
 
                 // 評価する前に、不要な丸括弧をすべて外す必要がある
-                while (CursorOperation.StripUnnecessaryParentheses(topLevel.FirstCap))
+                while (StripUnnecessaryParentheses.DoIt(topLevel))
                 {
                     strippedUnnecessaryParentheses = true;
 
